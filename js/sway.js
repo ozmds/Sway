@@ -125,9 +125,9 @@ setInterval(function(){
 	
 	/* Calculate new position */
 	r = toRadians(deg); 
-	x = Math.round(c.width / 2 + Math.cos(r) * line_height);
-	y = Math.round(((c.height / 2) - Math.round(c.height / 10)) - 
-				  (line_height * Math.sin(r)));
+	x = c.width / 2 + Math.cos(r) * line_height;
+	y = ((c.height / 2) - Math.round(c.height / 10)) - 
+				  (line_height * Math.sin(r));
 				  
 	createLine(small_x, small_y, x, y, 7, 'black', ctx); 
 	
@@ -161,4 +161,4 @@ setInterval(function(){
 	createCircle(x, y, 30, startAngle, endAngle, 'white', 10, 'black',
 	             ctx);
 	
-	}, 20); 
+	}, 3000); 
