@@ -155,6 +155,8 @@ setInterval(function(){
 	}
 	ctx.fillStyle = 'black';
 	ctx.fillText(score, c.width - 40, 25);
+	ctx.fillText(c.width, c.width - 60, 50); 
+	ctx.fillText(c.height, c.width - 60, 75); 
 	createCircle(x, y, 30, startAngle, endAngle, 'white', 10, 'black',
 	             ctx);
 	
