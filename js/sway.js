@@ -160,6 +160,8 @@ setInterval(function(){
 	ctx.fillText(window.devicePixelRatio, c.width - 60, 100);
 	ctx.fillText(window.screen.height, c.width - 60, 125); 
 	ctx.fillText(window.screen.width, c.width - 60, 150); 
+	ctx.fillText(window.screen.availWidth, c.width - 60, 175); 
+	ctx.fillText(window.screen.availHeight, c.width - 60, 200); 
 	createCircle(x, y, 30, startAngle, endAngle, 'white', 10, 'black',
 	             ctx);
 	
