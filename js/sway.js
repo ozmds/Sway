@@ -6,8 +6,11 @@ function init() {
 
 	time_counter = 0;
 	
-	c.height = window.screen.availHeight - 30; 
-	c.width = window.screen.availWidth - 30; 
+	c.height = (window.innerHeight - 30) * window.devicePixelRatio; 
+	c.width = (window.innerWidth - 30) * window.devicePixelRatio; 
+	
+	c.style.width = (c.width / window.devicePixelRatio).toString() + "px"; 
+	c.style.height = (c.height / window.devicePixelRatio).toString() + "px"; 
  
 	small_x = c.width / 2; 
 	small_y = (c.height / 2) - Math.round(c.height / 10); 
