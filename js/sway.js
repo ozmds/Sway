@@ -10,7 +10,11 @@ function init() {
 	c.width = (window.innerWidth - 30) * window.devicePixelRatio; 
 	
 	c.style.width = (c.width / window.devicePixelRatio).toString() + "px"; 
-	c.style.height = (c.height / window.devicePixelRatio).toString() + "px"; 
+	c.style.height = (c.height / window.devicePixelRatio).toString() + "px";
+
+	c.style.top = (35 / window.devicePixelRatio).toString() + "px"; 
+	c.style.left = (35 / window.devicePixelRatio).toString() + "px"; 
+	c.style.border = (5 / window.devicePixelRatio).toString() + "px solid #000000";
  
 	small_x = c.width / 2; 
 	small_y = (c.height / 2) - Math.round(c.height / 10); 
@@ -168,4 +172,4 @@ setInterval(function(){
 	createCircle(x, y, 30, startAngle, endAngle, 'white', 10, 'black',
 	             ctx);
 	
-	}, 3000); 
+	}, 20); 
