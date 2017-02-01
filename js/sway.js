@@ -157,7 +157,9 @@ setInterval(function(){
 	ctx.fillText(score, c.width - 40, 25);
 	ctx.fillText(c.width, c.width - 60, 50); 
 	ctx.fillText(c.height, c.width - 60, 75);
-	ctx.fillText(window.devicePixelRatio, c.width - 60, 100); 
+	ctx.fillText(window.devicePixelRatio, c.width - 60, 100);
+	ctx.fillText(window.screen.height, c.width - 60, 125); 
+	ctx.fillText(window.screen.width, c.width - 60, 150); 
 	createCircle(x, y, 30, startAngle, endAngle, 'white', 10, 'black',
 	             ctx);
 	
