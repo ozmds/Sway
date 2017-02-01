@@ -9,9 +9,9 @@ function init() {
 	c.height = (window.innerHeight - 30) * window.devicePixelRatio; 
 	c.width = (window.innerWidth - 30) * window.devicePixelRatio; 
 	
-	c.style.top = ((10 * window.devicePixelRatio) - 10).toString() + "px";
-	c.style.left = ((10 * window.devicePixelRatio) - 10).toString() + "px";
-	c.style.border = ((5 * window.devicePixelRatio) - 10).toString() + "px solid #000000";
+	c.style.top = ((10 * window.devicePixelRatio) - 20).toString() + "px";
+	c.style.left = ((10 * window.devicePixelRatio) - 20).toString() + "px";
+	c.style.border = ((5 * window.devicePixelRatio) - 20).toString() + "px solid #000000";
 	
 	c.style.width = (c.width / window.devicePixelRatio).toString() + "px"; 
 	c.style.height = (c.height / window.devicePixelRatio).toString() + "px"; 
