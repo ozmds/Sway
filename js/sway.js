@@ -162,13 +162,6 @@ setInterval(function(){
 	}
 	ctx.fillStyle = 'black';
 	ctx.fillText(score, c.width - 40, 25);
-	ctx.fillText(c.width, c.width - 60, 50); 
-	ctx.fillText(c.height, c.width - 60, 75);
-	ctx.fillText(window.devicePixelRatio, c.width - 60, 100);
-	ctx.fillText(c.style.border, c.width - 60, 125); 
-	ctx.fillText(c.style.top, c.width - 60, 150); 
-	ctx.fillText(c.style.left, c.width - 60, 175); 
-	ctx.fillText(window.screen.availHeight, c.width - 60, 200); 
 	createCircle(x, y, 30, startAngle, endAngle, 'white', 10, 'black',
 	             ctx);
 	
