@@ -12,9 +12,9 @@ function init() {
 	c.style.width = (c.width / window.devicePixelRatio).toString() + "px"; 
 	c.style.height = (c.height / window.devicePixelRatio).toString() + "px";
 
-	c.style.top = (15 * window.devicePixelRatio).toString() + "px"; 
-	c.style.left = (15 * window.devicePixelRatio).toString() + "px"; 
-	c.style.border = (5 * window.devicePixelRatio).toString() + "px solid #000000";
+	c.style.top = (15).toString() + "px"; 
+	c.style.left = (15).toString() + "px"; 
+	c.style.border = (5).toString() + "px solid #000000";
  
 	small_x = c.width / 2; 
 	small_y = (c.height / 2) - Math.round(c.height / 10); 
