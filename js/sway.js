@@ -40,6 +40,10 @@ function init() {
 	line_height = y - small_y; 
 	score = 0; 
 	
+	if (window.localStorage.getItem("highscore") == null) {
+		window.localStorage.setItem("highscore", score); 
+	}
+	
 	going_left = 1; 
 	ctx.font = '20px Georgia'; 
 	
@@ -90,7 +94,12 @@ function createLine (startX, startY, endX, endY, width, colour, ctx) {
 }
 
 function placeDiamond () {
-	var diamondX = Math.round(Math.random() * (c.width - 40)) + 20;
+	var diamondX; 
+	if (c.width < (2 * (line_height + 30))) {
+		diamondX = Math.round(Math.random() * (c.width - 40)) + 20;
+	} else {
+		diamondX = Math.round(Math.random() * (2 * line_height + 30)) + (0.5 * (c.width - (2 * line_height + 30)));
+	}
 	createDiamond(diamondX, 20, "red", ctx); 
 	orb_list.push(["red", diamondX, 20]); 
 }
@@ -162,6 +171,13 @@ setInterval(function(){
 	}
 	ctx.fillStyle = 'black';
 	ctx.fillText(score, c.width - 40, 25);
+	
+	if (score > window.localStorage.getItem("highscore")) {
+		window.localStorage.setItem("highscore", score); 
+	}
+	
+	ctx.fillText(window.localStorage.getItem("highscore"), c.width - 40, 50); 
+	
 	createCircle(x, y, 30, startAngle, endAngle, 'white', 10, 'black',
 	             ctx);
 	
