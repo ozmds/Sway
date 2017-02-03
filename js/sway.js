@@ -24,6 +24,61 @@ class Circle {
 	}
 }
 
+class Diamond {
+	constructor(x, y, r, colour, context) {
+		this.x = x; 
+		this.y = y; 
+		this.r = r; 
+		this.colour = colour; 
+		this.context = context; 
+	}
+	
+	draw() {
+		var ctx = this.context; 
+		var x = this.x; 
+		var y = this.y; 
+		var r = this.r; 
+		ctx.fillStyle = colour; 
+		
+		ctx.beginPath(); 
+		ctx.moveTo(x, y - r); 
+		ctx.lineTo(x - r, y); 
+		ctx.lineTo(x, y + r); 
+		ctx.lineTo(x + r, y); 
+		ctx.lineTo(x, y - r); 
+		ctx.fill(); 
+	}
+	
+	place() {
+		var x; 
+		var range = 2 * (line_height + 30); 
+		
+		if (c.width < range) {
+			x = Math.round(Math.random() * (c.width - 40)) + 20;
+		} else {
+			x = Math.round(Math.random() * range) + (0.5 * (c.width - range));
+		}
+	}
+}
+
+function createDiamond (x, y, colour, ctx) {
+	ctx.fillStyle = colour;
+	
+	ctx.beginPath(); 
+	ctx.moveTo(x, y - 10); 		
+	ctx.lineTo(x - 10, y); 
+	ctx.lineTo(x, y + 10); 
+	ctx.lineTo(x + 10, y); 
+	ctx.lineTo(x, y - 10); 
+	ctx.fill();  
+}
+
+function placeDiamond () {
+	var diamondX; 
+	createDiamond(diamondX, 20, "red", ctx); 
+	orb_list.push(["red", diamondX, 20]); 
+}
+
 function createCircle (x, y, radius, startAngle, endAngle, fill, 
 					   lineWidth, outline, ctx) {
 	ctx.fillStyle = fill; 
@@ -96,18 +151,6 @@ function toRadians (angle) {
 	return angle * (Math.PI / 180);
 }
 
-function createDiamond (x, y, colour, ctx) {
-	ctx.fillStyle = colour;
-	
-	ctx.beginPath(); 
-	ctx.moveTo(x, y - 10); 		
-	ctx.lineTo(x - 10, y); 
-	ctx.lineTo(x, y + 10); 
-	ctx.lineTo(x + 10, y); 
-	ctx.lineTo(x, y - 10); 
-	ctx.fill();  
-}
-
 function createLine (startX, startY, endX, endY, width, colour, ctx) {
 	ctx.lineWidth = width; 	
 	ctx.strokeStyle = colour; 
@@ -115,17 +158,6 @@ function createLine (startX, startY, endX, endY, width, colour, ctx) {
 	ctx.moveTo(startX, startY); 
 	ctx.lineTo(endX, endY); 
 	ctx.stroke();
-}
-
-function placeDiamond () {
-	var diamondX; 
-	if (c.width < (2 * (line_height + 30))) {
-		diamondX = Math.round(Math.random() * (c.width - 40)) + 20;
-	} else {
-		diamondX = Math.round(Math.random() * (2 * line_height + 30)) + (0.5 * (c.width - (2 * line_height + 30)));
-	}
-	createDiamond(diamondX, 20, "red", ctx); 
-	orb_list.push(["red", diamondX, 20]); 
 }
 
 function checkHitbox (circleX, circleY, diamondX, diamondY) {
