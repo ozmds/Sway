@@ -1,5 +1,41 @@
 document.addEventListener('DOMContentLoaded', init, false); 
 
+class Circle {
+	constructor(x, y, r, colour, outlineWidth, outlineColour, context) {
+		this.x = x; 
+		this.y = y; 
+		this.r = r; 
+		this.colour = colour; 
+		this.outWidth = outlineWidth; 
+		this.outColour = outlineColour; 
+		this.context = context; 
+	}
+	
+	draw() {
+		var ctx = this.context; 
+		ctx.fillStyle = this.colour; 
+		ctx.lineWidth = this.outWidth; 
+		ctx.strokeStyle = this.outColour; 
+		
+		ctx.beginPath(); 
+		ctx.arc(this.x, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);
+		ctx.fill(); 
+		ctx.stroke(); 
+	}
+}
+
+function createCircle (x, y, radius, startAngle, endAngle, fill, 
+					   lineWidth, outline, ctx) {
+	ctx.fillStyle = fill; 
+	ctx.lineWidth = lineWidth; 
+	ctx.strokeStyle = outline; 
+	
+	ctx.beginPath();
+	ctx.arc(x, y, radius, startAngle, endAngle); 
+	ctx.fill(); 
+	ctx.stroke(); 
+}
+
 function init() {
 	c = document.getElementById('myCanvas'); 
 	ctx = c.getContext('2d');
@@ -58,18 +94,6 @@ function init() {
 
 function toRadians (angle) {
 	return angle * (Math.PI / 180);
-}
-
-function createCircle (x, y, radius, startAngle, endAngle, fill, 
-					   lineWidth, outline, ctx) {
-	ctx.fillStyle = fill; 
-	ctx.lineWidth = lineWidth; 
-	ctx.strokeStyle = outline; 
-	
-	ctx.beginPath();
-	ctx.arc(x, y, radius, startAngle, endAngle); 
-	ctx.fill(); 
-	ctx.stroke(); 
 }
 
 function createDiamond (x, y, colour, ctx) {
