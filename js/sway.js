@@ -94,6 +94,8 @@ function createCircle (x, y, radius, startAngle, endAngle, fill,
 function init() {
 	c = document.getElementById('myCanvas'); 
 	ctx = c.getContext('2d');
+	
+	setting_flag = 0;
 
 	time_counter = 0;
 	
@@ -106,6 +108,8 @@ function init() {
 	c.style.top = (15).toString() + "px"; 
 	c.style.left = (15).toString() + "px"; 
 	c.style.border = (5).toString() + "px solid #000000";
+	
+	orb_list = [];
  
 	small_x = c.width / 2; 
 	small_y = (c.height / 2) - Math.round(c.height / 10); 
@@ -116,7 +120,6 @@ function init() {
 	startAngle = 0.0 * Math.PI; 
 	endAngle = 2.0 * Math.PI; 
 	
-	orb_list = [];
 	coin = new Audio('data/coin.wav'); 
 	
 	createLine(small_x, small_y, x, y, 7, 'black', ctx);
