@@ -82,8 +82,7 @@ function init() {
 	}
 }
 
-function setUpGame() {
-	window.alert("batman"); 
+function setUpGame() { 
 	init(); 	
 
 	setting_flag = 0;
@@ -100,19 +99,19 @@ function setUpGame() {
 	var outer_y = c.height - 40; 
 
 	line_height = outer_y - center_y; 
-
+	
 	createLine(center_x, center_y, outer_x, outer_y, 7, 'black', ctx);
 
 	cen = new Circle(center_x, center_y, 15, 'white', 5, 'black', ctx);
 	cen.draw(); 
 
-	pen = new Circle(outer_x, outer_y, 30, 'white', 10, 'black'ctx); 
+	pen = new Circle(outer_x, outer_y, 30, 'white', 10, 'black', ctx); 
 	pen.draw(); 
 	
 	coin = new Audio('data/coin.wav'); 
 
 	updateScore(); 
-	
+
 	c.addEventListener('click', function(event) {handleClick(event.x, event.y);}); 
 } 
 
@@ -155,13 +154,11 @@ function checkHitbox (circleX, circleY, diamondX, diamondY) {
 		return true; 
 	}
 }
- 
+
 setInterval(function(){
-	
-	/* Clear the Rectangle */
+
 	ctx.clearRect(0, 0, c.width, c.height); 
 	
-	/* Check if we hit a wall */
 	if (pen.x < 40) {
 		going_left = 0; 
 	} else if (pen.x > (c.width - 40)) {
@@ -175,15 +172,13 @@ setInterval(function(){
 			going_left = 0; 
 		}
 	}
-	
-	/* Direction to be currently going */
+
 	if (going_left == 1) {
 		deg = deg - 1; 
 	} else {
 		deg = deg + 1; 
 	}
 	
-	/* Calculate new position */
 	pen.r = toRadians(deg); 
 	pen.x = c.width / 2 + Math.cos(r) * line_height;
 	pen.y = ((c.height / 2) - Math.round(c.height / 10)) - 
