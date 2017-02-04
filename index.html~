@@ -11,6 +11,7 @@
 		</script> 
 	</head>
 	<body>
+		<p>Hi</p>
 		<canvas id="myCanvas"></canvas>
 	</body>
 </html>

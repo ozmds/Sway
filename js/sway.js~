@@ -160,7 +160,7 @@ function checkHitbox (circleX, circleY, diamondX, diamondY) {
 	}
 }
 
-setInterval(function(){
+function updateGame() {
 
 	ctx.clearRect(0, 0, c.width, c.height); 
 	
@@ -215,4 +215,6 @@ setInterval(function(){
 	updateScore(); 
 	pen.draw(); 
 	
-	}, 20); 
+}
+
+setInterval(updateGame(), 20); 
