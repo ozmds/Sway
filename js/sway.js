@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', init, false); 
+document.addEventListener('DOMContentLoaded', setUpGame, false); 
 
 class Circle {
 	constructor(x, y, r, colour, outlineWidth, outlineColour, context) {
@@ -25,9 +25,9 @@ class Circle {
 }
 
 class Diamond {
-	constructor(x, y, r, colour, context) {
-		this.x = x; 
-		this.y = y; 
+	constructor(r, colour, context) {
+		this.x = null; 
+		this.y = -2 * r; 
 		this.r = r; 
 		this.colour = colour; 
 		this.context = context; 
@@ -61,44 +61,10 @@ class Diamond {
 	}
 }
 
-function createDiamond (x, y, colour, ctx) {
-	ctx.fillStyle = colour;
-	
-	ctx.beginPath(); 
-	ctx.moveTo(x, y - 10); 		
-	ctx.lineTo(x - 10, y); 
-	ctx.lineTo(x, y + 10); 
-	ctx.lineTo(x + 10, y); 
-	ctx.lineTo(x, y - 10); 
-	ctx.fill();  
-}
-
-function placeDiamond () {
-	var diamondX; 
-	createDiamond(diamondX, 20, "red", ctx); 
-	orb_list.push(["red", diamondX, 20]); 
-}
-
-function createCircle (x, y, radius, startAngle, endAngle, fill, 
-					   lineWidth, outline, ctx) {
-	ctx.fillStyle = fill; 
-	ctx.lineWidth = lineWidth; 
-	ctx.strokeStyle = outline; 
-	
-	ctx.beginPath();
-	ctx.arc(x, y, radius, startAngle, endAngle); 
-	ctx.fill(); 
-	ctx.stroke(); 
-}
-
-function init() {
+function init() { 
 	c = document.getElementById('myCanvas'); 
 	ctx = c.getContext('2d');
-	
-	setting_flag = 0;
 
-	time_counter = 0;
-	
 	c.height = (window.innerHeight - 30) * window.devicePixelRatio; 
 	c.width = (window.innerWidth - 30) * window.devicePixelRatio; 
 	
@@ -107,48 +73,67 @@ function init() {
 
 	c.style.top = (15).toString() + "px"; 
 	c.style.left = (15).toString() + "px"; 
-	c.style.border = (5).toString() + "px solid #000000";
-	
-	orb_list = [];
- 
-	small_x = c.width / 2; 
-	small_y = (c.height / 2) - Math.round(c.height / 10); 
-	
-	x = c.width / 2; 
-	y = c.height - 40; 
-	
-	startAngle = 0.0 * Math.PI; 
-	endAngle = 2.0 * Math.PI; 
-	
-	coin = new Audio('data/coin.wav'); 
-	
-	createLine(small_x, small_y, x, y, 7, 'black', ctx);
-	
-	createCircle(small_x, small_y, 15, startAngle, endAngle, 'white', 
-				 5, 'black', ctx); 
-	
-	createCircle(x, y, 30, startAngle, endAngle, 'white', 10, 'black',
-	             ctx);
-				 
-	deg = 270; 
-	line_height = y - small_y; 
-	score = 0; 
-	
+	c.style.border = (5).toString() + "px solid #000000";	
+
+	ctx.font = '20px Georgia'; 
+
 	if (window.localStorage.getItem("highscore") == null) {
 		window.localStorage.setItem("highscore", score); 
 	}
+}
+
+function setUpGame() {
+	window.alert("batman"); 
+	init(); 	
+
+	setting_flag = 0;
+	time_counter = 0;
+	going_left = 1;
+	score = 0; 
+	deg = 270; 
+	orb_list = [];
+
+	var center_x = c.width / 2; 
+	var center_y = (c.height / 2) - Math.round(c.height / 10); 
 	
-	going_left = 1; 
-	ctx.font = '20px Georgia'; 
+	var outer_x = c.width / 2; 
+	var outer_y = c.height - 40; 
+
+	line_height = outer_y - center_y; 
+
+	createLine(center_x, center_y, outer_x, outer_y, 7, 'black', ctx);
+
+	cen = new Circle(center_x, center_y, 15, 'white', 5, 'black', ctx);
+	cen.draw(); 
+
+	pen = new Circle(outer_x, outer_y, 30, 'white', 10, 'black'ctx); 
+	pen.draw(); 
 	
-	c.addEventListener('click', function(event) {
-		if (going_left == 1) {
-			going_left = 0;
-		} else {
-			going_left = 1; 
-		}
-	}); 
+	coin = new Audio('data/coin.wav'); 
+
+	updateScore(); 
+	
+	c.addEventListener('click', function(event) {handleClick(event.x, event.y);}); 
 } 
+
+function handleClick(x, y) {
+	if (going_left == 1) {
+		going_left = 0; 
+	} else {
+		going_left = 1; 
+	}
+}
+
+function updateScore() {
+	ctx.fillStyle = 'black';
+
+	if (score > window.localStorage.getItem("highscore")) {
+		window.localStorage.setItem("highscore", score); 
+	}
+	
+	ctx.fillText(score, c.width - 40, 25);
+	ctx.fillText(window.localStorage.getItem("highscore"), c.width - 40, 50); 
+}
 
 function toRadians (angle) {
 	return angle * (Math.PI / 180);
@@ -177,14 +162,14 @@ setInterval(function(){
 	ctx.clearRect(0, 0, c.width, c.height); 
 	
 	/* Check if we hit a wall */
-	if (x < 40) {
+	if (pen.x < 40) {
 		going_left = 0; 
-	} else if (x > (c.width - 40)) {
+	} else if (pen.x > (c.width - 40)) {
 		going_left = 1; 
 	}
 	
-	if (y < 40) {
-		if (x > c.width / 2) {
+	if (pen.y < 40) {
+		if (pen.x > c.width / 2) {
 			going_left = 1; 	
 		} else {
 			going_left = 0; 
@@ -199,45 +184,36 @@ setInterval(function(){
 	}
 	
 	/* Calculate new position */
-	r = toRadians(deg); 
-	x = c.width / 2 + Math.cos(r) * line_height;
-	y = ((c.height / 2) - Math.round(c.height / 10)) - 
+	pen.r = toRadians(deg); 
+	pen.x = c.width / 2 + Math.cos(r) * line_height;
+	pen.y = ((c.height / 2) - Math.round(c.height / 10)) - 
 				  (line_height * Math.sin(r));
 				  
-	createLine(small_x, small_y, x, y, 7, 'black', ctx); 
+	createLine(cen.x, cen.y, pen.x, pen.y, 7, 'black', ctx); 
 	
-	createCircle(small_x, small_y, 15, startAngle, endAngle, 'white', 
-				 5, 'black', ctx); 
+	cen.draw(); 
 				 
 	time_counter = time_counter + 20; 
 	
 	if (time_counter == 3000) {
 		time_counter = 0;
-		placeDiamond(); 
+		var d = new Diamond(10, 'red', ctx); 
+		d.place(); 
+		orb_list.push(d);
 	}
 	
 	for (i = 0; i < orb_list.length; i++) {
-		orb_list[i][2] = orb_list[i][2] + 2;
+		orb_list[i].y = orb_list[i].y + 2;
 		
-		if (checkHitbox(x, y, orb_list[i][1], orb_list[i][2])) {
+		if (checkHitbox(pen.x, pen.y, orb_list[i].x, orb_list[i].y)) {
 			orb_list.splice(i, 1); 
 			coin.play();  
 			score = score + 1;  
 		} else {
-			createDiamond(orb_list[i][1], orb_list[i][2], orb_list[i][0], ctx);
+			orb_list[i].draw(); 
 		}
- 		
-	}
-	ctx.fillStyle = 'black';
-	ctx.fillText(score, c.width - 40, 25);
-	
-	if (score > window.localStorage.getItem("highscore")) {
-		window.localStorage.setItem("highscore", score); 
 	}
 	
-	ctx.fillText(window.localStorage.getItem("highscore"), c.width - 40, 50); 
+	pen.draw(); 
 	
-	createCircle(x, y, 30, startAngle, endAngle, 'white', 10, 'black',
-	             ctx);
-	
-	}, 20); 
+	}, 30); 
