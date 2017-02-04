@@ -112,9 +112,14 @@ function setUpGame() {
 	cen.draw(); 
 
 	pen = new Circle(outer_x, outer_y, 30, 'white', 10, 'black', ctx); 
-	pen.draw(); 
+	pen.draw();  
 	
-	coin = new Audio('data/coin.wav'); 
+	coin = new Audio('data/bgmusic.wav'); 
+	coin.play(); 
+	coin.addEventListener('ended', function() {
+		this.currentTime = 0; 
+		this.play(); 
+	}, false); 
 
 	updateScore(); 
 
@@ -122,11 +127,21 @@ function setUpGame() {
 } 
 
 function handleClick(x, y) {
-	if (going_left == 1) {
+	if (setting_flag == 1) {
+		setting_flag = 0; 
+	} else if ((x > 35) && (x < 85)) {
+		if ((y > 35) && (y < 85)) {
+			if (setting_flag == 1) {
+				setting_flag = 0;
+			} else {
+				setting_flag = 1;
+			}
+		}
+	} else if (going_left == 1) {
 		going_left = 0; 
 	} else {
 		going_left = 1; 
-	}
+	} 
 }
 
 function updateScore() {
@@ -160,10 +175,13 @@ function checkHitbox (circleX, circleY, diamondX, diamondY) {
 	}
 }
 
-setInterval(function(){
+function pauseScreen () {
+	ctx.fillStyle = 'red';
+	ctx.fillRect(20, 20, 17, 50);
+	ctx.fillRect(53, 20, 17, 50); 
+}
 
-	ctx.clearRect(0, 0, c.width, c.height); 
-	
+function updateGame() {
 	if (pen.x < 40) {
 		going_left = 0; 
 	} else if (pen.x > (c.width - 40)) {
@@ -203,16 +221,33 @@ setInterval(function(){
 	}
 	for (i = 0; i < orb_list.length; i++) {		
 		orb_list[i].y = orb_list[i].y + 2; 
+		if (orb_list[i].y == c.height) {
+			setting_flag = 1; 
+			score = 0; 
+		}
 		
 		if (checkHitbox(pen.x, pen.y, orb_list[i].x, orb_list[i].y)) {	
-			orb_list.splice(i, 1); 
-			coin.play();  
+			orb_list.splice(i, 1);   
 			score = score + 1;  
 		} else {
 			orb_list[i].draw();
 		}
 	}
 	updateScore(); 
-	pen.draw(); 
+	ctx.fillStyle = 'black';
+	ctx.fillRect(20, 20, 17, 50);
+	ctx.fillRect(53, 20, 17, 50); 
 	
+	pen.draw();
+}
+
+setInterval(function(){
+
+	ctx.clearRect(0, 0, c.width, c.height);  
+	
+	if (setting_flag == 1) {
+		pauseScreen(); 
+	} else {
+		updateGame(); 
+	}
 	}, 20); 
