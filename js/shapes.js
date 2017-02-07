@@ -19,6 +19,7 @@ class Circle {
 		ctx.arc(this.x, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);
 		ctx.fill(); 
 		ctx.stroke(); 
+		ctx.closePath(); 
 	}
 }
 
@@ -45,6 +46,7 @@ class Diamond {
 		ctx.lineTo(x + r, y); 
 		ctx.lineTo(x, y - r); 
 		ctx.fill(); 
+		ctx.closePath(); 
 	}
 	
 	place(line_height, width) {
@@ -84,5 +86,6 @@ class Line {
 		ctx.moveTo(this.startX, this.startY); 
 		ctx.lineTo(this.endX, this.endY); 
 		ctx.stroke();
+		ctx.closePath(); 
 	}
 }

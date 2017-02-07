@@ -17,6 +17,7 @@ function centeredRect (x, y, width, height, outWidth, outColour, context) {
 	context.strokeStyle = outColour; 
 	context.lineWidth = outWidth;
 	
+	context.beginPath(); 
 	context.rect(x - width / 2, y - height / 2, width, height); 
 	context.stroke(); 
 }

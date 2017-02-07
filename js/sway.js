@@ -76,8 +76,30 @@ function handleClick(x, y) {
 	going_left = !going_left; 
 }
 
-function pauseScreen() {
-	/* To be coded */
+function pauseScreen(ctx) {
+	
+	var box_list = []; 
+	
+	box_list.push([c.width - 55, 55, 50, 50]); 
+	box_list.push([c.width - 145, 55, 50, 50]); 
+	
+	box_list.push([c.width / 2, c.height * 0.35, 200, 50]); 
+	box_list.push([c.width / 2, c.height * 0.50, 200, 50]); 
+	box_list.push([c.width / 2, c.height * 0.65, 200, 50]); 
+	
+	drawPauseScreen(box_list, 5, 'black', ctx); 
+	
+	ctx.textAlign = 'center'; 
+	ctx.textBaseline = 'middle'; 
+	
+	ctx.font = '40px Palatino'; 
+	ctx.fillStyle = 'black'; 
+	
+	ctx.fillText('S', c.width - 55, 55); 
+	ctx.fillText('M', c.width - 145, 55);
+	ctx.fillText('Sway', c.width / 2, c.height * 0.35); 
+	ctx.fillText('Resume', c.width / 2, c.height * 0.50); 
+	ctx.fillText('Restart', c.width / 2, c.height * 0.65); 
 }
 
 function updateGame() {
@@ -128,9 +150,9 @@ function updateGame() {
 	if (s == null) {
 		setting_flag = !setting_flag; 
 	} else {
-		score = s; 
+		score = s;
 	}
-
+	
 	pen.draw(); 
 	
 	updateScore(score, c.width - 20, 20, c.width - 20, 50, '20px Palatino', 'black', ctx);
@@ -138,10 +160,11 @@ function updateGame() {
 }
 
 setInterval(function() {
+	
 	ctx.clearRect(0, 0, c.width, c.height); 
 	
 	if (setting_flag) {
-		pauseScreen(); 
+		pauseScreen(ctx); 
 	} else {
 		updateGame(); 
 	}
