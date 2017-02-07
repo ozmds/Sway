@@ -1,75 +1,35 @@
-document.addEventListener('DOMContentLoaded', setUpGame, false); 
+document.addEventListener('DOMContentLoaded', init, false); 
 
-class Circle {
-	constructor(x, y, r, colour, outlineWidth, outlineColour, context) {
-		this.x = x; 
-		this.y = y; 
-		this.r = r; 
-		this.colour = colour; 
-		this.outWidth = outlineWidth; 
-		this.outColour = outlineColour; 
-		this.context = context; 
-	}
-	
-	draw() {
-		var ctx = this.context; 
-		ctx.fillStyle = this.colour; 
-		ctx.lineWidth = this.outWidth; 
-		ctx.strokeStyle = this.outColour; 
-		
-		ctx.beginPath(); 
-		ctx.arc(this.x, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);
-		ctx.fill(); 
-		ctx.stroke(); 
-	}
-}
+var setting_flag = false;
+var going_left = true;  
 
-class Diamond {
-	constructor(r, colour, context) {
-		this.x = null; 
-		this.y = -2 * r; 
-		this.r = r; 
-		this.colour = colour; 
-		this.context = context; 
-	}
-	
-	draw() {
-		var ctx = this.context; 
-		var x = this.x; 
-		var y = this.y; 
-		var r = this.r; 
-		ctx.fillStyle = this.colour; 
-		
-		ctx.beginPath(); 
-		ctx.moveTo(x, y - r); 
-		ctx.lineTo(x - r, y); 
-		ctx.lineTo(x, y + r); 
-		ctx.lineTo(x + r, y); 
-		ctx.lineTo(x, y - r); 
-		ctx.fill(); 
-	}
-	
-	place() {
-		var x; 
-		var range = 2 * (line_height + 30); 
-		
-		if (c.width < range) {
-			x = Math.round(Math.random() * (c.width - 40)) + 20;
-		} else {
-			x = Math.round(Math.random() * range) + (0.5 * (c.width - range));
-		}
+var time_counter = 0; 
+var score = 0; 
+var deg = 270;
 
-		this.x = x; 
+var pen_rad = 60; 
+var pad = 10; 
+var cen_height = 0.40; 
+var speed = 2; 
 
-		this.draw(); 
+var time_interval = 20; 
 
-	}
-}
+var bgm; 
+var arm_length;
+var rad;  
 
-function init() { 
+var arm; 
+var cen; 
+var pen; 
+var d; 
+var s; 
+
+var orb_list = []; 
+
+function init() {
 	c = document.getElementById('myCanvas'); 
-	ctx = c.getContext('2d');
-
+	ctx = c.getContext('2d'); 
+	
 	c.height = (window.innerHeight - 30) * window.devicePixelRatio; 
 	c.width = (window.innerWidth - 30) * window.devicePixelRatio; 
 	
@@ -78,176 +38,111 @@ function init() {
 
 	c.style.top = (15).toString() + "px"; 
 	c.style.left = (15).toString() + "px"; 
-	c.style.border = (5).toString() + "px solid #000000";	
-
-	ctx.font = '20px Georgia'; 
+	c.style.border = (5).toString() + "px solid #000000";	 
 
 	if (window.localStorage.getItem("highscore") == null) {
 		window.localStorage.setItem("highscore", score); 
 	}
-}
-
-function setUpGame() { 
-	init(); 	
-
-	setting_flag = 0;
-	time_counter = 0;
-	going_left = 1;
-	score = 0; 
-	deg = 270; 
-	rad = 0; 
-	orb_list = [];
-
-	var center_x = c.width / 2; 
-	var center_y = (c.height / 2) - Math.round(c.height / 10); 
 	
-	var outer_x = c.width / 2; 
-	var outer_y = c.height - 40; 
+	setUpGame(); 
+}	
 
-	line_height = outer_y - center_y; 
+function setUpGame() {
+	var cen_x = c.width / 2; 
+	var cen_y = c.height * cen_height;
+
+	var out_x = c.width / 2;
+	var out_y = c.height - (pen_rad + pad); 
 	
-	createLine(center_x, center_y, outer_x, outer_y, 7, 'black', ctx);
-
-	cen = new Circle(center_x, center_y, 15, 'white', 5, 'black', ctx);
+	arm_length = out_y - cen_y; 
+	
+	arm = new Line(cen_x, cen_y, out_x, out_y, 7, 'black', ctx); 
+	arm.draw(); 
+	
+	cen = new Circle(cen_x, cen_y, 15, 'white', 5, 'black', ctx);
 	cen.draw(); 
-
-	pen = new Circle(outer_x, outer_y, 30, 'white', 10, 'black', ctx); 
-	pen.draw();  
 	
-	coin = new Audio('data/bgmusic.wav'); 
-	coin.play(); 
-	coin.addEventListener('ended', function() {
-		this.currentTime = 0; 
-		this.play(); 
-	}, false); 
-
-	updateScore(); 
-
-	c.addEventListener('click', function(event) {handleClick(event.x, event.y);}); 
-} 
+	pen = new Circle(out_x, out_y, pen_rad, 'white', 10, 'black', ctx); 
+	pen.draw(); 
+	
+	updateScore(score, c.width - 20, 20, c.width - 20, 50, '20px Palatino', 'black', ctx);
+	
+	drawPauseButton(20, 20, 50, 'black', ctx);
+	
+	c.addEventListener('click', function(event) {handleClick(event.x, event.y);});
+}
 
 function handleClick(x, y) {
-	if (setting_flag == 1) {
-		setting_flag = 0; 
-	} else if ((x > 35) && (x < 85)) {
-		if ((y > 35) && (y < 85)) {
-			if (setting_flag == 1) {
-				setting_flag = 0;
-			} else {
-				setting_flag = 1;
-			}
-		}
-	} else if (going_left == 1) {
-		going_left = 0; 
-	} else {
-		going_left = 1; 
-	} 
+	going_left = !going_left; 
 }
 
-function updateScore() {
-	ctx.fillStyle = 'black';
-
-	if (score > window.localStorage.getItem("highscore")) {
-		window.localStorage.setItem("highscore", score); 
-	}
-	ctx.fillText(score, c.width - 40, 25);
-	ctx.fillText(window.localStorage.getItem("highscore"), c.width - 40, 50); 
-}
-
-function toRadians (angle) {
-	return angle * (Math.PI / 180);
-}
-
-function createLine (startX, startY, endX, endY, width, colour, ctx) {
-	ctx.lineWidth = width; 	
-	ctx.strokeStyle = colour; 
-	ctx.beginPath(); 
-	ctx.moveTo(startX, startY); 
-	ctx.lineTo(endX, endY); 
-	ctx.stroke();
-}
-
-function checkHitbox (circleX, circleY, diamondX, diamondY) {
-	x_value = Math.pow(circleX - diamondX, 2); 
-	y_value = Math.pow(circleY - diamondY, 2); 
-	if (x_value + y_value < 900) {
-		return true; 
-	}
-}
-
-function pauseScreen () {
-	ctx.fillStyle = 'red';
-	ctx.fillRect(20, 20, 17, 50);
-	ctx.fillRect(53, 20, 17, 50); 
+function pauseScreen() {
+	/* To be coded */
 }
 
 function updateGame() {
-	if (pen.x < 40) {
-		going_left = 0; 
-	} else if (pen.x > (c.width - 40)) {
-		going_left = 1; 
-	}
-
-	if (pen.y < 40) {
-		if (pen.x > c.width / 2) {
-			going_left = 1; 	
-		} else {
-			going_left = 0; 
-		}
-	}
-
-	if (going_left == 1) {
-		deg = deg - 1; 
+	
+	if (going_left) {
+		deg -= speed; 
 	} else {
-		deg = deg + 1; 
+		deg += speed; 
 	}
 	
 	rad = toRadians(deg); 
-	pen.x = c.width / 2 + Math.cos(rad) * line_height;
-	pen.y = ((c.height / 2) - Math.round(c.height / 10)) - 
-				  (line_height * Math.sin(rad));
-				  
-	createLine(cen.x, cen.y, pen.x, pen.y, 7, 'black', ctx); 
+	
+	pen.x = cen.x + Math.cos(rad) * arm_length; 
+	pen.y = cen.y - Math.sin(rad) * arm_length;
+
+	if (checkHitWall(pen.x, pen.y, c.width, c.height, pen_rad, pad)) {
+		going_left = !going_left;
+		if (going_left) {
+			deg -= 2 * speed; 
+		} else {
+			deg += 2 * speed; 
+		}
+	}
+	
+	rad = toRadians(deg); 
+	
+	pen.x = cen.x + Math.cos(rad) * arm_length; 
+	pen.y = cen.y - Math.sin(rad) * arm_length;
+	
+	arm.endX = pen.x; 
+	arm.endY = pen.y; 
+	
+	arm.draw(); 
 	
 	cen.draw(); 
-				 
-	time_counter = time_counter + 20; 
+	
+	time_counter += time_interval; 
 	
 	if (time_counter == 3000) {
-		time_counter = 0;
-		var d = new Diamond(10, 'red', ctx);
-		d.place(); 
-		orb_list.push(d);  
+		time_counter = 0; 
+		d = new Diamond(10, 'red', ctx);		
+		d.place(arm_length, c.width);
+		orb_list.push(d); 
 	}
-	for (i = 0; i < orb_list.length; i++) {		
-		orb_list[i].y = orb_list[i].y + 2; 
-		if (orb_list[i].y == c.height) {
-			setting_flag = 1; 
-			score = 0; 
-		}
-		
-		if (checkHitbox(pen.x, pen.y, orb_list[i].x, orb_list[i].y)) {	
-			orb_list.splice(i, 1);   
-			score = score + 1;  
-		} else {
-			orb_list[i].draw();
-		}
-	}
-	updateScore(); 
-	ctx.fillStyle = 'black';
-	ctx.fillRect(20, 20, 17, 50);
-	ctx.fillRect(53, 20, 17, 50); 
 	
-	pen.draw();
+	s = moveDiamonds(orb_list, score, pen.x, pen.y, pen_rad, c.height);  
+	
+	if (s == null) {
+		setting_flag = !setting_flag; 
+	} else {
+		score = s; 
+	}
+
+	pen.draw(); 
+	
+	updateScore(score, c.width - 20, 20, c.width - 20, 50, '20px Palatino', 'black', ctx);
+	drawPauseButton(20, 20, 50, 'black', ctx);
 }
 
-setInterval(function(){
-
-	ctx.clearRect(0, 0, c.width, c.height);  
+setInterval(function() {
+	ctx.clearRect(0, 0, c.width, c.height); 
 	
-	if (setting_flag == 1) {
+	if (setting_flag) {
 		pauseScreen(); 
 	} else {
 		updateGame(); 
 	}
-	}, 20); 
+}, time_interval); 	

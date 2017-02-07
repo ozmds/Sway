@@ -1,71 +1,5 @@
 document.addEventListener('DOMContentLoaded', setUpGame, false); 
 
-class Circle {
-	constructor(x, y, r, colour, outlineWidth, outlineColour, context) {
-		this.x = x; 
-		this.y = y; 
-		this.r = r; 
-		this.colour = colour; 
-		this.outWidth = outlineWidth; 
-		this.outColour = outlineColour; 
-		this.context = context; 
-	}
-	
-	draw() {
-		var ctx = this.context; 
-		ctx.fillStyle = this.colour; 
-		ctx.lineWidth = this.outWidth; 
-		ctx.strokeStyle = this.outColour; 
-		
-		ctx.beginPath(); 
-		ctx.arc(this.x, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);
-		ctx.fill(); 
-		ctx.stroke(); 
-	}
-}
-
-class Diamond {
-	constructor(r, colour, context) {
-		this.x = null; 
-		this.y = -2 * r; 
-		this.r = r; 
-		this.colour = colour; 
-		this.context = context; 
-	}
-	
-	draw() {
-		var ctx = this.context; 
-		var x = this.x; 
-		var y = this.y; 
-		var r = this.r; 
-		ctx.fillStyle = this.colour; 
-		
-		ctx.beginPath(); 
-		ctx.moveTo(x, y - r); 
-		ctx.lineTo(x - r, y); 
-		ctx.lineTo(x, y + r); 
-		ctx.lineTo(x + r, y); 
-		ctx.lineTo(x, y - r); 
-		ctx.fill(); 
-	}
-	
-	place() {
-		var x; 
-		var range = 2 * (line_height + 30); 
-		
-		if (c.width < range) {
-			x = Math.round(Math.random() * (c.width - 40)) + 20;
-		} else {
-			x = Math.round(Math.random() * range) + (0.5 * (c.width - range));
-		}
-
-		this.x = x; 
-
-		this.draw(); 
-
-	}
-}
-
 function init() { 
 	c = document.getElementById('myCanvas'); 
 	ctx = c.getContext('2d');
@@ -78,9 +12,7 @@ function init() {
 
 	c.style.top = (15).toString() + "px"; 
 	c.style.left = (15).toString() + "px"; 
-	c.style.border = (5).toString() + "px solid #000000";	
-
-	ctx.font = '20px Georgia'; 
+	c.style.border = (5).toString() + "px solid #000000";	 
 
 	if (window.localStorage.getItem("highscore") == null) {
 		window.localStorage.setItem("highscore", score); 
@@ -89,15 +21,14 @@ function init() {
 
 function setUpGame() { 
 	init(); 	
-
-	setting_flag = 0;
+	setting_flag = false;
 	time_counter = 0;
 	going_left = 1;
 	score = 0; 
 	deg = 270; 
 	rad = 0; 
 	orb_list = [];
-
+	
 	var center_x = c.width / 2; 
 	var center_y = (c.height / 2) - Math.round(c.height / 10); 
 	
@@ -106,36 +37,27 @@ function setUpGame() {
 
 	line_height = outer_y - center_y; 
 	
-	createLine(center_x, center_y, outer_x, outer_y, 7, 'black', ctx);
-
+	arm = new Line(center_x, center_y, outer_x, outer_y, 7, 'black', ctx); 
+	arm.draw();  
+	
 	cen = new Circle(center_x, center_y, 15, 'white', 5, 'black', ctx);
 	cen.draw(); 
 
 	pen = new Circle(outer_x, outer_y, 30, 'white', 10, 'black', ctx); 
-	pen.draw(); 
-	
-	coin = new Audio('data/coin.wav'); 
-	coin.play(); 
-	coin.addEventListener('ended', function() {
-		this.currentTime = 0; 
-		this.play(); 
-	}, false); 
+	pen.draw();  
 
 	updateScore(); 
 
 	c.addEventListener('click', function(event) {handleClick(event.x, event.y);}); 
+
 } 
 
 function handleClick(x, y) {
-	if (setting_flag == 1) {
-		setting_flag = 0; 
+	if (setting_flag) {
+		setting_flag = !setting_flag; 
 	} else if ((x > 35) && (x < 85)) {
 		if ((y > 35) && (y < 85)) {
-			if (setting_flag == 1) {
-				setting_flag = 0;
-			} else {
-				setting_flag = 1;
-			}
+			setting_flag = !setting_flag;
 		}
 	} else if (going_left == 1) {
 		going_left = 0; 
@@ -144,57 +66,25 @@ function handleClick(x, y) {
 	} 
 }
 
-function updateScore() {
-	ctx.fillStyle = 'black';
-
-	if (score > window.localStorage.getItem("highscore")) {
-		window.localStorage.setItem("highscore", score); 
-	}
-	ctx.fillText(score, c.width - 40, 25);
-	ctx.fillText(window.localStorage.getItem("highscore"), c.width - 40, 50); 
-}
-
-function toRadians (angle) {
-	return angle * (Math.PI / 180);
-}
-
-function createLine (startX, startY, endX, endY, width, colour, ctx) {
-	ctx.lineWidth = width; 	
-	ctx.strokeStyle = colour; 
-	ctx.beginPath(); 
-	ctx.moveTo(startX, startY); 
-	ctx.lineTo(endX, endY); 
-	ctx.stroke();
-}
-
-function checkHitbox (circleX, circleY, diamondX, diamondY) {
-	x_value = Math.pow(circleX - diamondX, 2); 
-	y_value = Math.pow(circleY - diamondY, 2); 
-	if (x_value + y_value < 900) {
-		return true; 
-	}
-}
-
 function pauseScreen () {
-	ctx.fillStyle = 'red';
 	ctx.fillRect(20, 20, 17, 50);
-	ctx.fillRect(53, 20, 17, 50); 
+	ctx.fillRect(53, 20, 17, 50);
+
+	centeredRect(c.width - 55, 55, 50, 50, 5); 
+	centeredRect(c.width - 145, 55, 50, 50, 5); 
+	
+	centeredRect(c.width / 2, c.height * 0.35, 200, 50, 5);
+	centeredRect(c.width / 2, c.height * 0.50, 200, 50, 5);
+	centeredRect(c.width / 2, c.height * 0.65, 200, 50, 5);
+	
+	/*
+	ctx.font = "50px Palatino"; 
+	ctx.textAlign = "start"; 
+	ctx.textBaseline = "top";
+	*/
 }
 
 function updateGame() {
-	if (pen.x < 40) {
-		going_left = 0; 
-	} else if (pen.x > (c.width - 40)) {
-		going_left = 1; 
-	}
-
-	if (pen.y < 40) {
-		if (pen.x > c.width / 2) {
-			going_left = 1; 	
-		} else {
-			going_left = 0; 
-		}
-	}
 
 	if (going_left == 1) {
 		deg = deg - 1; 
@@ -207,7 +97,12 @@ function updateGame() {
 	pen.y = ((c.height / 2) - Math.round(c.height / 10)) - 
 				  (line_height * Math.sin(rad));
 				  
-	createLine(cen.x, cen.y, pen.x, pen.y, 7, 'black', ctx); 
+	arm.startX = cen.x; 
+	arm.startY = cen.y; 
+	arm.endX = pen.x; 
+	arm.endY = pen.y; 
+				  
+	arm.draw(); 			  
 	
 	cen.draw(); 
 				 
@@ -219,33 +114,18 @@ function updateGame() {
 		d.place(); 
 		orb_list.push(d);  
 	}
-	for (i = 0; i < orb_list.length; i++) {		
-		orb_list[i].y = orb_list[i].y + 2; 
-		if (orb_list[i].y == c.height) {
-			setting_flag = 1; 
-			score = 0; 
-		}
-		
-		if (checkHitbox(pen.x, pen.y, orb_list[i].x, orb_list[i].y)) {	
-			orb_list.splice(i, 1);   
-			score = score + 1;  
-		} else {
-			orb_list[i].draw();
-		}
-	}
-	updateScore(); 
-	ctx.fillStyle = 'black';
-	ctx.fillRect(20, 20, 17, 50);
-	ctx.fillRect(53, 20, 17, 50); 
 	
-	pen.draw();
+	if (!setting_flag) {
+		pen.draw();
+		updateScore(); 
+	}
 }
 
 setInterval(function(){
 
 	ctx.clearRect(0, 0, c.width, c.height);  
 	
-	if (setting_flag == 1) {
+	if (setting_flag) {
 		pauseScreen(); 
 	} else {
 		updateGame(); 
