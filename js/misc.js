@@ -22,6 +22,23 @@ function centeredRect (x, y, width, height, outWidth, outColour, context) {
 	context.stroke(); 
 }
 
+function drawCross (x1, y1, x2, y2, outWidth, outColour, context) {
+	context.strokeStyle = outColour; 
+	context.lineWidth = outWidth;
+	
+	context.beginPath(); 
+	context.moveTo(x1, y1); 
+	context.lineTo(x2, y2); 
+	context.stroke();
+	context.closePath(); 
+	
+	context.beginPath(); 
+	context.moveTo(x2, y1); 
+	context.lineTo(x1, y2); 
+	context.stroke();
+	context.closePath();
+}
+
 function checkHitWall (x, y, maxX, maxY, r, pad) {
 	if (x < (r + pad)) {
 		return true;
