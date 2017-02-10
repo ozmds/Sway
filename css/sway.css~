@@ -6,7 +6,7 @@
 
 @font-face {
 	font-family: basicWoodlands; 
-	src: url(TheWoodlands-Regular.otf);
+	src: 
 }	
 
 canvas {

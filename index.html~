@@ -12,7 +12,7 @@
 			}, false); 
 		</script> 
 	</head>
-	<body>
+	<body bgcolor="#000000">
 		<canvas id="myCanvas"></canvas>
 	</body>
 </html>

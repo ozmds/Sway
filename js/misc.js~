@@ -13,7 +13,7 @@ function checkHitbox (x1, y1, x2, y2, r) {
 	return false; 
 }
 
-function drawRect (x, y, width, height, outWidth, outColour, context) {
+function centeredRect (x, y, width, height, outWidth, outColour, context) {
 	context.strokeStyle = outColour; 
 	context.lineWidth = outWidth;
 	

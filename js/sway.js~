@@ -101,7 +101,7 @@ function startScreen(ctx) {
 	ctx.fillText('Sway', c.width * 0.50, c.height * 0.350);
 
 	ctx.font = (c.width * 0.08).toString() + 'px basicWoodlands'; 
-	ctx.fillText('Start', c.width * 0.50, c.height * 0.55);
+	ctx.fillText('Start', c.width * 0.50, c.height * 0.575);
 	ctx.fillText('Setting', c.width * 0.50, c.height * 0.750);
 }
 
