@@ -12,7 +12,6 @@
 		Athavan Karunakaran
 	</author>
 	<preference name="Orientation" value="portrait" />
-	<preference name="fullscreen" value="true" />
 	<icon src = "res/icon/android/drawable-ldpi/tp_icon.png"
 		gap:platform = "android" gap:qualifier = "ldpi" />
 	<icon src = "res/icon/android/drawable-mdpi/tp_icon.png"
