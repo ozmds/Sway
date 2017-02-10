@@ -119,6 +119,12 @@ document.addEventListener('DOMContentLoaded', init, false);
 setInterval(function() {
 	
 	ctx.clearRect(0, 0, c.width, c.height); 
+	
+	c.height = (window.innerHeight - 30) * window.devicePixelRatio; 
+	c.width = (window.innerWidth - 30) * window.devicePixelRatio; 
+	
+	c.style.width = (c.width / window.devicePixelRatio).toString() + "px"; 
+	c.style.height = (c.height / window.devicePixelRatio).toString() + "px";
 
 	switch (state) {
 		case START: 
