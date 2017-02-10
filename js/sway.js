@@ -46,7 +46,7 @@ function init() {
 
 	c.style.top = (15).toString() + "px"; 
 	c.style.left = (15).toString() + "px"; 
-	c.style.border = (5).toString() + "px solid " + SECONDARY_COLOUR;	
+	c.style.border = (1.5).toString() + "px solid " + SECONDARY_COLOUR;	
 	c.style.backgroundColor = PRIMARY_COLOUR; 
 
 	if (window.localStorage.getItem("highscore") == null) {
