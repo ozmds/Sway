@@ -83,15 +83,15 @@ function startScreen(ctx) {
  
 	box_list.push([c.width * 0.85, c.width * 0.05, c.width * 0.10, c.width * 0.10]); 
 
-	box_list.push([c.width * 0.20, c.height * 0.50, c.width * 0.60, c.height * 0.10]);
-	box_list.push([c.width * 0.20, c.height * 0.70, c.width * 0.60, c.height * 0.10]); 
+	box_list.push([c.width * 0.30, c.height * 0.50, c.width * 0.40, c.height * 0.10]);
+	box_list.push([c.width * 0.30, c.height * 0.70, c.width * 0.40, c.height * 0.10]); 
 	
 	drawScreen(box_list, 5, SECONDARY_COLOUR, ctx);  
 	
 	ctx.textAlign = 'center'; 
-	ctx.textBaseline = 'alphabetic'; 
+	ctx.textBaseline = 'middle'; 
 
-	ctx.font = (c.width * 0.08).toString() + 'px basicWoodlands'; 
+	ctx.font = (c.width * 0.07).toString() + 'px basicWoodlands'; 
 	ctx.fillStyle = SECONDARY_COLOUR; 
 
 	ctx.fillText('S', c.width * 0.75, c.width * 0.107);
@@ -100,7 +100,7 @@ function startScreen(ctx) {
 	ctx.font = (c.width * 0.15).toString() + 'px basicWoodlands';
 	ctx.fillText('Sway', c.width * 0.50, c.height * 0.350);
 
-	ctx.font = (c.width * 0.08).toString() + 'px basicWoodlands'; 
+	ctx.font = (c.width * 0.07).toString() + 'px basicWoodlands'; 
 	ctx.fillText('Start', c.width * 0.50, c.height * 0.55);
 	ctx.fillText('Setting', c.width * 0.50, c.height * 0.750);
 }
