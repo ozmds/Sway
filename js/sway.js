@@ -7,11 +7,7 @@ const PLAY = 'play';
 const GAME_OVER = 'gameOver'; 
 const START = 'start'; 
 
-var state = START; 
-
-var time_counter = 0; 
-var score = 0; 
-var deg = 270;
+var state = START;
 
 var pen_rad = 60; 
 var pad = 10; 
@@ -44,8 +40,8 @@ function init() {
 	c.style.width = (c.width / window.devicePixelRatio).toString() + "px"; 
 	c.style.height = (c.height / window.devicePixelRatio).toString() + "px";
 
-	c.style.top = (15).toString() + "px"; 
-	c.style.left = (15).toString() + "px"; 
+	c.style.top = (5).toString() + "px"; 
+	c.style.left = (5).toString() + "px"; 
 	c.style.border = (1.5).toString() + "px solid " + SECONDARY_COLOUR;	
 	c.style.backgroundColor = PRIMARY_COLOUR; 
 
@@ -78,6 +74,34 @@ function setUpGame() {
 
 function startScreen(ctx) {
 	var box_list = []; 
+	
+	var font_size = ((c.height * 0.10) * 0.90).toString(); 
+	var font = font_size + "px basicWoodlands"; 
+	
+	var start = new Button(c.width / 2, c.height * 0.50, c.width * 0.70, c.height * 0.10, PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Start"); 
+	var setting = new Button(c.width / 2, c.height * 0.65, c.width * 0.70, c.height * 0.10, PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Setting");
+
+	var sfx = new Button(c.width * 0.875, c.width * 0.125, c.width * 0.15, c.width * 0.15, PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Fx");
+	var music = new Button(c.width * 0.675, c.width * 0.125, c.width * 0.15, c.width * 0.15, PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "M");
+	
+	font_size = (c.height * 0.15).toString();
+	font = font_size + "px basicWoodlands";
+	
+	ctx.textAlign = 'center'; 
+	ctx.textBaseline = 'middle';
+	ctx.font = font; 
+	ctx.fillStyle = 'white';
+	
+	ctx.fillText('Sway', c.width * 0.50, c.height * 0.25);
+	
+	start.draw(); 
+	setting.draw(); 
+	sfx.draw(); 
+	music.draw();
+}
+
+function settingScreen(ctx) {
+	var box_list = []; 
 
 	box_list.push([c.width * 0.70, c.width * 0.05, c.width * 0.10, c.width * 0.10]);
  
@@ -94,21 +118,44 @@ function startScreen(ctx) {
 	ctx.font = (c.width * 0.07).toString() + 'px basicWoodlands'; 
 	ctx.fillStyle = SECONDARY_COLOUR; 
 
-	ctx.fillText('S', c.width * 0.75, c.width * 0.107);
-	ctx.fillText('M', c.width * 0.90, c.width * 0.107); 
+	ctx.fillText('S', c.width * 0.75, c.width * 0.10);
+	ctx.fillText('M', c.width * 0.90, c.width * 0.10); 
 
 	ctx.font = (c.width * 0.15).toString() + 'px basicWoodlands';
-	ctx.fillText('Sway', c.width * 0.50, c.height * 0.350);
+	ctx.fillText('Settings', c.width * 0.50, c.height * 0.350);
 
 	ctx.font = (c.width * 0.07).toString() + 'px basicWoodlands'; 
-	ctx.fillText('Start', c.width * 0.50, c.height * 0.55);
-	ctx.fillText('Setting', c.width * 0.50, c.height * 0.750);
-}
-
-function settingScreen(ctx) {
+	ctx.fillText('Clear Score', c.width * 0.50, c.height * 0.55);
+	ctx.fillText('OK', c.width * 0.50, c.height * 0.750);
 }
 
 function pauseScreen(ctx) {
+	var box_list = []; 
+
+	box_list.push([c.width * 0.70, c.width * 0.05, c.width * 0.10, c.width * 0.10]);
+ 
+	box_list.push([c.width * 0.85, c.width * 0.05, c.width * 0.10, c.width * 0.10]); 
+
+	box_list.push([c.width * 0.30, c.height * 0.50, c.width * 0.40, c.height * 0.10]);
+	box_list.push([c.width * 0.30, c.height * 0.70, c.width * 0.40, c.height * 0.10]); 
+	
+	drawScreen(box_list, 5, SECONDARY_COLOUR, ctx);  
+	
+	ctx.textAlign = 'center'; 
+	ctx.textBaseline = 'middle'; 
+
+	ctx.font = (c.width * 0.07).toString() + 'px basicWoodlands'; 
+	ctx.fillStyle = SECONDARY_COLOUR; 
+
+	ctx.fillText('S', c.width * 0.75, c.width * 0.10);
+	ctx.fillText('M', c.width * 0.90, c.width * 0.10); 
+
+	ctx.font = (c.width * 0.15).toString() + 'px basicWoodlands';
+	ctx.fillText(0, c.width * 0.50, c.height * 0.350);
+
+	ctx.font = (c.width * 0.07).toString() + 'px basicWoodlands'; 
+	ctx.fillText('Resume', c.width * 0.50, c.height * 0.55);
+	ctx.fillText('Restart', c.width * 0.50, c.height * 0.750);
 }
 
 function gameOverScreen(ctx) {
@@ -120,8 +167,8 @@ setInterval(function() {
 	
 	ctx.clearRect(0, 0, c.width, c.height); 
 	
-	c.height = (window.innerHeight - 30) * window.devicePixelRatio; 
-	c.width = (window.innerWidth - 30) * window.devicePixelRatio; 
+	c.height = (window.innerHeight - 10) * window.devicePixelRatio; 
+	c.width = (window.innerWidth - 10) * window.devicePixelRatio; 
 	
 	c.style.width = (c.width / window.devicePixelRatio).toString() + "px"; 
 	c.style.height = (c.height / window.devicePixelRatio).toString() + "px";
@@ -141,6 +188,5 @@ setInterval(function() {
 			break;
 		case PLAY:
 			updateGame(); 
-			break;
 	}
 }, time_interval); 	
