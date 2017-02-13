@@ -42,6 +42,9 @@ var speed = 1;
 
 var time_counter = 0;  
 
+var eventX; 
+var eventY; 
+
 function init() {
 	c = document.getElementById('myCanvas'); 
 	ctx = c.getContext('2d'); 
@@ -107,7 +110,7 @@ function setUpGame(c) {
 	gameOverRestartButton = new Button(c.width / 2, c.height * 0.50, c.width * 0.70, c.height * 0.10, 
 								 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Restart");
 
-	c.addEventListener('click', function(event) {handleClick((event.x - MARGIN) / window.devicePixelRatio, (event.y - MARGIN) / window.devicePixelRatio);});
+	c.addEventListener('click', function(event) {handleClick(event.x, event.y);});
 }
 
 function handleClick(x, y) { 
@@ -166,6 +169,9 @@ function handleClick(x, y) {
 				pen.going_left = !pen.going_left; 
 			}
 	}
+	
+	eventX = x; 
+	eventY = y; 
 }
 
 function updateGame(c, ctx) {
@@ -206,7 +212,7 @@ function updateGame(c, ctx) {
 	if (window.localStorage.getItem("highscore") < score) {
 		window.localStorage.setItem("highscore", score); 
 	}
-	updateScore(c, ctx, score, window.localStorage.getItem("highscore"), SECONDARY_COLOUR);
+	updateScore(c, ctx, c.width * 0.15, c.width * 0.15, eventX, eventY, SECONDARY_COLOUR);
 }
 
 document.addEventListener('DOMContentLoaded', init, false); 
@@ -214,8 +220,7 @@ document.addEventListener('DOMContentLoaded', init, false);
 setInterval(function() {
 	
 	ctx.clearRect(0, 0, c.width, c.height); 
-	initBackground(c);
-	setUpGame(c); 
+	initBackground(c); 
 	
 	switch (state) {
 		case START: 
