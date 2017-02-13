@@ -1,5 +1,7 @@
 const PRIMARY_COLOUR = '#123444';
 const SECONDARY_COLOUR = '#FFFFFF';  
+const MARGIN = 5;
+const PADDING = 10;  
 
 const SETTING = 'setting'; 
 const PAUSE = 'pause'; 
@@ -7,158 +9,205 @@ const PLAY = 'play';
 const GAME_OVER = 'gameOver'; 
 const START = 'start'; 
 
-var state = START;
+var c; 
+var ctx; 
+var state = START; 
+var time_interval = 20;
+var score = 0; 
 
-var pen_rad = 60; 
-var pad = 10; 
-var cen_height = 0.40; 
-var speed = 1; 
+var playMusicFlag = true; 
+var playSFXFlag = true;
 
-var time_interval = 20; 
+var musicButton; 
+var sfxButton; 
+var startButton; 
+var settingButton; 
+var clearButton; 
+var okButton; 
+var pauseResumeButton; 
+var pauseRestartButton; 
+var gameOverRestartButton; 
 
-var bgm; 
-var arm_length;
-var rad;  
+var pen_rad; 
+var cen_height; 
 
 var arm; 
 var cen; 
 var pen; 
-var d; 
-var s; 
+var arm_length;
 
-var orb_list = []; 
+var d;
+var diamond_list = [];
+
+var speed = 1;
+
+var time_counter = 0;  
 
 function init() {
 	c = document.getElementById('myCanvas'); 
 	ctx = c.getContext('2d'); 
 	
-	c.height = (window.innerHeight - 30) * window.devicePixelRatio; 
-	c.width = (window.innerWidth - 30) * window.devicePixelRatio; 
+	c.style.top = (MARGIN).toString() + "px"
+	c.style.left = (MARGIN).toString() + "px"; 
 
-	document.body.style.backgroundColor = PRIMARY_COLOUR;
-	
-	c.style.width = (c.width / window.devicePixelRatio).toString() + "px"; 
-	c.style.height = (c.height / window.devicePixelRatio).toString() + "px";
-
-	c.style.top = (5).toString() + "px"; 
-	c.style.left = (5).toString() + "px"; 
-	c.style.border = (1.5).toString() + "px solid " + SECONDARY_COLOUR;	
-	c.style.backgroundColor = PRIMARY_COLOUR; 
+	initBackground(c); 
 
 	if (window.localStorage.getItem("highscore") == null) {
 		window.localStorage.setItem("highscore", score); 
 	}
 	
-	setUpGame(); 
+	setUpGame(c); 
 }	
 
-function setUpGame() {
-	var cen_x = c.width / 2; 
-	var cen_y = c.height * cen_height;
+function initBackground(c) {
+	c.height = (window.innerHeight - 10) * window.devicePixelRatio; 
+	c.width = (window.innerWidth - 10) * window.devicePixelRatio; 
+	
+	c.style.width = (c.width / window.devicePixelRatio).toString() + "px"; 
+	c.style.height = (c.height / window.devicePixelRatio).toString() + "px";
+	
+	document.body.style.backgroundColor = PRIMARY_COLOUR;
+	c.style.backgroundColor = PRIMARY_COLOUR;
+	
+	c.style.border = (1.5).toString() + "px solid " + SECONDARY_COLOUR;
+}
 
-	var out_x = c.width / 2;
-	var out_y = c.height - (pen_rad + pad); 
-	
-	arm_length = out_y - cen_y; 
-	
-	arm = new Line(cen_x, cen_y, out_x, out_y, 7, SECONDARY_COLOUR, ctx); 
-	
-	cen = new Circle(cen_x, cen_y, 15, PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx);
-	
-	pen = new Circle(out_x, out_y, pen_rad, PRIMARY_COLOUR, 10, SECONDARY_COLOUR, ctx);
+function setUpGame(c) { 
+	cen_height = 0.60; 
+	pen_rad = c.width * 0.075;
 
-	startScreen(ctx); 	
+	var cen_x = c.width / 2;
+	var cen_y = c.height * cen_height; 
 	
+	var pen_x = c.width / 2; 
+	var pen_y = c.height - (pen_rad + PADDING); 
+	
+	arm = new Line(cen_x, cen_y, pen_x, pen_y, 7, SECONDARY_COLOUR, ctx); 
+	cen = new Circle(cen_x, cen_y, pen_rad / 2, PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx); 
+	pen = new Circle(pen_x, pen_y, pen_rad, PRIMARY_COLOUR, 10, SECONDARY_COLOUR, ctx); 
+	
+	var font_size = ((c.height * 0.10) * 0.90).toString(); 
+	var font = font_size + "px basicWoodlands";
+
+	musicButton = new Button(c.width * 0.675, c.width * 0.125, c.width * 0.15, c.width * 0.15, 
+							 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "M"); 
+	sfxButton = new Button(c.width * 0.875, c.width * 0.125, c.width * 0.15, c.width * 0.15, 
+							 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Fx"); 
+	startButton = new Button(c.width / 2, c.height * 0.50, c.width * 0.70, c.height * 0.10, 
+							 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Start"); 
+	settingButton = new Button(c.width / 2, c.height * 0.65, c.width * 0.70, c.height * 0.10, 
+							 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Setting");
+	clearButton = new Button(c.width / 2, c.height * 0.50, c.width * 0.70, c.height * 0.10, 
+								 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Clear Score");
+	okButton = new Button(c.width / 2, c.height * 0.65, c.width * 0.70, c.height * 0.10, 
+						PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "OK");
+	pauseResumeButton = new Button(c.width / 2, c.height * 0.50, c.width * 0.70, c.height * 0.10, 
+								 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Resume");
+	pauseRestartButton = new Button(c.width / 2, c.height * 0.65, c.width * 0.70, c.height * 0.10, 
+						PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Restart");
+	gameOverRestartButton = new Button(c.width / 2, c.height * 0.50, c.width * 0.70, c.height * 0.10, 
+								 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Restart");
+
 	c.addEventListener('click', function(event) {handleClick(event.x, event.y);});
 }
 
-function startScreen(ctx) {
-	var box_list = []; 
+function handleClick(x, y) { 
 	
-	var font_size = ((c.height * 0.10) * 0.90).toString(); 
-	var font = font_size + "px basicWoodlands"; 
-	
-	var start = new Button(c.width / 2, c.height * 0.50, c.width * 0.70, c.height * 0.10, PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Start"); 
-	var setting = new Button(c.width / 2, c.height * 0.65, c.width * 0.70, c.height * 0.10, PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Setting");
-
-	var sfx = new Button(c.width * 0.875, c.width * 0.125, c.width * 0.15, c.width * 0.15, PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Fx");
-	var music = new Button(c.width * 0.675, c.width * 0.125, c.width * 0.15, c.width * 0.15, PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "M");
-	
-	font_size = (c.height * 0.15).toString();
-	font = font_size + "px basicWoodlands";
-	
-	ctx.textAlign = 'center'; 
-	ctx.textBaseline = 'middle';
-	ctx.font = font; 
-	ctx.fillStyle = 'white';
-	
-	ctx.fillText('Sway', c.width * 0.50, c.height * 0.25);
-	
-	start.draw(); 
-	setting.draw(); 
-	sfx.draw(); 
-	music.draw();
+	switch (state) {
+		case START:  
+			if (startButton.isClicked(x, y, MARGIN)) {
+				state = PLAY; 
+			} else if (settingButton.isClicked(x, y, MARGIN)) {
+				state = SETTING; 
+			} else if (musicButton.isClicked(x, y, MARGIN)) {
+				playMusicFlag = !playMusicFlag; 
+			} else if (sfxButton.isClicked(x, y, MARGIN)) {
+				playSFXFlag = !playSFXFlag;
+			}
+			break; 
+		case SETTING: 
+			if (clearButton.isClicked(x, y, MARGIN)) {
+				window.localStorage.setItem("highscore", 0);
+			} else if (okButton.isClicked(x, y, MARGIN)) {
+				state = START; 
+			} else if (musicButton.isClicked(x, y, MARGIN)) {
+				playMusicFlag = !playMusicFlag; 
+			} else if (sfxButton.isClicked(x, y, MARGIN)) {
+				playSFXFlag = !playSFXFlag;
+			}
+			break;
+		case PAUSE:
+			if (pauseResumeButton.isClicked(x, y, MARGIN)) {
+				state = PLAY; 
+			} else if (pauseRestartButton.isClicked(x, y, MARGIN)) {
+				state = START; 
+				time_counter = 0; 
+				pen.deg = 270; 
+				score = 0; 
+				diamond_list = [];
+			} else if (musicButton.isClicked(x, y, MARGIN)) {
+				playMusicFlag = !playMusicFlag; 
+			} else if (sfxButton.isClicked(x, y, MARGIN)) {
+				playSFXFlag = !playSFXFlag;
+			}
+			break; 
+		case GAME_OVER: 
+			if (gameOverRestartButton.isClicked(x, y, MARGIN)) {
+				state = START; 
+				time_counter = 0; 
+				pen.deg = 270; 
+				score = 0; 
+				diamond_list = []; 
+			}
+			break;
+		case PLAY:	
+			if (pauseClicked(x, y, c.width * 0.05, c.width * 0.05, c.width * 0.15, c.width * 0.15, MARGIN)) {
+				state = PAUSE; 
+			} else {
+				pen.going_left = !pen.going_left; 
+			}
+	}
 }
 
-function settingScreen(ctx) {
-	var box_list = []; 
-
-	box_list.push([c.width * 0.70, c.width * 0.05, c.width * 0.10, c.width * 0.10]);
- 
-	box_list.push([c.width * 0.85, c.width * 0.05, c.width * 0.10, c.width * 0.10]); 
-
-	box_list.push([c.width * 0.30, c.height * 0.50, c.width * 0.40, c.height * 0.10]);
-	box_list.push([c.width * 0.30, c.height * 0.70, c.width * 0.40, c.height * 0.10]); 
+function updateGame(c, ctx) {
+	drawPauseButton(c.width * 0.05, c.width * 0.05, c.width * 0.10, SECONDARY_COLOUR, ctx);	 
 	
-	drawScreen(box_list, 5, SECONDARY_COLOUR, ctx);  
+	pen.move(speed, arm.length, cen, c, PADDING); 
+
+	arm.endX = pen.x; 
+	arm.endY = pen.y;
+
+	time_counter += time_interval; 
 	
-	ctx.textAlign = 'center'; 
-	ctx.textBaseline = 'middle'; 
-
-	ctx.font = (c.width * 0.07).toString() + 'px basicWoodlands'; 
-	ctx.fillStyle = SECONDARY_COLOUR; 
-
-	ctx.fillText('S', c.width * 0.75, c.width * 0.10);
-	ctx.fillText('M', c.width * 0.90, c.width * 0.10); 
-
-	ctx.font = (c.width * 0.15).toString() + 'px basicWoodlands';
-	ctx.fillText('Settings', c.width * 0.50, c.height * 0.350);
-
-	ctx.font = (c.width * 0.07).toString() + 'px basicWoodlands'; 
-	ctx.fillText('Clear Score', c.width * 0.50, c.height * 0.55);
-	ctx.fillText('OK', c.width * 0.50, c.height * 0.750);
-}
-
-function pauseScreen(ctx) {
-	var box_list = []; 
-
-	box_list.push([c.width * 0.70, c.width * 0.05, c.width * 0.10, c.width * 0.10]);
- 
-	box_list.push([c.width * 0.85, c.width * 0.05, c.width * 0.10, c.width * 0.10]); 
-
-	box_list.push([c.width * 0.30, c.height * 0.50, c.width * 0.40, c.height * 0.10]);
-	box_list.push([c.width * 0.30, c.height * 0.70, c.width * 0.40, c.height * 0.10]); 
+	if (time_counter == 3000) {
+		time_counter = 0; 
+		d = new Diamond(10, SECONDARY_COLOUR, ctx);
+		d.place(arm.length, c.width, pen_rad); 
+		diamond_list.push(d); 
+	}
 	
-	drawScreen(box_list, 5, SECONDARY_COLOUR, ctx);  
+	for (i = 0; i < diamond_list.length; i++) {
+		var res = diamond_list[i].move(speed, c.height, state, pen); 
+		
+		if (res == 'over') {
+			state = GAME_OVER; 
+			break;
+		} else if (res == 'score') {
+			score += 1; 
+			diamond_list.splice(i, 1); 
+		} else {
+			diamond_list[i].draw(); 
+		}
+	}
 	
-	ctx.textAlign = 'center'; 
-	ctx.textBaseline = 'middle'; 
-
-	ctx.font = (c.width * 0.07).toString() + 'px basicWoodlands'; 
-	ctx.fillStyle = SECONDARY_COLOUR; 
-
-	ctx.fillText('S', c.width * 0.75, c.width * 0.10);
-	ctx.fillText('M', c.width * 0.90, c.width * 0.10); 
-
-	ctx.font = (c.width * 0.15).toString() + 'px basicWoodlands';
-	ctx.fillText(0, c.width * 0.50, c.height * 0.350);
-
-	ctx.font = (c.width * 0.07).toString() + 'px basicWoodlands'; 
-	ctx.fillText('Resume', c.width * 0.50, c.height * 0.55);
-	ctx.fillText('Restart', c.width * 0.50, c.height * 0.750);
-}
-
-function gameOverScreen(ctx) {
+	arm.draw(); 
+	cen.draw();
+	pen.draw(); 
+	
+	if (window.localStorage.getItem("highscore") < score) {
+		window.localStorage.setItem("highscore", score); 
+	}
+	updateScore(c, ctx, score, window.localStorage.getItem("highscore"), SECONDARY_COLOUR);
 }
 
 document.addEventListener('DOMContentLoaded', init, false); 
@@ -166,27 +215,23 @@ document.addEventListener('DOMContentLoaded', init, false);
 setInterval(function() {
 	
 	ctx.clearRect(0, 0, c.width, c.height); 
+	initBackground(c); 
 	
-	c.height = (window.innerHeight - 10) * window.devicePixelRatio; 
-	c.width = (window.innerWidth - 10) * window.devicePixelRatio; 
-	
-	c.style.width = (c.width / window.devicePixelRatio).toString() + "px"; 
-	c.style.height = (c.height / window.devicePixelRatio).toString() + "px";
-
 	switch (state) {
 		case START: 
-			startScreen(ctx); 
+			startScreen(c, ctx, musicButton, sfxButton, startButton, settingButton, playSFXFlag, playMusicFlag); 
 			break; 
 		case SETTING:
-			settingScreen(ctx); 
+			settingScreen(c, ctx, musicButton, sfxButton, clearButton, okButton, playSFXFlag, playMusicFlag); 
 			break;
 		case PAUSE:
-			pauseScreen(ctx); 
+			pauseScreen(c, ctx, musicButton, sfxButton, pauseResumeButton, pauseRestartButton, score, playSFXFlag, playMusicFlag); 
 			break; 
 		case GAME_OVER:
-			gameOverScreen(ctx); 
+			gameOverScreen(c, ctx, gameOverRestartButton, score); 
 			break;
 		case PLAY:
-			updateGame(); 
+			updateGame(c, ctx); 
 	}
+	
 }, time_interval); 	

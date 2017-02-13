@@ -8,6 +8,7 @@ class Circle {
 		this.outColour = outlineColour; 
 		this.context = context; 
 		this.deg = 270; 
+		this.going_left = true; 
 	}
 	
 	draw() {
@@ -21,6 +22,47 @@ class Circle {
 		ctx.fill(); 
 		ctx.stroke(); 
 		ctx.closePath(); 
+	}
+	
+	move(speed, armLength, cen, c, pad) {
+		var rad; 
+		
+		if (this.going_left) {
+			this.deg -= speed; 
+		} else {
+			this.deg += speed;
+		}
+		
+		rad = this.toRadians(); 
+		
+		this.x = cen.x + Math.cos(rad) * armLength; 
+		this.y = cen.y - Math.sin(rad) * armLength; 
+		
+		if (this.hitWall(c.height, c.width, pad)) {
+			this.going_left = !this.going_left; 
+			if (this.going_left) {
+				this.deg -= 2 * speed; 
+			} else {
+				this.deg += 2 * speed;
+			}
+			
+			rad = this.toRadians(); 
+			
+			this.x = cen.x + Math.cos(rad) * armLength; 
+			this.y = cen.y - Math.sin(rad) * armLength;
+		}
+	}
+	
+	toRadians() {
+		return this.deg * (Math.PI / 180); 
+	}
+	
+	hitWall(cHeight, cWidth, pad) {
+		if (this.x < this.r + pad) {
+			return true; 
+		} else if (this.x > (cWidth - (this.r + pad))) {
+			return true; 
+		} 
 	}
 }
 
@@ -50,12 +92,12 @@ class Diamond {
 		ctx.closePath(); 
 	}
 	
-	place(line_height, width) {
+	place(line_height, width, radius) {
 		var x; 
-		var range = 2 * (line_height + 30); 
+		var range = 2 * (line_height + radius); 
 		
 		if (width < range) {
-			x = Math.round(Math.random() * (width - 40)) + 20;
+			x = Math.round(Math.random() * (width - 4 * this.r)) + 2 * this.r;
 		} else {
 			x = Math.round(Math.random() * range) + (0.5 * (width - range));
 		}
@@ -63,6 +105,27 @@ class Diamond {
 		this.x = x; 
 
 		this.draw(); 
+	}
+	
+	move(speed, floor, state, pen) {
+		this.y += speed; 
+		
+		if (this.y >= floor) {
+			return "over"; 
+		} else if (this.checkHitBox(pen.x, pen.y, pen.r)){
+			return "score"; 
+		}
+	}
+	
+	checkHitBox(x, y, r) {
+		var xDelta = Math.pow(this.x - x, 2); 
+		var yDelta = Math.pow(this.y - y, 2); 
+		
+		if (xDelta + yDelta < Math.pow(r, 2)) {
+			return true; 
+		}
+		
+		return false; 
 	}
 }
 
@@ -75,6 +138,7 @@ class Line {
 		this.width = width; 
 		this.colour = colour; 
 		this.context = context; 
+		this.length = endY - startY; 
 	}
 	
 	draw() {
@@ -126,11 +190,11 @@ class Button {
 		ctx.fillText(this.title, this.x, this.y - this.height * 0.20);  
 	}
 	
-	isClicked(eventX, eventY) {
-		if (eventX > this.x - this.width / 2) {
-			if (eventX < this.x + this.width / 2) {
-				if (eventY > this.y - this.height / 2) {
-					if (eventY < this.y + this.height / 2) {
+	isClicked(eventX, eventY, padding) {
+		if (eventX > this.x - this.width / 2 + padding) {
+			if (eventX < this.x + this.width / 2 + padding) {
+				if (eventY > this.y - this.height / 2 + padding) {
+					if (eventY < this.y + this.height / 2 + padding) {
 						return true; 
 					}
 				}
@@ -138,5 +202,22 @@ class Button {
 		}
 		
 		return false; 
+	}
+	
+	drawCross() {
+		this.context.strokeStyle = this.outColour; 
+		this.context.lineWidth = this.outWidth;
+		
+		this.context.beginPath(); 
+		this.context.moveTo(this.x - this.width / 2, this.y - this.height / 2); 
+		this.context.lineTo(this.x + this.width / 2, this.y + this.height / 2); 
+		this.context.stroke(); 
+		this.context.closePath();
+		
+		this.context.beginPath();
+		this.context.moveTo(this.x + this.width / 2, this.y - this.height / 2); 
+		this.context.lineTo(this.x - this.width / 2, this.y + this.height / 2); 
+		this.context.stroke(); 
+		this.context.closePath(); 
 	}
 }
