@@ -1,4 +1,4 @@
-const PRIMARY_COLOUR = '#120000';
+const PRIMARY_COLOUR = '#123444';
 const SECONDARY_COLOUR = '#FFFFFF';  
 const MARGIN = 5;
 const PADDING = 10;  
@@ -11,7 +11,7 @@ const START = 'start';
 
 var c; 
 var ctx; 
-var state = START; 
+var state = PLAY; 
 var time_interval = 20;
 var score = 0; 
 
