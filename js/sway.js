@@ -107,7 +107,7 @@ function setUpGame(c) {
 	gameOverRestartButton = new Button(c.width / 2, c.height * 0.50, c.width * 0.70, c.height * 0.10, 
 								 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Restart");
 
-	c.addEventListener('click', function(event) {handleClick(event.x, event.y);});
+	c.addEventListener('click', function(event) {handleClick((event.x - MARGIN) / window.devicePixelRatio, (event.y - MARGIN) / window.devicePixelRatio);});
 }
 
 function handleClick(x, y) { 
