@@ -1,4 +1,4 @@
-const PRIMARY_COLOUR = '#123444';
+const PRIMARY_COLOUR = '#120000';
 const SECONDARY_COLOUR = '#FFFFFF';  
 const MARGIN = 5;
 const PADDING = 10;  
