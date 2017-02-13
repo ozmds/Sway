@@ -11,7 +11,7 @@ const START = 'start';
 
 var c; 
 var ctx; 
-var state = START; 
+var state = PLAY; 
 var time_interval = 20;
 var score = 0; 
 
@@ -19,7 +19,6 @@ var playMusicFlag = true;
 var playSFXFlag = true;
 
 var musicButton; 
-var sfxButton; 
 var startButton; 
 var settingButton; 
 var clearButton; 
@@ -215,7 +214,8 @@ document.addEventListener('DOMContentLoaded', init, false);
 setInterval(function() {
 	
 	ctx.clearRect(0, 0, c.width, c.height); 
-	initBackground(c); 
+	initBackground(c);
+	setUpGame(c); 
 	
 	switch (state) {
 		case START: 
