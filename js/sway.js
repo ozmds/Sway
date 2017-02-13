@@ -11,7 +11,7 @@ const START = 'start';
 
 var c; 
 var ctx; 
-var state = PLAY; 
+var state = START; 
 var time_interval = 20;
 var score = 0; 
 
