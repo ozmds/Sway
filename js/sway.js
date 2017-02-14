@@ -212,8 +212,8 @@ function updateGame(c, ctx) {
 
 document.addEventListener('DOMContentLoaded', init, false); 
 
-setTimeout(setUpGame, 1000, c); 
-setTimeout(initBackground, 1000, c); 
+setTimeout(setUpGame, 3000, c); 
+setTimeout(initBackground, 3000, c); 
 
 setInterval(function() {
 	
