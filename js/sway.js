@@ -34,7 +34,7 @@ var cen_height;
 var arm; 
 var cen; 
 var pen; 
-var arm_length;
+var arm_length; 
 
 var d;
 var diamond_list = [];
@@ -42,6 +42,9 @@ var diamond_list = [];
 var speed = 1;
 
 var time_counter = 0;  
+
+var cHeight;
+var t_count = 0;
 
 function init() {
 	c = document.getElementById('myCanvas'); 
@@ -73,6 +76,8 @@ function initBackground(c) {
 }
 
 function setUpGame(c) { 
+	cHeight = c.height;
+
 	cen_height = 0.60; 
 	pen_rad = c.width * 0.075;
 
@@ -212,19 +217,15 @@ function updateGame(c, ctx) {
 
 document.addEventListener('DOMContentLoaded', init, false); 
 
-/*
-setTimeout(setUpGame, 3000, c); 
-setTimeout(initBackground, 3000, c); 
-*/
 
-var cHeight = c.height; 
-var t_count = 0; 
+
+window.alert('batmna');
 
 setInterval(function() {
 	
 	ctx.clearRect(0, 0, c.width, c.height);
 	initBackground(c);
-
+	
 	t_count = t_count + time_interval; 
 	if (cHeight != c.height) {
 		score = t_count; 
