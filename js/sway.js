@@ -223,11 +223,13 @@ setInterval(function() {
 	
 	initBackground(c);
 
+	/*
 	if (cHeight != c.height) {
 		setUpGame(c); 
 		cHeight = c.height; 
 	}
-
+	*/
+	
 	switch (state) {
 		case START: 
 			startScreen(c, ctx, musicButton, sfxButton, startButton, settingButton, playSFXFlag, playMusicFlag); 
