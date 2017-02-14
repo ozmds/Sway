@@ -44,7 +44,6 @@ var speed = 1;
 var time_counter = 0;  
 
 var cHeight;
-var t_count = 0;
 
 function init() {
 	c = document.getElementById('myCanvas'); 
@@ -60,6 +59,8 @@ function init() {
 	}
 	
 	setUpGame(c); 
+	
+	c.addEventListener('click', function(event) {handleClick(event.x * window.devicePixelRatio, event.y * window.devicePixelRatio);});
 }	
 
 function initBackground(c) {
@@ -112,8 +113,6 @@ function setUpGame(c) {
 						PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Restart");
 	gameOverRestartButton = new Button(c.width / 2, c.height * 0.50, c.width * 0.70, c.height * 0.10, 
 								 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Restart");
-
-	c.addEventListener('click', function(event) {handleClick(event.x * window.devicePixelRatio, event.y * window.devicePixelRatio);});
 }
 
 function handleClick(x, y) { 
@@ -223,12 +222,10 @@ setInterval(function() {
 	
 	initBackground(c);
 
-	/*
 	if (cHeight != c.height) {
 		setUpGame(c); 
-		cHeight = c.height; 
+		cHeight = c.height;
 	}
-	*/
 	
 	switch (state) {
 		case START: 
