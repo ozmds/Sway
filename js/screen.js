@@ -32,7 +32,7 @@ function pauseClicked(x, y, x1, y1, x2, y2, mar) {
 	return false; 
 }
 
-function updateScore(c, ctx, score, highscore, ex, ey, colour) {
+function updateScore(c, ctx, score, highscore, colour) {
 	ctx.textBaseline = 'middle'; 
 	ctx.textAlign = 'end'; 
 	ctx.fillStyle = colour; 
@@ -43,10 +43,7 @@ function updateScore(c, ctx, score, highscore, ex, ey, colour) {
 	ctx.font = font; 
 	
 	ctx.fillText(score, c.width * 0.95, c.width * 0.05);
-	ctx.fillText(highscore, c.width * 0.95, c.width * 0.13);
-
-	ctx.fillText(ex, c.width * 0.95, c.width * 0.21); 
-	ctx.fillText(ey, c.width * 0.95, c.width * 0.29); 
+	ctx.fillText(highscore, c.width * 0.95, c.width * 0.13); 
 }
 
 function startScreen(c, ctx, b1, b2, b3, b4, sfx, mus) { 

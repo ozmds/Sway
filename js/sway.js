@@ -11,7 +11,7 @@ const START = 'start';
 
 var c; 
 var ctx; 
-var state = PLAY; 
+var state = START; 
 var time_interval = 20;
 var score = 0; 
 
@@ -19,6 +19,7 @@ var playMusicFlag = true;
 var playSFXFlag = true;
 
 var musicButton; 
+var sfxButton; 
 var startButton; 
 var settingButton; 
 var clearButton; 
@@ -41,9 +42,6 @@ var diamond_list = [];
 var speed = 1;
 
 var time_counter = 0;  
-
-var eventX; 
-var eventY; 
 
 function init() {
 	c = document.getElementById('myCanvas'); 
@@ -110,7 +108,7 @@ function setUpGame(c) {
 	gameOverRestartButton = new Button(c.width / 2, c.height * 0.50, c.width * 0.70, c.height * 0.10, 
 								 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Restart");
 
-	c.addEventListener('click', function(event) {handleClick(event.x * window.devicePixelRatio, event.y * window.devicePixelRatio);});
+	c.addEventListener('click', function(event) {handleClick(event.x, event.y);});
 }
 
 function handleClick(x, y) { 
@@ -169,9 +167,6 @@ function handleClick(x, y) {
 				pen.going_left = !pen.going_left; 
 			}
 	}
-	
-	eventX = x; 
-	eventY = y; 
 }
 
 function updateGame(c, ctx) {
@@ -212,7 +207,7 @@ function updateGame(c, ctx) {
 	if (window.localStorage.getItem("highscore") < score) {
 		window.localStorage.setItem("highscore", score); 
 	}
-	updateScore(c, ctx, c.width * 0.15, c.width * 0.15, eventX, eventY, SECONDARY_COLOUR);
+	updateScore(c, ctx, score, window.localStorage.getItem("highscore"), SECONDARY_COLOUR);
 }
 
 document.addEventListener('DOMContentLoaded', init, false); 
