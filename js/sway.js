@@ -220,9 +220,10 @@ document.addEventListener('DOMContentLoaded', init, false);
 setInterval(function() {
 	
 	ctx.clearRect(0, 0, c.width, c.height);
+	
+	initBackground(c);
 
 	if (cHeight != c.height) {
-		initBackground(c); 
 		setUpGame(c); 
 		cHeight = c.height; 
 	}
