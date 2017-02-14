@@ -108,7 +108,7 @@ function setUpGame(c) {
 	gameOverRestartButton = new Button(c.width / 2, c.height * 0.50, c.width * 0.70, c.height * 0.10, 
 								 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Restart");
 
-	c.addEventListener('click', function(event) {handleClick(event.x, event.y);});
+	c.addEventListener('click', function(event) {handleClick(event.x * window.devicePixelRatio, event.y * window.devicePixelRatio);});
 }
 
 function handleClick(x, y) { 
@@ -181,13 +181,13 @@ function updateGame(c, ctx) {
 	
 	if (time_counter == 3000) {
 		time_counter = 0; 
-		d = new Diamond(10, SECONDARY_COLOUR, ctx);
+		d = new Diamond(c.width * 0.02, SECONDARY_COLOUR, ctx);
 		d.place(arm.length, c.width, pen_rad); 
 		diamond_list.push(d); 
 	}
 	
 	for (i = 0; i < diamond_list.length; i++) {
-		var res = diamond_list[i].move(speed, c.height, state, pen); 
+		var res = diamond_list[i].move(3 * speed, c.height, state, pen); 
 		
 		if (res == 'over') {
 			state = GAME_OVER; 
