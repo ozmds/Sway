@@ -212,13 +212,26 @@ function updateGame(c, ctx) {
 
 document.addEventListener('DOMContentLoaded', init, false); 
 
+/*
 setTimeout(setUpGame, 3000, c); 
 setTimeout(initBackground, 3000, c); 
+*/
+
+var cHeight = c.height; 
+var t_count = 0; 
 
 setInterval(function() {
 	
-	ctx.clearRect(0, 0, c.width, c.height); 
-	
+	ctx.clearRect(0, 0, c.width, c.height);
+	initBackground(c);
+
+	t_count = t_count + time_interval; 
+	if (cHeight != c.height) {
+		score = t_count; 
+		t_count = 0; 
+		cHeight = c.height; 
+	}
+
 	switch (state) {
 		case START: 
 			startScreen(c, ctx, musicButton, sfxButton, startButton, settingButton, playSFXFlag, playMusicFlag); 
