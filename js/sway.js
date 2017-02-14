@@ -177,7 +177,7 @@ function handleClick(x, y) {
 function updateGame(c, ctx) {
 	drawPauseButton(c.width * 0.05, c.width * 0.05, c.width * 0.10, SECONDARY_COLOUR, ctx);	 
 	
-	pen.move(3 * speed, arm.length, cen, c, PADDING); 
+	pen.move(1.5 * speed, arm.length, cen, c, PADDING); 
 
 	arm.endX = pen.x; 
 	arm.endY = pen.y;
@@ -217,19 +217,13 @@ function updateGame(c, ctx) {
 
 document.addEventListener('DOMContentLoaded', init, false); 
 
-
-
-window.alert('batmna');
-
 setInterval(function() {
 	
 	ctx.clearRect(0, 0, c.width, c.height);
-	initBackground(c);
-	
-	t_count = t_count + time_interval; 
+
 	if (cHeight != c.height) {
-		score = t_count; 
-		t_count = 0; 
+		initBackground(c); 
+		setUpGame(c); 
 		cHeight = c.height; 
 	}
 
