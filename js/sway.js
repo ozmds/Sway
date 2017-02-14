@@ -172,7 +172,7 @@ function handleClick(x, y) {
 function updateGame(c, ctx) {
 	drawPauseButton(c.width * 0.05, c.width * 0.05, c.width * 0.10, SECONDARY_COLOUR, ctx);	 
 	
-	pen.move(speed, arm.length, cen, c, PADDING); 
+	pen.move(3 * speed, arm.length, cen, c, PADDING); 
 
 	arm.endX = pen.x; 
 	arm.endY = pen.y;
@@ -181,13 +181,13 @@ function updateGame(c, ctx) {
 	
 	if (time_counter == 3000) {
 		time_counter = 0; 
-		d = new Diamond(c.width * 0.02, SECONDARY_COLOUR, ctx);
+		d = new Diamond(c.width * 0.04, SECONDARY_COLOUR, ctx);
 		d.place(arm.length, c.width, pen_rad); 
 		diamond_list.push(d); 
 	}
 	
 	for (i = 0; i < diamond_list.length; i++) {
-		var res = diamond_list[i].move(3 * speed, c.height, state, pen); 
+		var res = diamond_list[i].move(6 * speed, c.height, state, pen); 
 		
 		if (res == 'over') {
 			state = GAME_OVER; 
@@ -212,10 +212,12 @@ function updateGame(c, ctx) {
 
 document.addEventListener('DOMContentLoaded', init, false); 
 
+setTimeout(setUpGame, 1000, c); 
+setTimeout(initBackground, 1000, c); 
+
 setInterval(function() {
 	
 	ctx.clearRect(0, 0, c.width, c.height); 
-	initBackground(c); 
 	
 	switch (state) {
 		case START: 
