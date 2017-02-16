@@ -45,7 +45,20 @@ var time_counter = 0;
 
 var cHeight;
 
+var snare; 
+var kick; 
+var piano;
+
+var drum_flag = true; 
+
 function init() {
+	piano = new Audio('data/piano.wav'); 
+	piano.play(); 
+	piano.addEventListener('ended', function() {
+		this.currentTime = 0;
+		this.play(); 
+	}, false);
+	
 	c = document.getElementById('myCanvas'); 
 	ctx = c.getContext('2d'); 
 	
@@ -61,6 +74,9 @@ function init() {
 	setUpGame(c); 
 	
 	c.addEventListener('click', function(event) {handleClick(event.x * window.devicePixelRatio, event.y * window.devicePixelRatio);});
+	
+	snare = new Audio('data/snare.wav'); 
+	kick = new Audio('data/kick.wav');  
 }	
 
 function initBackground(c) {
@@ -113,6 +129,8 @@ function setUpGame(c) {
 						PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Restart");
 	gameOverRestartButton = new Button(c.width / 2, c.height * 0.50, c.width * 0.70, c.height * 0.10, 
 								 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Restart");
+								 
+	startScreen(c, ctx, musicButton, sfxButton, startButton, settingButton, playSFXFlag, playMusicFlag);							 
 }
 
 function handleClick(x, y) { 
@@ -124,6 +142,11 @@ function handleClick(x, y) {
 			} else if (settingButton.isClicked(x, y, MARGIN)) {
 				state = SETTING; 
 			} else if (musicButton.isClicked(x, y, MARGIN)) {
+				if (playMusicFlag) {
+					piano.pause(); 
+				} else {
+					piano.play();
+				}
 				playMusicFlag = !playMusicFlag; 
 			} else if (sfxButton.isClicked(x, y, MARGIN)) {
 				playSFXFlag = !playSFXFlag;
@@ -135,6 +158,11 @@ function handleClick(x, y) {
 			} else if (okButton.isClicked(x, y, MARGIN)) {
 				state = START; 
 			} else if (musicButton.isClicked(x, y, MARGIN)) {
+				if (playMusicFlag) {
+					piano.pause(); 
+				} else {
+					piano.play();
+				}
 				playMusicFlag = !playMusicFlag; 
 			} else if (sfxButton.isClicked(x, y, MARGIN)) {
 				playSFXFlag = !playSFXFlag;
@@ -150,6 +178,11 @@ function handleClick(x, y) {
 				score = 0; 
 				diamond_list = [];
 			} else if (musicButton.isClicked(x, y, MARGIN)) {
+				if (playMusicFlag) {
+					piano.pause(); 
+				} else {
+					piano.play();
+				}
 				playMusicFlag = !playMusicFlag; 
 			} else if (sfxButton.isClicked(x, y, MARGIN)) {
 				playSFXFlag = !playSFXFlag;
@@ -183,7 +216,7 @@ function updateGame(c, ctx) {
 
 	time_counter += time_interval; 
 	
-	if (time_counter == 3000) {
+	if (time_counter == 1500) {
 		time_counter = 0; 
 		d = new Diamond(c.width * 0.04, SECONDARY_COLOUR, ctx);
 		d.place(arm.length, c.width, pen_rad); 
@@ -199,6 +232,14 @@ function updateGame(c, ctx) {
 		} else if (res == 'score') {
 			score += 1; 
 			diamond_list.splice(i, 1); 
+			if (playSFXFlag) {
+				if (drum_flag) {
+					kick.play(); 
+				} else {
+					snare.play(); 
+				}
+			drum_flag = !drum_flag;
+			}
 		} else {
 			diamond_list[i].draw(); 
 		}
@@ -215,6 +256,7 @@ function updateGame(c, ctx) {
 }
 
 document.addEventListener('DOMContentLoaded', init, false); 
+
 
 setInterval(function() {
 	
@@ -244,4 +286,4 @@ setInterval(function() {
 			updateGame(c, ctx); 
 	}
 	
-}, time_interval); 	
+}, time_interval); 
