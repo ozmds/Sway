@@ -52,31 +52,41 @@ var piano;
 var drum_flag = true; 
 
 function init() {
-	piano = new Audio('data/piano.wav'); 
-	piano.play(); 
-	piano.addEventListener('ended', function() {
-		this.currentTime = 0;
-		this.play(); 
-	}, false);
+	piano = new Howl({ 
+				src: ['data/piano.wav'], 
+				autoplay: false,
+				loop: true
+			});
+	
+	snare = new Howl({
+				src: ['data/snare.wav'], 
+				autoplay: false,
+				loop: false
+			});
+	
+	kick = new Howl({
+				src: ['data/kick.wav'],
+				autoplay: false,
+				loop: false
+			});
+				
+	piano.play();
 	
 	c = document.getElementById('myCanvas'); 
-	ctx = c.getContext('2d'); 
+	ctx = c.getContext('2d');  
 	
 	c.style.top = (MARGIN).toString() + "px"
 	c.style.left = (MARGIN).toString() + "px"; 
 
 	initBackground(c); 
-
+	
 	if (window.localStorage.getItem("highscore") == null) {
 		window.localStorage.setItem("highscore", score); 
 	}
 	
 	setUpGame(c); 
 	
-	c.addEventListener('click', function(event) {handleClick(event.x * window.devicePixelRatio, event.y * window.devicePixelRatio);});
-	
-	snare = new Audio('data/snare.wav'); 
-	kick = new Audio('data/kick.wav');  
+	c.addEventListener('click', function(event) {handleClick(event.x * window.devicePixelRatio, event.y * window.devicePixelRatio, piano);});
 }	
 
 function initBackground(c) {
@@ -133,7 +143,7 @@ function setUpGame(c) {
 	startScreen(c, ctx, musicButton, sfxButton, startButton, settingButton, playSFXFlag, playMusicFlag);							 
 }
 
-function handleClick(x, y) { 
+function handleClick(x, y, piano) { 
 	
 	switch (state) {
 		case START:  
@@ -142,7 +152,7 @@ function handleClick(x, y) {
 			} else if (settingButton.isClicked(x, y, MARGIN)) {
 				state = SETTING; 
 			} else if (musicButton.isClicked(x, y, MARGIN)) {
-				if (playMusicFlag) {
+				if (playMusicFlag) { 
 					piano.pause(); 
 				} else {
 					piano.play();
