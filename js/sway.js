@@ -7,11 +7,12 @@ const SETTING = 'setting';
 const PAUSE = 'pause'; 
 const PLAY = 'play'; 
 const GAME_OVER = 'gameOver'; 
-const START = 'start'; 
+const START = 'start';
+const LOGO = 'logo'; 
 
 var c; 
 var ctx; 
-var state = START; 
+var state = LOGO; 
 var time_interval = 20;
 var score = 0; 
 
@@ -87,6 +88,8 @@ function init() {
 	setUpGame(c); 
 	
 	c.addEventListener('click', function(event) {handleClick(event.x * window.devicePixelRatio, event.y * window.devicePixelRatio, piano);});
+	
+	logoScreen(); 
 }	
 
 function initBackground(c) {
@@ -99,7 +102,20 @@ function initBackground(c) {
 	document.body.style.backgroundColor = PRIMARY_COLOUR;
 	c.style.backgroundColor = PRIMARY_COLOUR;
 	
-	c.style.border = (1.5).toString() + "px solid " + SECONDARY_COLOUR;
+	if (state != LOGO) {
+		c.style.border = (1.5).toString() + "px solid " + SECONDARY_COLOUR;
+	}
+}
+
+function logoScreen() {
+	var img = new Image();
+	img.src = "data/logo.jpg";
+	
+	var w = c.width * 0.70; 
+	var left = c.width * 0.15; 
+	var t = (c.height - w) / 2;
+	
+	ctx.drawImage(img, left, t, w, w); 
 }
 
 function setUpGame(c) { 
@@ -138,9 +154,7 @@ function setUpGame(c) {
 	pauseRestartButton = new Button(c.width / 2, c.height * 0.65, c.width * 0.70, c.height * 0.10, 
 						PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Restart");
 	gameOverRestartButton = new Button(c.width / 2, c.height * 0.50, c.width * 0.70, c.height * 0.10, 
-								 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Restart");
-								 
-	startScreen(c, ctx, musicButton, sfxButton, startButton, settingButton, playSFXFlag, playMusicFlag);							 
+								 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "Restart");							 
 }
 
 function handleClick(x, y, piano) { 
@@ -279,7 +293,18 @@ setInterval(function() {
 		cHeight = c.height;
 	}
 	
+	if (state == LOGO) {
+		time_counter += time_interval; 
+		if (time_counter == 2000) {
+			time_counter = 0; 
+			state = START; 
+		}
+	}
+	
 	switch (state) {
+		case LOGO:
+			logoScreen(); 
+			break;
 		case START: 
 			startScreen(c, ctx, musicButton, sfxButton, startButton, settingButton, playSFXFlag, playMusicFlag); 
 			break; 
