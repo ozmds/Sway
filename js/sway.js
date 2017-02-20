@@ -70,8 +70,10 @@ function init() {
 				autoplay: false,
 				loop: false
 			});
-				
-	piano.play();
+	
+	if (playMusicFlag) {
+		piano.play();
+	}
 	
 	c = document.getElementById('myCanvas'); 
 	ctx = c.getContext('2d');  
@@ -295,7 +297,7 @@ setInterval(function() {
 	
 	if (state == LOGO) {
 		time_counter += time_interval; 
-		if (time_counter == 2000) {
+		if (time_counter == 5000) {
 			time_counter = 0; 
 			state = START; 
 		}
