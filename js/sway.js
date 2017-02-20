@@ -16,7 +16,7 @@ var state = LOGO;
 var time_interval = 20;
 var score = 0; 
 
-var playMusicFlag = true; 
+var playMusicFlag = false; 
 var playSFXFlag = true;
 
 var musicButton; 
