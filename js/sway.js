@@ -15,6 +15,7 @@ var ctx;
 var state = LOGO; 
 var time_interval = 20;
 var score = 0; 
+var bpm = 120; 
 
 var playMusicFlag = false; 
 var playSFXFlag = true;
@@ -40,7 +41,7 @@ var arm_length;
 var d;
 var diamond_list = [];
 
-var speed = 1;
+var speed;
 
 var time_counter = 0;  
 
@@ -138,6 +139,8 @@ function setUpGame(c) {
 	
 	var font_size = ((c.height * 0.10) * 0.90).toString(); 
 	var font = font_size + "px basicWoodlands";
+	
+	speed = calculateSpeed(c.width / 2, arm.length, PADDING + pen_rad, time_interval, bpm);
 
 	musicButton = new Button(c.width * 0.675, c.width * 0.125, c.width * 0.15, c.width * 0.15, 
 							 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "M"); 
@@ -200,7 +203,7 @@ function handleClick(x, y, piano) {
 			} else if (pauseRestartButton.isClicked(x, y, MARGIN)) {
 				state = START; 
 				time_counter = 0; 
-				pen.deg = 270; 
+				pen.deg = 1.5 * Math.PI; 
 				score = 0; 
 				diamond_list = [];
 			} else if (musicButton.isClicked(x, y, MARGIN)) {
@@ -218,7 +221,7 @@ function handleClick(x, y, piano) {
 			if (gameOverRestartButton.isClicked(x, y, MARGIN)) {
 				state = START; 
 				time_counter = 0; 
-				pen.deg = 270; 
+				pen.deg = 1.5 * Math.PI; 
 				score = 0; 
 				diamond_list = []; 
 			}
@@ -232,10 +235,22 @@ function handleClick(x, y, piano) {
 	}
 }
 
+function calculateSpeed(width, arm_length, margin, time_interval, bpm) {
+	var time_cycle = (2 * 60000) / bpm;
+	
+	var span = 2 * Math.asin((width - margin) / arm_length); 
+
+	var num_sections = time_cycle / time_interval;
+	
+	var deg = span / num_sections; 
+	
+	return deg;
+}
+
 function updateGame(c, ctx) {
 	drawPauseButton(c.width * 0.05, c.width * 0.05, c.width * 0.10, SECONDARY_COLOUR, ctx);	 
 	
-	pen.move(1.5 * speed, arm.length, cen, c, PADDING); 
+	pen.move(speed, arm.length, cen, c, PADDING); 
 
 	arm.endX = pen.x; 
 	arm.endY = pen.y;
@@ -250,7 +265,7 @@ function updateGame(c, ctx) {
 	}
 	
 	for (i = 0; i < diamond_list.length; i++) {
-		var res = diamond_list[i].move(6 * speed, c.height, state, pen); 
+		var res = diamond_list[i].move(30 * speed, c.height, state, pen); 
 		
 		if (res == 'over') {
 			state = GAME_OVER; 

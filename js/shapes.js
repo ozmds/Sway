@@ -7,7 +7,7 @@ class Circle {
 		this.outWidth = outlineWidth; 
 		this.outColour = outlineColour; 
 		this.context = context; 
-		this.deg = 270; 
+		this.deg = 1.5 * Math.PI; 
 		this.going_left = true; 
 	}
 	
@@ -33,7 +33,7 @@ class Circle {
 			this.deg += speed;
 		}
 		
-		rad = this.toRadians(); 
+		rad = this.deg; 
 		
 		this.x = cen.x + Math.cos(rad) * armLength; 
 		this.y = cen.y - Math.sin(rad) * armLength; 
@@ -46,11 +46,12 @@ class Circle {
 				this.deg += 2 * speed;
 			}
 			
-			rad = this.toRadians(); 
+			rad = this.deg; 
 			
 			this.x = cen.x + Math.cos(rad) * armLength; 
 			this.y = cen.y - Math.sin(rad) * armLength;
 		}
+		
 	}
 	
 	toRadians() {
