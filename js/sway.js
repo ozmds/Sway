@@ -52,6 +52,7 @@ var kick;
 var piano;
 
 var drum_flag = true; 
+var bgm_restart = false; 
 
 function init() {
 	piano = new Howl({ 
@@ -168,6 +169,12 @@ function handleClick(x, y, piano) {
 		case START:  
 			if (startButton.isClicked(x, y, MARGIN)) {
 				state = PLAY; 
+				if (playMusicFlag) {
+					piano.fade(1.0, 0.0, 60); 
+					piano.pause();
+					piano.seek(0); 
+					bgm_restart = true;
+				}
 			} else if (settingButton.isClicked(x, y, MARGIN)) {
 				state = SETTING; 
 			} else if (musicButton.isClicked(x, y, MARGIN)) {
@@ -248,6 +255,13 @@ function calculateSpeed(width, arm_length, margin, time_interval, bpm) {
 }
 
 function updateGame(c, ctx) {
+	if (playMusicFlag) {
+		if (bgm_restart) {
+			piano.play();
+			bgm_restart = false;
+		}
+	}
+	
 	drawPauseButton(c.width * 0.05, c.width * 0.05, c.width * 0.10, SECONDARY_COLOUR, ctx);	 
 	
 	pen.move(speed, arm.length, cen, c, PADDING); 
