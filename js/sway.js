@@ -44,6 +44,7 @@ var diamond_list = [];
 var speed;
 
 var time_counter = 0;  
+var diamond_speed; 
 
 var cHeight;
 
@@ -53,6 +54,8 @@ var piano;
 
 var drum_flag = true; 
 var bgm_restart = false; 
+
+var music_counter = -1; 
 
 function init() {
 	piano = new Howl({ 
@@ -142,6 +145,7 @@ function setUpGame(c) {
 	var font = font_size + "px basicWoodlands";
 	
 	speed = calculateSpeed(c.width / 2, arm.length, PADDING + pen_rad, time_interval, bpm);
+	diamond_speed = calculateDiamondSpeed(c.height, bpm, time_interval);
 
 	musicButton = new Button(c.width * 0.675, c.width * 0.125, c.width * 0.15, c.width * 0.15, 
 							 PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx, font, "M"); 
@@ -174,6 +178,7 @@ function handleClick(x, y, piano) {
 					piano.pause();
 					piano.seek(0); 
 					bgm_restart = true;
+					music_counter = -1; 
 				}
 			} else if (settingButton.isClicked(x, y, MARGIN)) {
 				state = SETTING; 
@@ -254,32 +259,54 @@ function calculateSpeed(width, arm_length, margin, time_interval, bpm) {
 	return deg;
 }
 
+function calculateDiamondSpeed(height, bpm, time_interval) {
+	var time_cycle = (4 * 60000) / bpm; 
+	
+	var num_sections = time_cycle / time_interval; 
+	
+	var speed = height / num_sections; 
+	
+	return speed;
+}
+
 function updateGame(c, ctx) {
 	if (playMusicFlag) {
 		if (bgm_restart) {
 			piano.play();
 			bgm_restart = false;
 		}
-	}
+	} 
 	
 	drawPauseButton(c.width * 0.05, c.width * 0.05, c.width * 0.10, SECONDARY_COLOUR, ctx);	 
 	
-	pen.move(speed, arm.length, cen, c, PADDING); 
+	pen.move(speed, arm.length, cen, c, PADDING);
 
 	arm.endX = pen.x; 
 	arm.endY = pen.y;
-
-	time_counter += time_interval; 
 	
-	if (time_counter == 1500) {
+	if (playMusicFlag) {
+		if (time_counter % 1000 == 0) {
+			if (music_counter == 31) {
+				music_counter = -1; 
+			}
+			music_counter += 1; 
+			piano.seek(music_counter); 
+		}
+	}
+	
+	if (time_counter == 2000) {
 		time_counter = 0; 
 		d = new Diamond(c.width * 0.04, SECONDARY_COLOUR, ctx);
-		d.place(arm.length, c.width, pen_rad); 
+		/* d.place(arm.length, c.width, pen_rad); */ 
+		d.y = -1 * (pen_rad + PADDING); 
+		d.x = c.width / 2; 
 		diamond_list.push(d); 
 	}
 	
+	time_counter += time_interval;
+	
 	for (i = 0; i < diamond_list.length; i++) {
-		var res = diamond_list[i].move(30 * speed, c.height, state, pen); 
+		var res = diamond_list[i].move(diamond_speed, c.height, state, pen); 
 		
 		if (res == 'over') {
 			state = GAME_OVER; 
