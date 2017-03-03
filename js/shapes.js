@@ -81,16 +81,18 @@ class Diamond {
 		var r = this.r; 
 		ctx.strokeStyle = this.colour;
 		ctx.lineWidth = r * 0.30; 
-		ctx.fillStyle = "red"; 
+		
+		ctx.save(); 
+		
+		ctx.translate(x, y); 
+		ctx.rotate(Math.PI / 4); 
 		
 		ctx.beginPath(); 
-		ctx.moveTo(x, y - r); 
-		ctx.lineTo(x - r, y); 
-		ctx.lineTo(x, y + r); 
-		ctx.lineTo(x + r, y); 
-		ctx.lineTo(x, y - r); 
+		ctx.rect(-r, -r, 2 * r, 2 * r);
 		ctx.stroke(); 
-		ctx.closePath(); 
+		ctx.closePath();
+		
+		ctx.restore(); 
 	}
 	
 	fill() {

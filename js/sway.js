@@ -8,14 +8,18 @@ const PAUSE = 'pause';
 const PLAY = 'play'; 
 const GAME_OVER = 'gameOver'; 
 const START = 'start';
-const LOGO = 'logo'; 
+const LOGO = 'logo';
+
+const MAX_PEN_BPM = 200; 
+const MAX_DIAMOND_BPM = 200;  
 
 var c; 
 var ctx; 
 var state = LOGO; 
 var time_interval = 20;
 var score = 0; 
-var bpm = 120; 
+var pen_bpm = 100; 
+var diamond_bpm = 100; 
 
 var buttonList; 
 
@@ -42,6 +46,8 @@ var cHeight;
 
 var snare; 
 var piano;
+
+var increment_speed_flag = false; 
 
 function init() {
 	piano = new Howl({ 
@@ -109,9 +115,6 @@ function setUpGame(c) {
 	arm = new Line(cen_x, cen_y, pen_x, pen_y, 7, SECONDARY_COLOUR, ctx); 
 	cen = new Circle(cen_x, cen_y, pen_rad / 2, PRIMARY_COLOUR, 5, SECONDARY_COLOUR, ctx); 
 	pen = new Circle(pen_x, pen_y, pen_rad, PRIMARY_COLOUR, 10, SECONDARY_COLOUR, ctx); 
-	
-	speed = calculateSpeed(c.width / 2, arm.length, PADDING + pen_rad, time_interval, bpm);
-	diamond_speed = calculateDiamondSpeed(c.height, bpm, time_interval);
 
 	buttonList = createButtonList(c, ctx, PRIMARY_COLOUR, SECONDARY_COLOUR); 
 }
@@ -189,6 +192,19 @@ function updateGame(c, ctx) {
 	
 	drawPauseButton(c.width * 0.05, c.width * 0.05, c.width * 0.10, SECONDARY_COLOUR, ctx);
 	
+	if (increment_speed_flag) {
+		if (pen_bpm < MAX_PEN_BPM) {
+			pen_bpm += 10; 
+		}
+		if (diamond_bpm < MAX_DIAMOND_BPM) {
+			diamond_bpm += 10;
+		}
+		increment_speed_flag = false; 
+	}
+	
+	speed = calculateSpeed(c.width / 2, arm.length, PADDING + pen_rad, time_interval, pen_bpm);
+	diamond_speed = calculateDiamondSpeed(c.height, diamond_bpm, time_interval);
+	
 	pen.move(speed, arm.length, cen, c, PADDING);
 
 	arm.endX = pen.x; 
@@ -196,7 +212,7 @@ function updateGame(c, ctx) {
 	
 	if (time_counter == 2000) {
 		time_counter = 0; 
-		d = new Diamond(c.width * 0.04, SECONDARY_COLOUR, ctx);
+		d = new Diamond(c.width * 0.03, SECONDARY_COLOUR, ctx);
 		d.place(arm.length, c.width, pen_rad); 
 		diamond_list.push(d); 
 	}
@@ -229,6 +245,10 @@ function updateGame(c, ctx) {
 		window.localStorage.setItem("highscore", score); 
 	}
 	updateScore(c, ctx, score, window.localStorage.getItem("highscore"), SECONDARY_COLOUR);
+	
+	if ((score % 10 == 0) && (score > 0)) {
+		increment_speed_flag = true; 
+	}
 }
 
 document.addEventListener('DOMContentLoaded', init, false); 
