@@ -227,6 +227,9 @@ function updateGame(c, ctx) {
 			break;
 		} else if (res == 'score') {
 			score += 1; 
+			if (score % 10 == 0) {
+				increment_speed_flag = true; 
+			}
 			diamond_list.splice(i, 1); 
 			if (playSFXFlag) {
 				snare.play(); 
@@ -245,10 +248,6 @@ function updateGame(c, ctx) {
 		window.localStorage.setItem("highscore", score); 
 	}
 	updateScore(c, ctx, score, window.localStorage.getItem("highscore"), SECONDARY_COLOUR);
-	
-	if ((score % 10 == 0) && (score > 0)) {
-		increment_speed_flag = true; 
-	}
 }
 
 document.addEventListener('DOMContentLoaded', init, false); 
