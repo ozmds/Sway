@@ -1,3 +1,5 @@
+/*Definitions of Geometric Shapes Present in Game: Circle, Line and Diamond */
+
 class Circle {
 	constructor(x, y, r, colour, outlineWidth, outlineColour, context) {
 		this.x = x; 
@@ -54,10 +56,6 @@ class Circle {
 		
 	}
 	
-	toRadians() {
-		return this.deg * (Math.PI / 180); 
-	}
-	
 	hitWall(cHeight, cWidth, pad) {
 		if (this.x < this.r + pad) {
 			return true; 
@@ -81,7 +79,9 @@ class Diamond {
 		var x = this.x; 
 		var y = this.y; 
 		var r = this.r; 
-		ctx.fillStyle = this.colour; 
+		ctx.strokeStyle = this.colour;
+		ctx.lineWidth = r * 0.30; 
+		ctx.fillStyle = "red"; 
 		
 		ctx.beginPath(); 
 		ctx.moveTo(x, y - r); 
@@ -89,6 +89,23 @@ class Diamond {
 		ctx.lineTo(x, y + r); 
 		ctx.lineTo(x + r, y); 
 		ctx.lineTo(x, y - r); 
+		ctx.stroke(); 
+		ctx.closePath(); 
+	}
+	
+	fill() {
+		var ctx = this.context; 
+		var x = this.x; 
+		var y = this.y; 
+		var r = this.r;
+		ctx.fillStyle = "red";
+		
+		ctx.beginPath(); 
+		ctx.moveTo(x, y - r * 0.4); 
+		ctx.lineTo(x - r * 0.4, y); 
+		ctx.lineTo(x, y + r * 0.4); 
+		ctx.lineTo(x + r * 0.4, y); 
+		ctx.lineTo(x, y - r * 0.4); 
 		ctx.fill(); 
 		ctx.closePath(); 
 	}
@@ -153,72 +170,5 @@ class Line {
 		ctx.lineTo(this.endX, this.endY); 
 		ctx.stroke();
 		ctx.closePath(); 
-	}
-}
-
-class Button {
-	constructor(x, y, width, height, colour, outWidth, outColour, context, font, title) {
-		this.x = x; 
-		this.y = y; 
-		this.width = width; 
-		this.height = height; 
-		this.colour = colour; 
-		this.outWidth = outWidth;
-		this.outColour = outColour;
-		this.font = font;
-		this.title = title; 
-		this.context = context; 
-	}
-	
-	draw() {
-		var ctx = this.context; 
-		
-		ctx.fillStyle = this.colour; 
-		ctx.lineWidth = this.outWidth; 
-		ctx.strokeStyle = this.outColour; 
-		
-		ctx.beginPath(); 
-		ctx.rect(this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
-		ctx.fill(); 
-		ctx.stroke(); 
-		ctx.closePath();
-		
-		ctx.textAlign = 'center'; 
-		ctx.textBaseline = 'middle';
-		ctx.font = this.font; 
-		ctx.fillStyle = this.outColour; 
-		
-		ctx.fillText(this.title, this.x, this.y - this.height * 0.20);  
-	}
-	
-	isClicked(eventX, eventY, padding) {
-		if (eventX > this.x - this.width / 2 + padding) {
-			if (eventX < this.x + this.width / 2 + padding) {
-				if (eventY > this.y - this.height / 2 + padding) {
-					if (eventY < this.y + this.height / 2 + padding) {
-						return true; 
-					}
-				}
-			}
-		}
-		
-		return false; 
-	}
-	
-	drawCross() {
-		this.context.strokeStyle = this.outColour; 
-		this.context.lineWidth = this.outWidth;
-		
-		this.context.beginPath(); 
-		this.context.moveTo(this.x - this.width / 2, this.y - this.height / 2); 
-		this.context.lineTo(this.x + this.width / 2, this.y + this.height / 2); 
-		this.context.stroke(); 
-		this.context.closePath();
-		
-		this.context.beginPath();
-		this.context.moveTo(this.x + this.width / 2, this.y - this.height / 2); 
-		this.context.lineTo(this.x - this.width / 2, this.y + this.height / 2); 
-		this.context.stroke(); 
-		this.context.closePath(); 
 	}
 }
