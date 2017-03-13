@@ -66,7 +66,8 @@ class Circle {
 }
 
 class Diamond {
-	constructor(r, colour, context) {
+	constructor(fillColour, r, colour, context) {
+		this.fillColour = fillColour;
 		this.x = null; 
 		this.y = -2 * r; 
 		this.r = r; 
@@ -100,14 +101,14 @@ class Diamond {
 		var x = this.x; 
 		var y = this.y; 
 		var r = this.r;
-		ctx.fillStyle = "red";
+		ctx.fillStyle = this.fillColour; 
 		
 		ctx.beginPath(); 
-		ctx.moveTo(x, y - r * 0.4); 
-		ctx.lineTo(x - r * 0.4, y); 
-		ctx.lineTo(x, y + r * 0.4); 
-		ctx.lineTo(x + r * 0.4, y); 
-		ctx.lineTo(x, y - r * 0.4); 
+		ctx.moveTo(x, y - r * 0.7); 
+		ctx.lineTo(x - r * 0.7, y); 
+		ctx.lineTo(x, y + r * 0.7); 
+		ctx.lineTo(x + r * 0.7, y); 
+		ctx.lineTo(x, y - r * 0.7); 
 		ctx.fill(); 
 		ctx.closePath(); 
 	}

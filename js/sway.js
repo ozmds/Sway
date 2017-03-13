@@ -10,44 +10,72 @@ const GAME_OVER = 'gameOver';
 const START = 'start';
 const LOGO = 'logo';
 
+const NORMAL = "#FFFFCC";
+const POISON = "#9900CC"; 
+const BALLOON = "#FF6666";
+const RAIN = "#3399FF"; 
+const METAL = "#999966"; 
+const WALL = "#FFFF66"; 
+
 const MAX_PEN_BPM = 200; 
 const MAX_DIAMOND_BPM = 200;  
+const MIN_PEN_BPM = 100; 
+const MIN_DIAMOND_BPM = 60; 
+
+const BALLOON_TIME = 15; 
+const RAIN_TIME = 15; 
+const METAL_TIME = 15;
 
 var c; 
 var ctx; 
-var state = LOGO; 
-var time_interval = 20;
+
+var state = LOGO;
+
 var score = 0; 
-var pen_bpm = 100; 
-var diamond_bpm = 100; 
+var time_interval = 20;
+var time_counter = 0;  
+
+var pen_bpm = MIN_PEN_BPM; 
+var diamond_bpm = MIN_DIAMOND_BPM; 
+var speed;
+var diamond_speed;
 
 var buttonList; 
 
 var playMusicFlag = false; 
 var playSFXFlag = true; 
+var increment_speed_flag = false; 
+
+var balloon_flag = false;
+var balloon_timer = 0;
+
+var rain_flag = false; 
+var rain_timer = 0;   
+
+var metal_flag = false;
+var metal_timer = 0; 
+var metal_cen_flag = false; 
 
 var pen_rad; 
 var cen_height; 
 
 var arm; 
-var cen; 
-var pen; 
-var arm_length; 
+var cen;
+var pen;  
 
 var d;
-var diamond_list = [];
-
-var speed;
-
-var time_counter = 0;  
-var diamond_speed; 
-
-var cHeight;
+var diamond_list = []; 
 
 var snare; 
 var piano;
 
-var increment_speed_flag = false; 
+var typeInt;
+var diamondType; 
+
+var cHeight;
+
+var circle_paint_counter = 0; 
+var reverse_flag = false; 
 
 function init() {
 	piano = new Howl({ 
@@ -163,6 +191,8 @@ function handleClick(x, y, piano) {
 				pen.deg = 1.5 * Math.PI; 
 				score = 0; 
 				diamond_list = [];
+				speed = 100; 
+				diamond_speed = 60; 
 			} else if (buttonList["musicButton"].isClicked(x, y, MARGIN)) {
 				flipMusic(playMusicFlag, piano);
 				playMusicFlag = !playMusicFlag; 
@@ -177,6 +207,8 @@ function handleClick(x, y, piano) {
 				pen.deg = 1.5 * Math.PI; 
 				score = 0; 
 				diamond_list = []; 
+				speed = 100; 
+				diamond_speed = 60;
 			}
 			break;
 		case PLAY:	
@@ -188,7 +220,7 @@ function handleClick(x, y, piano) {
 	}
 }
 
-function updateGame(c, ctx) {
+function updateGame(c, ctx) { 
 	
 	drawPauseButton(c.width * 0.05, c.width * 0.05, c.width * 0.10, SECONDARY_COLOUR, ctx);
 	
@@ -201,9 +233,41 @@ function updateGame(c, ctx) {
 		}
 		increment_speed_flag = false; 
 	}
+
+	if (balloon_flag) {
+		if (balloon_timer > BALLOON_TIME * 1000) {
+			if (pen.r > c.width * 0.075) {
+				pen.r -= pen.r * 0.01; 
+				arm.length += pen.r * 0.01; 
+			} else {
+				balloon_flag = false; 
+				balloon_timer = 0; 
+			}
+		} else if (pen.r < c.width * 0.15) {
+			pen.r += pen.r * 0.01; 
+			arm.length -= pen.r * 0.01;
+		} else {
+			balloon_timer += time_interval; 
+		}
+	}
 	
+	if (rain_flag) {
+		if (rain_timer > RAIN_TIME * 1000) {
+			diamond_speed = diamond_speed * 2; 
+			rain_timer = 0; 
+			rain_flag = false; 
+		} else if (rain_timer == 0) {
+			diamond_speed = diamond_speed / 2; 
+			rain_timer += time_interval; 
+		} else {
+			rain_timer += time_interval;
+		}
+	}
+
 	speed = calculateSpeed(c.width / 2, arm.length, PADDING + pen_rad, time_interval, pen_bpm);
-	diamond_speed = calculateDiamondSpeed(c.height, diamond_bpm, time_interval);
+	if (!rain_flag) {
+		diamond_speed = calculateDiamondSpeed(c.height, diamond_bpm, time_interval);
+	}
 	
 	pen.move(speed, arm.length, cen, c, PADDING);
 
@@ -211,8 +275,23 @@ function updateGame(c, ctx) {
 	arm.endY = pen.y;
 	
 	if (time_counter == 2000) {
-		time_counter = 0; 
-		d = new Diamond(c.width * 0.03, SECONDARY_COLOUR, ctx);
+		time_counter = 0;
+		typeInt = Math.random() * 100; 
+		if (typeInt < 70) {
+			diamondType = NORMAL; 
+		} else if (typeInt < 80) {
+			diamondType = POISON;
+		} else if (typeInt < 88) {
+			diamondType = BALLOON; 
+		} else if (typeInt < 94) {
+			diamondType = RAIN; 
+		} else if (typeInt < 98) {
+			diamondType = METAL; 
+		} else {
+			diamondType = WALL;
+		}
+		
+		d = new Diamond(diamondType, c.width * 0.03, SECONDARY_COLOUR, ctx);
 		d.place(arm.length, c.width, pen_rad); 
 		diamond_list.push(d); 
 	}
@@ -222,13 +301,36 @@ function updateGame(c, ctx) {
 	for (i = 0; i < diamond_list.length; i++) {
 		var res = diamond_list[i].move(diamond_speed, c.height, state, pen); 
 		
+		if (metal_flag) {
+			if (lineHitBox(arm, diamond_list[i], c, ctx)) {
+				metal_cen_flag = true; 
+			} else {
+				metal_cen_flag = diamond_list[i].checkHitBox(cen.x, cen.y, cen.r);
+			}
+		} else {
+			metal_cen_flag = false; 
+		}
+		
 		if (res == 'over') {
-			state = GAME_OVER; 
-			break;
-		} else if (res == 'score') {
+			if (diamond_list[i].fillColour != POISON) {
+				state = GAME_OVER; 
+				break;
+			} else {
+				diamond_list.splice(i, 1);
+			}
+		} else if (res == 'score' || metal_cen_flag) {
 			score += 1; 
 			if (score % 10 == 0) {
 				increment_speed_flag = true; 
+			} 
+			if (diamond_list[i].fillColour == POISON) {
+				state = GAME_OVER; 
+			} else if (diamond_list[i].fillColour == BALLOON) {
+				balloon_flag = true; 
+			} else if (diamond_list[i].fillColour == RAIN) {
+				rain_flag = true; 
+			} else if (diamond_list[i].fillColour == METAL) {
+				metal_flag = true; 
 			}
 			diamond_list.splice(i, 1); 
 			if (playSFXFlag) {
@@ -243,6 +345,61 @@ function updateGame(c, ctx) {
 	arm.draw(); 
 	cen.draw();
 	pen.draw(); 
+	
+	if (metal_flag) {
+		ctx.strokeStyle = METAL; 
+		ctx.fillStyle = PRIMARY_COLOUR;
+	
+		if (circle_paint_counter > 100) {
+			if (circle_paint_counter > 200) {
+				ctx.lineWidth = arm.width;
+				
+				ctx.beginPath(); 
+				ctx.moveTo(arm.endX - ((arm.endX - arm.startX) / 100 * (circle_paint_counter - 200)),
+						   arm.endY - ((arm.endY - arm.startY) / 100 * (circle_paint_counter - 200))); 
+				ctx.lineTo(arm.endX, arm.endY);
+				ctx.stroke();
+				ctx.closePath(); 
+			}
+			
+			ctx.lineWidth = cen.outWidth; 
+			
+			ctx.beginPath(); 
+			ctx.arc(cen.x, cen.y, cen.r, 0.0 * Math.PI, (circle_paint_counter - 100) * (2.0 * Math.PI / 100));
+			ctx.fill(); 
+			ctx.stroke(); 
+			ctx.closePath();
+		} 
+		ctx.lineWidth = pen.outWidth;
+		
+		ctx.beginPath(); 
+		ctx.arc(pen.x, pen.y, pen.r, 0.0 * Math.PI, circle_paint_counter * (2.0 * Math.PI / 100));
+		ctx.fill(); 
+		ctx.stroke(); 
+		ctx.closePath();
+		
+		if (circle_paint_counter == 300) {
+			metal_timer += time_interval; 
+		}
+		
+		if (metal_timer > METAL_TIME * 1000) {
+			reverse_flag = true; 
+		}
+		
+		if (reverse_flag) {
+			if (circle_paint_counter != 0) {
+				circle_paint_counter -= 1; 
+			} else {
+				reverse_flag = false; 
+				metal_flag = false; 
+				metal_timer = 0; 
+			}
+		} else {
+			if (circle_paint_counter < 300) {
+				circle_paint_counter += 1;
+			}
+		}
+	}
 	
 	if (window.localStorage.getItem("highscore") < score) {
 		window.localStorage.setItem("highscore", score); 
