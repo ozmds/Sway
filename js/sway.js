@@ -193,6 +193,11 @@ function handleClick(x, y, piano) {
 				diamond_list = [];
 				speed = 100; 
 				diamond_speed = 60; 
+				rain_flag = false; 
+				metal_flag = false; 
+				balloon_flag = false; 
+				pen.r = c.width * 0.075;
+				arm.length = (c.height - (pen_rad + PADDING)) - cen.y;
 			} else if (buttonList["musicButton"].isClicked(x, y, MARGIN)) {
 				flipMusic(playMusicFlag, piano);
 				playMusicFlag = !playMusicFlag; 
@@ -209,6 +214,11 @@ function handleClick(x, y, piano) {
 				diamond_list = []; 
 				speed = 100; 
 				diamond_speed = 60;
+				rain_flag = false; 
+				metal_flag = false; 
+				balloon_flag = false; 
+				pen.r = c.width * 0.075;
+				arm.length = (c.height - (pen_rad + PADDING)) - cen.y;
 			}
 			break;
 		case PLAY:	
