@@ -25,6 +25,7 @@ const MIN_DIAMOND_BPM = 60;
 const BALLOON_TIME = 15; 
 const RAIN_TIME = 15; 
 const METAL_TIME = 15;
+const WALL_TIME = 15; 
 
 var c; 
 var ctx; 
@@ -55,6 +56,12 @@ var rain_timer = 0;
 var metal_flag = false;
 var metal_timer = 0; 
 var metal_cen_flag = false; 
+
+var wall_flag = false; 
+var wall_dist = 0; 
+var wall_length = 0; 
+var wall_timer = 0;
+var wall_hit_flag = false;  
 
 var pen_rad; 
 var cen_height; 
@@ -198,6 +205,11 @@ function handleClick(x, y, piano) {
 				balloon_flag = false; 
 				pen.r = c.width * 0.075;
 				arm.length = (c.height - (pen_rad + PADDING)) - cen.y;
+				wall_flag = false; 
+				wall_dist = 0; 
+				wall_length = 0; 
+				wall_timer = 0;
+				wall_hit_flag = false;  
 			} else if (buttonList["musicButton"].isClicked(x, y, MARGIN)) {
 				flipMusic(playMusicFlag, piano);
 				playMusicFlag = !playMusicFlag; 
@@ -219,6 +231,11 @@ function handleClick(x, y, piano) {
 				balloon_flag = false; 
 				pen.r = c.width * 0.075;
 				arm.length = (c.height - (pen_rad + PADDING)) - cen.y;
+				wall_flag = false; 
+				wall_dist = 0; 
+				wall_length = 0; 
+				wall_timer = 0;
+				wall_hit_flag = false;
 			}
 			break;
 		case PLAY:	
@@ -279,10 +296,12 @@ function updateGame(c, ctx) {
 		diamond_speed = calculateDiamondSpeed(c.height, diamond_bpm, time_interval);
 	}
 	
-	pen.move(speed, arm.length, cen, c, PADDING);
-
-	arm.endX = pen.x; 
-	arm.endY = pen.y;
+	if (wall_length < 2) {
+		pen.move(speed, arm.length, cen, c, PADDING);
+		
+		arm.endX = pen.x; 
+		arm.endY = pen.y;
+	}
 	
 	if (time_counter == 2000) {
 		time_counter = 0;
@@ -299,6 +318,10 @@ function updateGame(c, ctx) {
 			diamondType = METAL; 
 		} else {
 			diamondType = WALL;
+		}
+		
+		if (wall_flag || metal_flag) {
+			diamondType = NORMAL; 	
 		}
 		
 		d = new Diamond(diamondType, c.width * 0.03, SECONDARY_COLOUR, ctx);
@@ -321,6 +344,24 @@ function updateGame(c, ctx) {
 			metal_cen_flag = false; 
 		}
 		
+		if (wall_flag) {
+			if (diamond_list[i].x > (pen.x - wall_dist)) {
+				if (diamond_list[i].x < (pen.x + wall_dist)) {
+					if (diamond_list[i].y > pen.y) {
+						wall_hit_flag = true;
+					} else {
+						wall_hit_flag = false; 
+					}
+				} else {
+					wall_hit_flag = false; 
+				}
+			} else {
+				wall_hit_flag = false; 
+			}
+		} else {
+			wall_hit_flag = false; 
+		}
+		
 		if (res == 'over') {
 			if (diamond_list[i].fillColour != POISON) {
 				state = GAME_OVER; 
@@ -328,7 +369,7 @@ function updateGame(c, ctx) {
 			} else {
 				diamond_list.splice(i, 1);
 			}
-		} else if (res == 'score' || metal_cen_flag) {
+		} else if (res == 'score' || metal_cen_flag || wall_hit_flag) {
 			score += 1; 
 			if (score % 10 == 0) {
 				increment_speed_flag = true; 
@@ -341,6 +382,8 @@ function updateGame(c, ctx) {
 				rain_flag = true; 
 			} else if (diamond_list[i].fillColour == METAL) {
 				metal_flag = true; 
+			} else if (diamond_list[i].fillColour == WALL) {
+				wall_flag = true; 
 			}
 			diamond_list.splice(i, 1); 
 			if (playSFXFlag) {
@@ -354,7 +397,56 @@ function updateGame(c, ctx) {
 	
 	arm.draw(); 
 	cen.draw();
-	pen.draw(); 
+	
+	if (wall_flag) {
+		ctx.lineWidth = pen.r; 	
+		ctx.strokeStyle = pen.outColour; 
+		
+		ctx.beginPath(); 
+		ctx.moveTo(pen.x, pen.y); 
+	
+		if (pen.x + wall_dist >= c.width) {
+			ctx.lineTo(c.width, pen.y); 
+			wall_length = 1; 
+		} else {
+			ctx.lineTo(pen.x + wall_dist, pen.y); 
+			wall_length = 0; 
+		}
+		ctx.stroke();
+		ctx.closePath();
+		
+		ctx.beginPath(); 
+		ctx.moveTo(pen.x, pen.y); 
+		
+		if (pen.x - wall_dist <= 0) {
+			ctx.lineTo(0, pen.y); 
+			wall_length += 1; 
+		} else {
+			ctx.lineTo(pen.x - wall_dist, pen.y);  
+		}
+		
+		ctx.stroke();
+		ctx.closePath();
+
+		pen.draw(); 
+
+		wall_timer += time_interval;
+		
+		if (wall_timer > WALL_TIME * 1000) {
+			wall_dist -= c.width * 0.01; 
+			if (wall_dist < 0) {
+				wall_flag = false; 
+				wall_dist = 0; 
+				wall_timer = 0; 
+			}
+		} else {
+			if (wall_length < 2) {
+				wall_dist += c.width * 0.01; 
+			}
+		}
+	} else {
+		pen.draw();
+	}
 	
 	if (metal_flag) {
 		ctx.strokeStyle = METAL; 
