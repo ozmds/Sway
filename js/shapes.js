@@ -4,6 +4,16 @@ const RIGHT = 'right';
 const REGULAR = 'regular';
 const BALLOON = 'balloon';
 const SLOW_DOWN = 'slow_down';
+const POISON = 'poison';
+const SPIKE = 'spike';
+
+var arrow = new Image();
+var spike = new Image();
+var skull = new Image();
+
+spike.src = 'data/spike.png';
+arrow.src = 'data/arrow.png';
+skull.src = 'data/skull.png';
 
 class Circle {
 	constructor(x, y, r, col, owid, ocol, ctx, cnv) {
@@ -149,12 +159,16 @@ class Diamond {
 		
 		var typeInt = Math.random() * 100;
 
-		if (typeInt < 50) {
+		if (typeInt < 20) {
 			this.type = REGULAR;
-		} else if (typeInt < 75) {
+		} else if (typeInt < 40) {
 			this.type = BALLOON;
-		} else {
+		} else if (typeInt < 60){
 			this.type = SLOW_DOWN;
+		} else if (typeInt < 80) {
+			this.type = POISON;
+		} else {
+			this.type = SPIKE;
 		}
 	}
 	
@@ -215,30 +229,26 @@ class Diamond {
 			this.drawBalloon(); 
 		} else if (this.type == SLOW_DOWN) {
 			this.drawSlowDown();
+		} else if (this.type == SPIKE) {
+			this.drawSpike();
+		} else if (this.type == POISON) {
+			this.drawPoison();
 		}
 	}
 	
 	drawSlowDown() {
 		this.hitOrb();
-		this.ctx.strokeStyle = this.col;
-		this.ctx.lineWidth = this.r * 0.30;
-		this.ctx.fillStyle = this.col;
-		
-		this.ctx.beginPath();
-		this.ctx.moveTo(this.x - this.r * 1.5, this.y - this.r * 1.5);
-		this.ctx.lineTo(this.x + this.r * 1.5, this.y - this.r * 1.5);
-		this.ctx.lineTo(this.x, this.y + this.r * 1.5);
-		this.ctx.lineTo(this.x - this.r * 1.5, this.y - this.r * 1.5);
-		this.ctx.stroke();
-		this.ctx.closePath();
-		
-		this.ctx.beginPath();
-		this.ctx.moveTo(this.x - this.r * 0.6, this.y - this.r * 0.9);
-		this.ctx.lineTo(this.x + this.r * 0.6, this.y - this.r * 0.9);
-		this.ctx.lineTo(this.x, this.y + this.r * 0.6);
-		this.ctx.lineTo(this.x - this.r * 0.9, this.y - this.r * 0.9);
-		this.ctx.fill();
-		this.ctx.closePath();
+		this.ctx.drawImage(arrow, this.x - this.r * 1.4, this.y - this.r * 1.4, 2 * this.r * 1.4, 2 * this.r * 1.4);
+	}
+	
+	drawPoison() {
+		this.hitOrb();
+		this.ctx.drawImage(skull, this.x - this.r * 1.6, this.y - this.r * 1.6, 2 * this.r * 1.6, 2 * this.r * 1.6);
+	}
+	
+	drawSpike() {
+		this.hitOrb();
+		this.ctx.drawImage(spike, this.x - this.r * 1.4, this.y - this.r * 1.4, 2 * this.r * 1.4, 2 * this.r * 1.4);
 	}
 	
 	drawBalloon() {

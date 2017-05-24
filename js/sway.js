@@ -160,13 +160,7 @@ function updateScore(c, ctx, score, highscore, colour) {
 
 function startGame() {
 	var swayGame = new Sway('myCanvas');
-	var arrow = new Image();
-	var spike = new Image();
-	var skull = new Image();
-
-	spike.src = 'data/spike.png';
-	arrow.src = 'data/arrow.png';
-	skull.src = 'data/skull.png';
+	
 	swayGame.background();
 	swayGame.initVariable();
 	
@@ -187,9 +181,5 @@ function startGame() {
 		
 		swayGame.manageOrbs();
 		swayGame.move();
-		
-		swayGame.getCtx().drawImage(arrow, 250, 50);
-		swayGame.getCtx().drawImage(skull, 500, 50);
-		swayGame.getCtx().drawImage(spike, 50, 350);
 	}, TIME_INTERVAL);
 }
