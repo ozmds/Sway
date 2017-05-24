@@ -1,0 +1,20 @@
+* {
+	margin: 0; 
+	padding: 0px; 
+	box-sizing: border-box; 
+}
+
+@font-face {
+	font-family: basicWoodlands; 
+	src: url(TheWoodlands-Regular.otf);
+}	
+
+html, body {
+	font-family: basicWoodlands; 
+}
+
+canvas {
+	display: block; 
+	position: absolute; 
+	font-family: basicWoodlands;
+}
