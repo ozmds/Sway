@@ -8,12 +8,16 @@ const POISON = 'poison';
 const SPIKE = 'spike';
 
 var arrow = new Image();
-var spike = new Image();
-var skull = new Image();
+var knife = new Image();
+var bomb = new Image();
+var crystal = new Image();
+var balloon = new Image();
 
-spike.src = 'data/spike.png';
+knife.src = 'data/knife.png';
 arrow.src = 'data/arrow.png';
-skull.src = 'data/skull.png';
+bomb.src = 'data/bomb.png';
+crystal.src = 'data/diamond.png';
+balloon.src = 'data/balloon.png';
 
 class Circle {
 	constructor(x, y, r, col, owid, ocol, ctx, cnv) {
@@ -156,19 +160,25 @@ class Diamond {
 		this.cnv = cnv;
 		this.type = type;
 		this.hitTimer = 0;
+		this.aspectRatio = 0;
 		
 		var typeInt = Math.random() * 100;
 
 		if (typeInt < 20) {
 			this.type = REGULAR;
+			this.aspectRatio = crystal.height / crystal.width;
 		} else if (typeInt < 40) {
 			this.type = BALLOON;
+			this.aspectRatio = balloon.height / balloon.width;
 		} else if (typeInt < 60){
 			this.type = SLOW_DOWN;
+			this.aspectRatio = arrow.height / arrow.width;
 		} else if (typeInt < 80) {
 			this.type = POISON;
+			this.aspectRatio = bomb.height / bomb.width;
 		} else {
 			this.type = SPIKE;
+			this.aspectRatio = knife.height / knife.width;
 		}
 	}
 	
@@ -238,61 +248,62 @@ class Diamond {
 	
 	drawSlowDown() {
 		this.hitOrb();
-		this.ctx.drawImage(arrow, this.x - this.r * 1.4, this.y - this.r * 1.4, 2 * this.r * 1.4, 2 * this.r * 1.4);
+		this.ctx.drawImage(arrow, this.x - this.r, this.y - this.r * this.aspectRatio, 2 * this.r, 2 * this.r * this.aspectRatio);this.ctx.fillStyle = this.col;
+		this.ctx.lineWidth = this.r * 0.30;
+		this.ctx.strokeStyle = this.col;
+		
+		this.ctx.beginPath();
+		this.ctx.arc(this.x, this.y, this.r * 2, 0.0 * Math.PI, 2.0 * Math.PI);
+		this.ctx.stroke();
+		this.ctx.closePath();
 	}
 	
 	drawPoison() {
 		this.hitOrb();
-		this.ctx.drawImage(skull, this.x - this.r * 1.6, this.y - this.r * 1.6, 2 * this.r * 1.6, 2 * this.r * 1.6);
+		this.ctx.drawImage(bomb, this.x - this.r, this.y - this.r * this.aspectRatio, 2 * this.r, 2 * this.r * this.aspectRatio);
+		this.ctx.lineWidth = this.r * 0.30;
+		this.ctx.strokeStyle = this.col;
+		
+		this.ctx.beginPath();
+		this.ctx.arc(this.x, this.y, this.r * 2, 0.0 * Math.PI, 2.0 * Math.PI);
+		this.ctx.stroke();
+		this.ctx.closePath();
 	}
 	
 	drawSpike() {
 		this.hitOrb();
-		this.ctx.drawImage(spike, this.x - this.r * 1.4, this.y - this.r * 1.4, 2 * this.r * 1.4, 2 * this.r * 1.4);
+		this.ctx.drawImage(knife, this.x - this.r, this.y - this.r * this.aspectRatio, 2 * this.r, 2 * this.r * this.aspectRatio);
+		this.ctx.lineWidth = this.r * 0.30;
+		this.ctx.strokeStyle = this.col;
+		
+		this.ctx.beginPath();
+		this.ctx.arc(this.x, this.y, this.r * 2, 0.0 * Math.PI, 2.0 * Math.PI);
+		this.ctx.stroke();
+		this.ctx.closePath();
 	}
 	
 	drawBalloon() {
 		this.hitOrb();
-		this.ctx.strokeStyle = this.col;
+		this.ctx.drawImage(balloon, this.x - this.r, this.y - this.r * this.aspectRatio, 2 * this.r, 2 * this.r * this.aspectRatio);
 		this.ctx.lineWidth = this.r * 0.30;
-		this.ctx.fillStyle = PRIMARY_COLOUR;
+		this.ctx.strokeStyle = this.col;
 		
 		this.ctx.beginPath();
-		this.ctx.rect(this.x - this.r * 0.6, this.y, this.r * 1.2, 2 * this.r);
+		this.ctx.arc(this.x, this.y, this.r * 2, 0.0 * Math.PI, 2.0 * Math.PI);
 		this.ctx.stroke();
-		this.ctx.closePath();
-		
-		this.ctx.beginPath();
-		this.ctx.arc(this.x, this.y, this.r * 1.4, 0.0 * Math.PI, 2.0 * Math.PI);
-		this.ctx.fill();
-		this.ctx.stroke();
-		this.ctx.closePath();
-		
-		this.ctx.fillStyle = SECONDARY_COLOUR;
-		this.ctx.beginPath();
-		this.ctx.arc(this.x, this.y, this.r * 0.8, 0.0 * Math.PI, 2.0 * Math.PI);
-		this.ctx.fill();
 		this.ctx.closePath();
 	}
 	
 	drawRegular() {
 		this.hitOrb();
-		this.ctx.strokeStyle = this.col;
+		this.ctx.drawImage(crystal, this.x - this.r, this.y - this.r * this.aspectRatio, 2 * this.r, 2 * this.r * this.aspectRatio);
 		this.ctx.lineWidth = this.r * 0.30;
-		
-		this.ctx.save();
-		
-		this.ctx.translate(this.x, this.y);
-		this.ctx.rotate(Math.PI / 4);
+		this.ctx.strokeStyle = this.col;
 		
 		this.ctx.beginPath();
-		this.ctx.rect(-this.r, -this.r, 2 * this.r, 2 * this.r);
+		this.ctx.arc(this.x, this.y, this.r * 2, 0.0 * Math.PI, 2.0 * Math.PI);
 		this.ctx.stroke();
 		this.ctx.closePath();
-		
-		this.ctx.restore();
-		
-		this.fill();
 	}
 	
 	place(armLength, rad) {
