@@ -68,9 +68,9 @@ function Sway(cnv) {
 		var pen_x = this.cnv.width / 2;
 		var pen_y = this.cnv.height - (pen_rad + PADDING);
 		
-		var arm = new Line(cen_x, cen_y, pen_x, pen_y, 5, SECONDARY_COLOUR, this.ctx, this.cnv); 
-		var cen = new Circle(cen_x, cen_y, pen_rad / 2, PRIMARY_COLOUR, 5, SECONDARY_COLOUR, this.ctx, this.cnv);
-		var pen = new Circle(pen_x, pen_y, pen_rad, PRIMARY_COLOUR, 5, SECONDARY_COLOUR, this.ctx, this.cnv);
+		var arm = new Line(cen_x, cen_y, pen_x, pen_y, this.cnv.width * 0.02, SECONDARY_COLOUR, this.ctx, this.cnv); 
+		var cen = new Circle(cen_x, cen_y, pen_rad / 2, PRIMARY_COLOUR, this.cnv.width * 0.02, SECONDARY_COLOUR, this.ctx, this.cnv);
+		var pen = new Circle(pen_x, pen_y, pen_rad, PRIMARY_COLOUR, this.cnv.width * 0.02, SECONDARY_COLOUR, this.ctx, this.cnv);
 		
 		this.pen = new Pendulum(cen, pen, arm);
 	};	 
