@@ -87,7 +87,7 @@ function Sway(cnv) {
 		if (time_counter == 2000) {
 			time_counter = 0;
 			
-			var d = new Diamond(this.cnv.width * 0.03, this.ctx, this.cnv, null);
+			var d = new Diamond(this.cnv.width * 0.035, this.ctx, this.cnv, null);
 			d.place(this.pen.getArm().getLen(), this.pen.getPen().getR()); 
 			this.orbList.push(d);
 		}
