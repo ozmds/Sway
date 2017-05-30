@@ -310,7 +310,7 @@ class Diamond {
 		var range = 2 * (armLength + rad);
 		
 		if (this.cnv.width < range) {
-			this.x = Math.round(Math.random() * (this.cnv.width - 4 * this.r)) + 2 * this.r;
+			this.x = Math.round(Math.random() * (this.cnv.width - 8 * this.r)) + 4 * this.r;
 		} else {
 			this.x = Math.round(Math.random() *	 range) + (0.5 * (this.cnv.width - range));
 		}

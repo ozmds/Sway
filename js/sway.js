@@ -149,13 +149,13 @@ function updateScore(c, ctx, score, highscore, colour) {
 	ctx.textAlign = 'end'; 
 	ctx.fillStyle = colour; 
 	
-	var font_size = c.width * 0.10; 
+	var font_size = c.width * 0.13; 
 	var font = font_size.toString() + "px basicWoodlands";
 
 	ctx.font = font; 
 	
 	ctx.fillText(score, c.width * 0.95, c.width * 0.05);
-	ctx.fillText(highscore, c.width * 0.95, c.width * 0.13); 
+	ctx.fillText(highscore, c.width * 0.95, c.width * 0.16); 
 }
 
 function startGame() {
