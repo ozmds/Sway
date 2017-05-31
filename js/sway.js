@@ -10,6 +10,8 @@ const TIME_INTERVAL = 20;
 
 var time_counter = 0;
 
+var orb_time = 6000;
+
 function Sway(cnv) {
 	this.cnv = document.getElementById(cnv);
 	this.ctx = this.cnv.getContext('2d');
@@ -18,9 +20,15 @@ function Sway(cnv) {
 	this.orbList = [];
 	this.hitList = [];
 	this.score = 0;
+	this.speed = 0;
 	
 	this.cnv.style.top = (MARGIN).toString() + 'px';
 	this.cnv.style.left = (MARGIN).toString() + 'px';
+	
+	this.calculateSpeed = function() {
+		/* Calculate Speed based on orb_time */
+		this.speed = this.cnv.height / (orb_time / TIME_INTERVAL);
+	}
 	
 	this.getScore = function() {
 		/* Return Score */
@@ -83,8 +91,11 @@ function Sway(cnv) {
 	
 	this.manageOrbs = function() {
 		/* Manage the all of the orbs currently on the screen */
+		
+		this.calculateSpeed();
+		
 		var i;
-		if (time_counter == 2000) {
+		if (time_counter >= 1500) {
 			time_counter = 0;
 			
 			var d = new Diamond(this.cnv.width * 0.035, this.ctx, this.cnv, null);
@@ -93,10 +104,11 @@ function Sway(cnv) {
 		}
 		
 		for (i = 0; i < this.orbList.length; i++) {
-			this.orbList[i].move(2);
+			this.orbList[i].move(this.speed);
 			
-			if (this.orbList[i].getY() > (this.cnv.height + this.orbList[i].getR())) {
+			if (this.orbList[i].getY() > (this.cnv.height + this.orbList[i].getR() * 2)) {
 				this.orbList.splice(i, 1);
+				this.score = 0;
 			} else if (this.orbList[i].checkHitPen(this.pen.getPen().getX(), this.pen.getPen().getY(), this.pen.getPen().getR())) {
 				this.hitList.push(this.orbList[i]);
 				this.orbList.splice(i, 1);
@@ -109,10 +121,10 @@ function Sway(cnv) {
 		for (i = 0; i < this.hitList.length; i++) {
 			this.hitList[i].updateHitTimer(TIME_INTERVAL);
 			
-			if (this.hitList[i].getHitTimer() > 1000) {
+			if (this.hitList[i].getHitTimer() > 2000) {
 				this.hitList.splice(i, 1);
 			} else {
-				this.hitList[i].move(-2);
+				this.hitList[i].move(this.speed * -0.5);
 				this.hitList[i].draw();
 			}
 		}

@@ -164,16 +164,16 @@ class Diamond {
 		
 		var typeInt = Math.random() * 100;
 
-		if (typeInt < 20) {
+		if (typeInt < 85) {
 			this.type = REGULAR;
 			this.aspectRatio = crystal.height / crystal.width;
-		} else if (typeInt < 40) {
+		} else if (typeInt < 89) {
 			this.type = BALLOON;
 			this.aspectRatio = balloon.height / balloon.width;
-		} else if (typeInt < 60){
+		} else if (typeInt < 91){
 			this.type = SLOW_DOWN;
 			this.aspectRatio = arrow.height / arrow.width;
-		} else if (typeInt < 80) {
+		} else if (typeInt < 99) {
 			this.type = POISON;
 			this.aspectRatio = bomb.height / bomb.width;
 		} else {
@@ -202,9 +202,7 @@ class Diamond {
 		var dist_x = Math.pow(this.x - x, 2);
 		var dist_y = Math.pow(this.y - y, 2);
 		
-		var dist_c = Math.sqrt(Math.pow(this.r, 2) / 2);
-		
-		if (Math.pow(r + dist_c, 2) > (dist_x + dist_y)) {
+		if (Math.pow(r + this.r * 2, 2) > (dist_x + dist_y)) {
 			return true;
 		}
 		
