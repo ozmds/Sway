@@ -81,6 +81,8 @@ function Sway(cnv) {
 		var pen = new Circle(pen_x, pen_y, pen_rad, PRIMARY_COLOUR, this.cnv.width * 0.02, SECONDARY_COLOUR, this.ctx, this.cnv);
 		
 		this.pen = new Pendulum(cen, pen, arm);
+		
+		this.calculateSpeed();
 	};	 
 	
 	this.move = function() {
@@ -91,8 +93,6 @@ function Sway(cnv) {
 	
 	this.manageOrbs = function() {
 		/* Manage the all of the orbs currently on the screen */
-		
-		this.calculateSpeed();
 		
 		var i;
 		if (time_counter >= 1500) {
