@@ -46,6 +46,10 @@ class Circle {
 		return this.r;
 	}	
 	
+	getDeg() {
+		return this.deg;
+	}
+	
 	flip() {
 		if (this.dir == LEFT) {
 			this.dir = RIGHT;
@@ -124,6 +128,7 @@ class Line {
 		this.ctx = ctx;
 		this.cnv = cnv;
 		this.len = endY - stY;
+		this.oldLen = endY - stY; 
 	}
 	
 	draw() {
@@ -137,8 +142,16 @@ class Line {
 		this.ctx.closePath();
 	}
 	
+	getOldLen() {
+		return this.oldLen;
+	}
+	
 	getLen() {
 		return this.len;
+	}
+	
+	setLen(x) {
+		this.len = x;
 	}
 	
 	setEndX(x) {
@@ -180,6 +193,10 @@ class Diamond {
 			this.type = SPIKE;
 			this.aspectRatio = knife.height / knife.width;
 		}
+	}
+	
+	getType() {
+		return this.type;
 	}
 	
 	getHitTimer() {
@@ -337,6 +354,20 @@ class Pendulum {
 		this.cen = cen;
 		this.pen = pen;
 		this.arm = arm;
+		this.smallLen = 0;
+		this.timer = 0;
+		this.startRange = null;
+		this.endRange = null;
+	}
+	
+	setRange(width, padding) {
+		var span = Math.asin((width - (this.pen.getR() + padding)) / this.arm.getOldLen());
+		this.startRange = Math.PI * 1.5 - span;
+		this.endRange = Math.PI * 1.5 + span;
+	}
+	
+	setSmallLen(cnv) {
+		this.smallLen = (cnv.width / 2) - this.pen.getR() - PADDING;	
 	}
 	
 	getPen() {
@@ -363,5 +394,29 @@ class Pendulum {
 		this.pen.move(SPEED, this.arm.getLen(), this.cen, PADDING);
 		this.arm.setEndX(this.pen.getX());
 		this.arm.setEndY(this.pen.getY());
+	}
+	
+	startShrink() {
+		var deg = null; 
+		if (this.pen.getDeg() > 0) {
+			deg = this.pen.getDeg() % (2 * Math.PI);
+		} else {
+			deg = (2 * Math.PI) - Math.abs(this.pen.getDeg() % (2 * Math.PI));
+		}
+		 
+		if (this.timer < 15000) {
+			if (this.arm.getLen() > this.smallLen) {
+				this.arm.setLen(this.arm.getLen() * 0.99);
+				return false;
+			}
+		} else {
+			if (this.arm.getOldLen() > this.arm.getLen()) {
+				if ((deg > this.startRange) && (deg < this.endRange)) {
+					this.arm.setLen(this.arm.getLen() * 1.01);
+				}
+			}
+		}
+		
+		this.timer += TIME_INTERVAL;
 	}
 }

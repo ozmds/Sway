@@ -21,9 +21,20 @@ function Sway(cnv) {
 	this.hitList = [];
 	this.score = 0;
 	this.speed = 0;
+	this.status = REGULAR;
 	
 	this.cnv.style.top = (MARGIN).toString() + 'px';
 	this.cnv.style.left = (MARGIN).toString() + 'px';
+	
+	this.getStatus = function() {
+		/* Return status */
+		return this.status;
+	}
+	
+	this.setStatus = function(x) {
+		/* Set Status */
+		this.status = x;
+	}
 	
 	this.calculateSpeed = function() {
 		/* Calculate Speed based on orb_time */
@@ -81,6 +92,8 @@ function Sway(cnv) {
 		var pen = new Circle(pen_x, pen_y, pen_rad, PRIMARY_COLOUR, this.cnv.width * 0.02, SECONDARY_COLOUR, this.ctx, this.cnv);
 		
 		this.pen = new Pendulum(cen, pen, arm);
+		this.pen.setSmallLen(this.cnv);
+		this.pen.setRange(this.cnv.width / 2, PADDING); 
 		
 		this.calculateSpeed();
 	};	 
@@ -99,7 +112,7 @@ function Sway(cnv) {
 			time_counter = 0;
 			
 			var d = new Diamond(this.cnv.width * 0.035, this.ctx, this.cnv, null);
-			d.place(this.pen.getArm().getLen(), this.pen.getPen().getR()); 
+			d.place(this.pen.getArm().getOldLen(), this.pen.getPen().getR()); 
 			this.orbList.push(d);
 		}
 		
@@ -111,8 +124,15 @@ function Sway(cnv) {
 				this.score = 0;
 			} else if (this.orbList[i].checkHitPen(this.pen.getPen().getX(), this.pen.getPen().getY(), this.pen.getPen().getR())) {
 				this.hitList.push(this.orbList[i]);
+				
+				if (this.orbList[i].getType() == POISON) {
+					this.score = 0; 
+				} else if (this.orbList[i].getType() == REGULAR) {
+					this.setStatus(SLOW_DOWN);
+					this.incrementScore();					
+				} 
 				this.orbList.splice(i, 1);
-				this.incrementScore();
+				
 			} else {
 				this.orbList[i].draw();
 			}
@@ -192,6 +212,11 @@ function startGame() {
 		updateScore(swayGame.getCnv(), swayGame.getCtx(), swayGame.getScore(), 0, SECONDARY_COLOUR);
 		
 		swayGame.manageOrbs();
+		
+		if (swayGame.getStatus() == SLOW_DOWN) {
+			swayGame.getPen().startShrink();
+		}
+		
 		swayGame.move();
 	}, TIME_INTERVAL);
 }
