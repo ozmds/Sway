@@ -407,16 +407,20 @@ class Pendulum {
 		if (this.timer < 15000) {
 			if (this.arm.getLen() > this.smallLen) {
 				this.arm.setLen(this.arm.getLen() * 0.99);
-				return false;
 			}
 		} else {
 			if (this.arm.getOldLen() > this.arm.getLen()) {
 				if ((deg > this.startRange) && (deg < this.endRange)) {
 					this.arm.setLen(this.arm.getLen() * 1.01);
 				}
+			} else {
+				this.timer = 0;
+				return false;
 			}
 		}
 		
 		this.timer += TIME_INTERVAL;
+		
+		return true;
 	}
 }

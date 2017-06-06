@@ -120,18 +120,20 @@ function Sway(cnv) {
 			this.orbList[i].move(this.speed);
 			
 			if (this.orbList[i].getY() > (this.cnv.height + this.orbList[i].getR() * 2)) {
-				this.orbList.splice(i, 1);
-				this.score = 0;
+				if (this.orbList[i].getType() == REGULAR) {
+					this.orbList.splice(i, 1);
+					this.score = 0;
+				}
 			} else if (this.orbList[i].checkHitPen(this.pen.getPen().getX(), this.pen.getPen().getY(), this.pen.getPen().getR())) {
 				this.hitList.push(this.orbList[i]);
 				
 				if (this.orbList[i].getType() == POISON) {
 					this.score = 0; 
-				} else if (this.orbList[i].getType() == REGULAR) {
-					this.setStatus(SLOW_DOWN);
-					this.incrementScore();					
+				} else if (this.orbList[i].getType() == SLOW_DOWN) {
+					this.setStatus(SLOW_DOWN);					
 				} 
 				this.orbList.splice(i, 1);
+				this.incrementScore();
 				
 			} else {
 				this.orbList[i].draw();
@@ -214,7 +216,9 @@ function startGame() {
 		swayGame.manageOrbs();
 		
 		if (swayGame.getStatus() == SLOW_DOWN) {
-			swayGame.getPen().startShrink();
+			if (!swayGame.getPen().startShrink()) {
+				swayGame.setStatus(REGULAR);
+			}
 		}
 		
 		swayGame.move();
