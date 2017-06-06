@@ -117,6 +117,12 @@ function Sway(cnv) {
 		}
 		
 		for (i = 0; i < this.orbList.length; i++) {
+			
+			if (this.status != REGULAR) {
+				this.orbList[i].setType(REGULAR);
+				this.orbList[i].setImage();
+			}
+			
 			this.orbList[i].move(this.speed);
 			
 			if (this.orbList[i].getY() > (this.cnv.height + this.orbList[i].getR() * 2)) {
@@ -131,7 +137,9 @@ function Sway(cnv) {
 					this.score = 0; 
 				} else if (this.orbList[i].getType() == SLOW_DOWN) {
 					this.setStatus(SLOW_DOWN);					
-				} 
+				} else if (this.orbList[i].getType() == BALLOON) {
+					this.setStatus(BALLOON);
+				}
 				this.orbList.splice(i, 1);
 				this.incrementScore();
 				
@@ -217,6 +225,10 @@ function startGame() {
 		
 		if (swayGame.getStatus() == SLOW_DOWN) {
 			if (!swayGame.getPen().startShrink()) {
+				swayGame.setStatus(REGULAR);
+			}
+		} else if (swayGame.getStatus() == BALLOON) {
+			if (!swayGame.getPen().startBalloon()) {
 				swayGame.setStatus(REGULAR);
 			}
 		}

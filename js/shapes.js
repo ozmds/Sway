@@ -32,6 +32,15 @@ class Circle {
 		this.deg = 1.5 * Math.PI;
 		this.dir = LEFT;
 		this.sp = 0;
+		this.oldR = r;
+	}
+	
+	getOldR() {
+		return this.oldR;
+	}
+	
+	setR(x) {
+		this.r = x;
 	}
 	
 	getX() {
@@ -174,29 +183,47 @@ class Diamond {
 		this.type = type;
 		this.hitTimer = 0;
 		this.aspectRatio = 0;
+		this.img = null;
 		
 		var typeInt = Math.random() * 100;
 
-		if (typeInt < 85) {
+		if (typeInt < 20) {
 			this.type = REGULAR;
-			this.aspectRatio = crystal.height / crystal.width;
-		} else if (typeInt < 89) {
+		} else if (typeInt < 40) {
 			this.type = BALLOON;
-			this.aspectRatio = balloon.height / balloon.width;
-		} else if (typeInt < 91){
+		} else if (typeInt < 60){
 			this.type = SLOW_DOWN;
-			this.aspectRatio = arrow.height / arrow.width;
-		} else if (typeInt < 99) {
+		} else if (typeInt < 80) {
 			this.type = POISON;
-			this.aspectRatio = bomb.height / bomb.width;
 		} else {
 			this.type = SPIKE;
-			this.aspectRatio = knife.height / knife.width;
 		}
+		
+		this.setImage();
+	}
+	
+	setImage() {
+		if (this.type == REGULAR) {
+			this.img = crystal;
+		} else if (this.type == BALLOON) {
+			this.img = balloon;
+		} else if (this.type == SLOW_DOWN) {
+			this.img = arrow;
+		} else if (this.type == POISON) {
+			this.img = bomb;
+		} else if (this.type == SPIKE) {
+			this.img = knife;
+		}
+		
+		this.aspectRatio = this.img.height / this.img.width;
 	}
 	
 	getType() {
 		return this.type;
+	}
+	
+	setType(x) {
+		this.type = x;
 	}
 	
 	getHitTimer() {
@@ -233,85 +260,9 @@ class Diamond {
 		}
 	}
 	
-	fill() {
-		this.hitOrb();
-		this.ctx.fillStyle = this.col;
-		this.ctx.beginPath();
-		this.ctx.moveTo(this.x, this.y - this.r * 0.7);
-		this.ctx.lineTo(this.x - this.r * 0.7, this.y);
-		this.ctx.lineTo(this.x, this.y + this.r * 0.7);
-		this.ctx.lineTo(this.x + this.r * 0.7, this.y);
-		this.ctx.lineTo(this.x, this.y - this.r * 0.7);
-		this.ctx.fill();
-		this.ctx.closePath();
-	}
-	
 	draw() {
-		
-		if (this.type == REGULAR) {
-			this.drawRegular();
-		} else if (this.type == BALLOON) {
-			this.drawBalloon(); 
-		} else if (this.type == SLOW_DOWN) {
-			this.drawSlowDown();
-		} else if (this.type == SPIKE) {
-			this.drawSpike();
-		} else if (this.type == POISON) {
-			this.drawPoison();
-		}
-	}
-	
-	drawSlowDown() {
 		this.hitOrb();
-		this.ctx.drawImage(arrow, this.x - this.r, this.y - this.r * this.aspectRatio, 2 * this.r, 2 * this.r * this.aspectRatio);this.ctx.fillStyle = this.col;
-		this.ctx.lineWidth = this.r * 0.30;
-		this.ctx.strokeStyle = this.col;
-		
-		this.ctx.beginPath();
-		this.ctx.arc(this.x, this.y, this.r * 2, 0.0 * Math.PI, 2.0 * Math.PI);
-		this.ctx.stroke();
-		this.ctx.closePath();
-	}
-	
-	drawPoison() {
-		this.hitOrb();
-		this.ctx.drawImage(bomb, this.x - this.r, this.y - this.r * this.aspectRatio, 2 * this.r, 2 * this.r * this.aspectRatio);
-		this.ctx.lineWidth = this.r * 0.30;
-		this.ctx.strokeStyle = this.col;
-		
-		this.ctx.beginPath();
-		this.ctx.arc(this.x, this.y, this.r * 2, 0.0 * Math.PI, 2.0 * Math.PI);
-		this.ctx.stroke();
-		this.ctx.closePath();
-	}
-	
-	drawSpike() {
-		this.hitOrb();
-		this.ctx.drawImage(knife, this.x - this.r, this.y - this.r * this.aspectRatio, 2 * this.r, 2 * this.r * this.aspectRatio);
-		this.ctx.lineWidth = this.r * 0.30;
-		this.ctx.strokeStyle = this.col;
-		
-		this.ctx.beginPath();
-		this.ctx.arc(this.x, this.y, this.r * 2, 0.0 * Math.PI, 2.0 * Math.PI);
-		this.ctx.stroke();
-		this.ctx.closePath();
-	}
-	
-	drawBalloon() {
-		this.hitOrb();
-		this.ctx.drawImage(balloon, this.x - this.r, this.y - this.r * this.aspectRatio, 2 * this.r, 2 * this.r * this.aspectRatio);
-		this.ctx.lineWidth = this.r * 0.30;
-		this.ctx.strokeStyle = this.col;
-		
-		this.ctx.beginPath();
-		this.ctx.arc(this.x, this.y, this.r * 2, 0.0 * Math.PI, 2.0 * Math.PI);
-		this.ctx.stroke();
-		this.ctx.closePath();
-	}
-	
-	drawRegular() {
-		this.hitOrb();
-		this.ctx.drawImage(crystal, this.x - this.r, this.y - this.r * this.aspectRatio, 2 * this.r, 2 * this.r * this.aspectRatio);
+		this.ctx.drawImage(this.img, this.x - this.r, this.y - this.r * this.aspectRatio, 2 * this.r, 2 * this.r * this.aspectRatio);
 		this.ctx.lineWidth = this.r * 0.30;
 		this.ctx.strokeStyle = this.col;
 		
@@ -413,6 +364,27 @@ class Pendulum {
 				if ((deg > this.startRange) && (deg < this.endRange)) {
 					this.arm.setLen(this.arm.getLen() * 1.01);
 				}
+			} else {
+				this.timer = 0;
+				return false;
+			}
+		}
+		
+		this.timer += TIME_INTERVAL;
+		
+		return true;
+	}
+	
+	startBalloon() {
+		if (this.timer < 15000) {
+			if (this.pen.getR() < 2 * this.pen.getOldR()) {
+				this.arm.setLen(this.arm.getLen() - (this.pen.getR() * 0.01));
+				this.pen.setR(this.pen.getR() * 1.01);
+			}
+		} else {
+			if (this.pen.getR() > this.pen.getOldR()) {
+				this.arm.setLen(this.arm.getLen() + (this.pen.getR() * 0.01));
+				this.pen.setR(this.pen.getR() * 0.99);
 			} else {
 				this.timer = 0;
 				return false;
