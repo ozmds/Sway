@@ -144,8 +144,12 @@ function Sway(cnv) {
 				} else if (this.orbList[i].getType() == SPIKE) {
 					this.setStatus(SPIKE);
 				}
+				
+				if (this.orbList[i].getType != POISON) {
+					this.incrementScore();
+				}
+				
 				this.orbList.splice(i, 1);
-				this.incrementScore();
 				
 			} else {
 				this.orbList[i].draw();
