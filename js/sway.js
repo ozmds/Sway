@@ -145,7 +145,7 @@ function Sway(cnv) {
 					this.setStatus(SPIKE);
 				}
 				
-				if (this.orbList[i].getType != POISON) {
+				if (this.orbList[i].getType() == REGULAR) {
 					this.incrementScore();
 				}
 				
