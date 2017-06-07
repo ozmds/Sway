@@ -119,8 +119,10 @@ function Sway(cnv) {
 		for (i = 0; i < this.orbList.length; i++) {
 			
 			if (this.status != REGULAR) {
-				this.orbList[i].setType(REGULAR);
-				this.orbList[i].setImage();
+				if (this.orbList[i].getType() != POISON) {
+					this.orbList[i].setType(REGULAR);
+					this.orbList[i].setImage();
+				}
 			}
 			
 			this.orbList[i].move(this.speed);
@@ -139,6 +141,8 @@ function Sway(cnv) {
 					this.setStatus(SLOW_DOWN);					
 				} else if (this.orbList[i].getType() == BALLOON) {
 					this.setStatus(BALLOON);
+				} else if (this.orbList[i].getType() == SPIKE) {
+					this.setStatus(SPIKE);
 				}
 				this.orbList.splice(i, 1);
 				this.incrementScore();
@@ -229,6 +233,10 @@ function startGame() {
 			}
 		} else if (swayGame.getStatus() == BALLOON) {
 			if (!swayGame.getPen().startBalloon()) {
+				swayGame.setStatus(REGULAR);
+			}
+		} else if (swayGame.getStatus() == SPIKE) {
+			if (!swayGame.getPen().startSpike()) {
 				swayGame.setStatus(REGULAR);
 			}
 		}

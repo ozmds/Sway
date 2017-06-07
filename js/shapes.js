@@ -86,7 +86,7 @@ class Circle {
 		this.ctx.fillStyle = this.col;
 		this.ctx.lineWidth = this.owid;
 		this.ctx.strokeStyle = this.ocol;
-		
+			
 		this.ctx.beginPath();
 		this.ctx.arc(this.x, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);
 		this.ctx.fill();
@@ -189,11 +189,11 @@ class Diamond {
 
 		if (typeInt < 20) {
 			this.type = REGULAR;
-		} else if (typeInt < 40) {
+		} else if (typeInt < 25) {
 			this.type = BALLOON;
-		} else if (typeInt < 60){
+		} else if (typeInt < 30){
 			this.type = SLOW_DOWN;
-		} else if (typeInt < 80) {
+		} else if (typeInt < 95) {
 			this.type = POISON;
 		} else {
 			this.type = SPIKE;
@@ -377,7 +377,7 @@ class Pendulum {
 	
 	startBalloon() {
 		if (this.timer < 15000) {
-			if (this.pen.getR() < 2 * this.pen.getOldR()) {
+			if (this.pen.getR() < 1.5 * this.pen.getOldR()) {
 				this.arm.setLen(this.arm.getLen() - (this.pen.getR() * 0.01));
 				this.pen.setR(this.pen.getR() * 1.01);
 			}
@@ -395,4 +395,25 @@ class Pendulum {
 		
 		return true;
 	}
+	
+	startSpike() {
+		if (this.timer < 15000) {
+			if (this.pen.getR() < 1.5 * this.pen.getOldR()) {
+				this.arm.setLen(this.arm.getLen() - (this.pen.getR() * 0.01));
+				this.pen.setR(this.pen.getR() * 1.01);
+			}
+		} else {
+			if (this.pen.getR() > this.pen.getOldR()) {
+				this.arm.setLen(this.arm.getLen() + (this.pen.getR() * 0.01));
+				this.pen.setR(this.pen.getR() * 0.99);
+			} else {
+				this.timer = 0;
+				return false;
+			}
+		}
+		
+		this.timer += TIME_INTERVAL;
+		
+		return true;
+	}	
 }
