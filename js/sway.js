@@ -4,9 +4,9 @@ const PRIMARY_COLOUR = '#000015';
 const SECONDARY_COLOUR = '#FFFFFF';
 const MARGIN = 5;
 const PADDING = 10;
-const SPEED = 0.02;
+const SPEED = 0.015;
 
-const TIME_INTERVAL = 20;
+const TIME_INTERVAL = 15;
 
 var time_counter = 0;
 
@@ -38,12 +38,7 @@ function Sway(cnv) {
 	
 	this.calculateSpeed = function() {
 		/* Calculate Speed based on orb_time */
-		
-		/*
 		this.speed = Math.round(this.cnv.height / (orb_time / TIME_INTERVAL));
-		*/
-		
-		this.speed = 5;
 	}
 	
 	this.getScore = function() {
