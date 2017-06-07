@@ -38,7 +38,12 @@ function Sway(cnv) {
 	
 	this.calculateSpeed = function() {
 		/* Calculate Speed based on orb_time */
+		
+		/*
 		this.speed = Math.round(this.cnv.height / (orb_time / TIME_INTERVAL));
+		*/
+		
+		this.speed = 5;
 	}
 	
 	this.getScore = function() {
