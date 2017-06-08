@@ -119,9 +119,14 @@ function Sway(cnv) {
 		for (i = 0; i < this.orbList.length; i++) {
 			
 			if (this.status != REGULAR) {
-				if (this.orbList[i].getType() != POISON) {
+				if (this.status != SLOW_DOWN) {
 					this.orbList[i].setType(REGULAR);
 					this.orbList[i].setImage();
+				} else {
+					if (this.orbList[i].getType() != POISON) {
+						this.orbList[i].setType(REGULAR);
+						this.orbList[i].setImage();
+					}
 				}
 			}
 			
@@ -132,7 +137,7 @@ function Sway(cnv) {
 					this.orbList.splice(i, 1);
 					this.score = 0;
 				}
-			} else if (this.orbList[i].checkHitPen(this.pen.getPen().getX(), this.pen.getPen().getY(), this.pen.getPen().getR())) {
+			} else if (this.orbList[i].checkHitPen(this.pen.getPen().getX(), this.pen.getPen().getY(), this.pen.getPen().getR() * this.pen.getSpikeHeight())) {
 				this.hitList.push(this.orbList[i]);
 				
 				if (this.orbList[i].getType() == POISON) {
@@ -236,7 +241,7 @@ function startGame() {
 				swayGame.setStatus(REGULAR);
 			}
 		} else if (swayGame.getStatus() == BALLOON) {
-			if (!swayGame.getPen().startBalloon()) {
+			if (!swayGame.getPen().startBalloon(swayGame.getCnv())) {
 				swayGame.setStatus(REGULAR);
 			}
 		} else if (swayGame.getStatus() == SPIKE) {
