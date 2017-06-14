@@ -1,6 +1,14 @@
 document.addEventListener('DOMContentLoaded', startGame, false);
 
-const PRIMARY_COLOUR = '#000015';
+const PURPLE = '#9935B5';
+const GREEN = '#338A28';
+const RED = '#7F0000';
+const BLUE = '#000015';
+
+var PRIMARY_COLOUR = BLUE;
+
+var DEST_COLOUR = PRIMARY_COLOUR;
+
 const SECONDARY_COLOUR = '#FFFFFF';
 const MARGIN = 5;
 const PADDING = 10;
@@ -91,7 +99,14 @@ function Sway(cnv) {
 		var cen = new Circle(cen_x, cen_y, pen_rad / 2, PRIMARY_COLOUR, this.cnv.width * 0.0175, SECONDARY_COLOUR, this.ctx, this.cnv);
 		var pen = new Circle(pen_x, pen_y, pen_rad, PRIMARY_COLOUR, this.cnv.width * 0.02, SECONDARY_COLOUR, this.ctx, this.cnv);
 		
+		var sArm = new Line(cen_x, cen_y, pen_x, pen_y, this.cnv.width * 0.015, SECONDARY_COLOUR, this.ctx, this.cnv);
+		var sPen = new Circle(pen_x, pen_y, pen_rad, PRIMARY_COLOUR, this.cnv.width * 0.02, SECONDARY_COLOUR, this.ctx, this.cnv);
+		
 		this.pen = new Pendulum(cen, pen, arm);
+		
+		this.pen.setSArm(sArm);
+		this.pen.setSPen(sPen);
+		
 		this.pen.setSmallLen(this.cnv);
 		this.pen.setRange(this.cnv.width / 2, PADDING); 
 		
@@ -100,7 +115,7 @@ function Sway(cnv) {
 	
 	this.move = function() {
 		/* Move the pendulum as a whole */
-		this.pen.move();
+		this.pen.move(this.status);
 		this.pen.draw();
 	}
 	
@@ -137,7 +152,12 @@ function Sway(cnv) {
 					this.orbList.splice(i, 1);
 					this.score = 0;
 				}
-			} else if (this.orbList[i].checkHitPen(this.pen.getPen().getX(), this.pen.getPen().getY(), this.pen.getPen().getR() * this.pen.getSpikeHeight())) {
+			} else if ((this.orbList[i].checkHitPen(this.pen.getPen().getX(), 
+													this.pen.getPen().getY(), 
+													this.pen.getPen().getR() * this.pen.getSpikeHeight())) ||
+						(this.orbList[i].checkHitPen(this.pen.getSPen().getX(), 
+													this.pen.getSPen().getY(), 
+													this.pen.getSPen().getR()))) {
 				this.hitList.push(this.orbList[i]);
 				
 				if (this.orbList[i].getType() == POISON) {
@@ -187,8 +207,72 @@ Sway.prototype.background = function() {
 	this.cnv.style.backgroundColor = PRIMARY_COLOUR;
 };
 
+function changeColours(colour1, colour2) {
+	var c1 = [];
+	var c2 = [];
+	
+	var newcol = []
+	
+	c1.push(parseInt(colour1.slice(1, 3), 16));
+	c1.push(parseInt(colour1.slice(3, 5), 16));
+	c1.push(parseInt(colour1.slice(5, 7), 16));
+	
+	c2.push(parseInt(colour2.slice(1, 3), 16));
+	c2.push(parseInt(colour2.slice(3, 5), 16));
+	c2.push(parseInt(colour2.slice(5, 7), 16));
+	
+	if (c1[0] > c2[0]) {
+		newcol.push(c1[0] - 1);
+	} else if (c1[0] == c2[0]) { 
+		newcol.push(c1[0]);
+	} else {
+		newcol.push(c1[0] + 1);
+	}
+	
+	if (c1[1] > c2[1]) {
+		newcol.push(c1[1] - 1);
+	} else if (c1[1] == c2[1]) { 
+		newcol.push(c1[1]);
+	} else {
+		newcol.push(c1[1] + 1);
+	}
+	
+	if (c1[2] > c2[2]) {
+		newcol.push(c1[2] - 1);
+	} else if (c1[2] == c2[2]) { 
+		newcol.push(c1[2]);
+	} else {
+		newcol.push(c1[2] + 1);
+	}
+	
+	if (newcol[0] == 0) {
+		newcol[0] = '00';
+	} else if (newcol[0] < 16) {
+		newcol[0] = '0' + newcol[0].toString(16);	
+	}
+	
+	if (newcol[1] == 0) {
+		newcol[1] = '00';
+	} else if (newcol[1] < 16) {
+		newcol[1] = '0' + newcol[1].toString(16);	
+	}
+	
+	if (newcol[2] == 0) {
+		newcol[2] = '00';
+	} else if (newcol[2] < 16) {
+		newcol[2] = '0' + newcol[2].toString(16);	
+	}
+	
+	PRIMARY_COLOUR = '#' + newcol[0].toString(16) + newcol[1].toString(16) + newcol[2].toString(16);
+	return true;
+}
+
 function handleClick(event_x, event_y, sway) {
 	sway.getPen().getPen().flip();
+	
+	if (sway.getStatus() != BALLOON) {	
+		sway.getPen().getSPen().flip();
+	}
 }
 
 function drawPauseButton(x, y, side_len, colour, context) {
@@ -222,7 +306,11 @@ function startGame() {
 	swayGame.getCnv().addEventListener('click', function(event) {handleClick(event.x * window.devicePixelRatio, event.y * window.devicePixelRatio, swayGame);});
 	
 	setInterval(function() {
+		changeColours(PRIMARY_COLOUR, DEST_COLOUR);
+		
 		swayGame.background();
+		
+		swayGame.getPen().setCol(PRIMARY_COLOUR);
 		
 		if (swayGame.getOldHeight() != swayGame.getCnv().height) {
 			swayGame.initVariable();
@@ -241,7 +329,7 @@ function startGame() {
 				swayGame.setStatus(REGULAR);
 			}
 		} else if (swayGame.getStatus() == BALLOON) {
-			if (!swayGame.getPen().startBalloon(swayGame.getCnv())) {
+			if (!swayGame.getPen().startBalloon()) {
 				swayGame.setStatus(REGULAR);
 			}
 		} else if (swayGame.getStatus() == SPIKE) {

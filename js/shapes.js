@@ -35,12 +35,20 @@ class Circle {
 		this.oldR = r;
 	}
 	
+	setCol(x) {
+		this.col = x;
+	}
+	
 	getOldR() {
 		return this.oldR;
 	}
 	
 	setR(x) {
 		this.r = x;
+	}
+	
+	setY(x) {
+		this.y = x;
 	}
 	
 	getX() {
@@ -225,13 +233,13 @@ class Diamond {
 		
 		var typeInt = Math.random() * 100;
 
-		if (typeInt < 85) {
+		if (typeInt < 20) {
 			this.type = REGULAR;
-		} else if (typeInt < 86) {
+		} else if (typeInt < 40) {
 			this.type = BALLOON;
-		} else if (typeInt < 89){
+		} else if (typeInt < 60){
 			this.type = SLOW_DOWN;
-		} else if (typeInt < 99.5) {
+		} else if (typeInt < 80) {
 			this.type = POISON;
 		} else {
 			this.type = SPIKE;
@@ -337,6 +345,26 @@ class Pendulum {
 		this.startRange = null;
 		this.endRange = null;
 		this.spikeHeight = 1;
+		this.sArm = null;
+		this.sPen = null;
+	}
+	
+	setCol(x) {
+		this.pen.setCol(x);
+		this.cen.setCol(x);
+		this.sPen.setCol(x);
+	}
+	
+	setSArm(x) {
+		this.sArm = x;
+	}
+	
+	setSPen(x) {
+		this.sPen = x;
+	}
+	
+	getSPen() {
+		return this.sPen;
 	}
 	
 	getSpikeHeight() {
@@ -368,16 +396,27 @@ class Pendulum {
 	draw() {
 		this.pen.spin();
 		this.arm.draw();
+		this.sArm.draw();
 		this.cen.draw();
+		this.sPen.draw();
 		this.pen.drawSpikes(this.spikeHeight);
 		this.pen.draw();
 		this.pen.drawInnerCircle();
 	}
 	
-	move() {
+	move(status) {
 		this.pen.move(SPEED, this.arm.getLen(), this.cen, PADDING);
+		
+		if (status == BALLOON) {
+			this.sPen.move(-SPEED, this.sArm.getLen(), this.cen, PADDING);
+		} else {
+			this.sPen.move(SPEED, this.sArm.getLen(), this.cen, PADDING);
+		}
+		
 		this.arm.setEndX(this.pen.getX());
 		this.arm.setEndY(this.pen.getY());
+		this.sArm.setEndX(this.sPen.getX());
+		this.sArm.setEndY(this.sPen.getY());
 	}
 	
 	startShrink() {
@@ -389,13 +428,17 @@ class Pendulum {
 		}
 		 
 		if (this.timer < 15000) {
+			DEST_COLOUR = RED;
 			if (this.arm.getLen() > this.smallLen) {
 				this.arm.setLen(this.arm.getLen() * 0.99);
+				this.sArm.setLen(this.sArm.getLen() * 0.99);
 			}
 		} else {
+			DEST_COLOUR = BLUE;
 			if (this.arm.getOldLen() > this.arm.getLen()) {
 				if ((deg > this.startRange) && (deg < this.endRange)) {
 					this.arm.setLen(this.arm.getLen() * 1.01);
+					this.sArm.setLen(this.sArm.getLen() * 1.01);
 				}
 			} else {
 				this.timer = 0;
@@ -408,20 +451,15 @@ class Pendulum {
 		return true;
 	}
 	
-	startBalloon(cnv) {
-		if (this.timer < 10000) {
-			if (this.pen.getR() < cnv.width * 0.6) {
-				this.arm.setLen(this.arm.getLen() - (this.pen.getR() * 0.01));
-				this.pen.setR(this.pen.getR() * 1.01);
-			}
-		} else {
-			if (this.pen.getR() > this.pen.getOldR()) {
-				this.arm.setLen(this.arm.getLen() + (this.pen.getR() * 0.01));
-				this.pen.setR(this.pen.getR() * 0.99);
-			} else {
+	startBalloon() {
+		if (this.timer > 15000) {
+			DEST_COLOUR = BLUE;
+			if (this.pen.getX() == this.sPen.getX()) {
 				this.timer = 0;
 				return false;
 			}
+		} else {
+			DEST_COLOUR = GREEN;
 		}
 		
 		this.timer += TIME_INTERVAL;
@@ -430,19 +468,25 @@ class Pendulum {
 	}
 	
 	startSpike() {
-		if (this.timer < 20000) {
+		if (this.timer < 15000) {
+			DEST_COLOUR = PURPLE;
 			if (this.pen.getR() < 1.5 * this.pen.getOldR()) {
 				this.arm.setLen(this.arm.getLen() - (this.pen.getR() * 0.01));
+				this.sArm.setLen(this.sArm.getLen() - (this.sPen.getR() * 0.01));
 				this.pen.setR(this.pen.getR() * 1.01);
+				this.sPen.setR(this.sPen.getR() * 1.01);
 			}
 			
 			if (this.spikeHeight < 2) {
 				this.spikeHeight = this.spikeHeight * 1.01;
 			}
 		} else {
+			DEST_COLOUR = BLUE;
 			if (this.pen.getR() > this.pen.getOldR()) {
 				this.arm.setLen(this.arm.getLen() + (this.pen.getR() * 0.01));
+				this.sArm.setLen(this.sArm.getLen() + (this.sPen.getR() * 0.01));
 				this.pen.setR(this.pen.getR() * 0.99);
+				this.sPen.setR(this.sPen.getR() * 0.99);
 			} else if (this.spikeHeight > 1) {
 				this.spikeHeight = this.spikeHeight * 0.99;
 			} else {
