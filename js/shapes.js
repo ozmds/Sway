@@ -347,6 +347,11 @@ class Pendulum {
 		this.spikeHeight = 1;
 		this.sArm = null;
 		this.sPen = null;
+		this.speed = null;
+	}
+	
+	calcPenSpeed(penTime) {
+		this.speed = (this.endRange - this.startRange) / (penTime / TIME_INTERVAL);
 	}
 	
 	setCol(x) {
@@ -405,12 +410,12 @@ class Pendulum {
 	}
 	
 	move(status) {
-		this.pen.move(SPEED, this.arm.getLen(), this.cen, PADDING);
+		this.pen.move(this.speed, this.arm.getLen(), this.cen, PADDING);
 		
 		if (status == BALLOON) {
-			this.sPen.move(-SPEED, this.sArm.getLen(), this.cen, PADDING);
+			this.sPen.move(-this.speed, this.sArm.getLen(), this.cen, PADDING);
 		} else {
-			this.sPen.move(SPEED, this.sArm.getLen(), this.cen, PADDING);
+			this.sPen.move(this.speed, this.sArm.getLen(), this.cen, PADDING);
 		}
 		
 		this.arm.setEndX(this.pen.getX());

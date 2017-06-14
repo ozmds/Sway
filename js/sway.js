@@ -12,13 +12,15 @@ var DEST_COLOUR = PRIMARY_COLOUR;
 const SECONDARY_COLOUR = '#FFFFFF';
 const MARGIN = 5;
 const PADDING = 10;
-const SPEED = 0.015;
 
 const TIME_INTERVAL = 15;
+const PEN_START_TIME = 1500;
+const PEN_DECREMENT_TIME = 0.05 * PEN_START_TIME;
 
 var time_counter = 0;
 
 var orb_time = 6000;
+var pen_time = PEN_START_TIME;
 
 function Sway(cnv) {
 	this.cnv = document.getElementById(cnv);
@@ -111,6 +113,7 @@ function Sway(cnv) {
 		this.pen.setRange(this.cnv.width / 2, PADDING); 
 		
 		this.calculateSpeed();
+		this.pen.calcPenSpeed(pen_time);
 	};	 
 	
 	this.move = function() {
@@ -172,6 +175,10 @@ function Sway(cnv) {
 				
 				if (this.orbList[i].getType() == REGULAR) {
 					this.incrementScore();
+					if ((this.score % 10 == 0) && (this.score <= 200)) {
+						pen_time = PEN_START_TIME - (this.score / 10) * PEN_DECREMENT_TIME;
+						this.pen.calcPenSpeed(pen_time);
+					}
 				}
 				
 				this.orbList.splice(i, 1);
