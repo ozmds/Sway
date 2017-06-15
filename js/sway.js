@@ -1,21 +1,20 @@
 document.addEventListener('DOMContentLoaded', startGame, false);
 
+const MARGIN = 5;
+const PADDING = 10;
+
 const PURPLE = '#9935B5';
 const GREEN = '#338A28';
 const RED = '#7F0000';
 const BLUE = '#000015';
-
-var PRIMARY_COLOUR = BLUE;
-
-var DEST_COLOUR = PRIMARY_COLOUR;
-
 const SECONDARY_COLOUR = '#FFFFFF';
-const MARGIN = 5;
-const PADDING = 10;
 
 const TIME_INTERVAL = 15;
 const PEN_START_TIME = 1500;
 const PEN_DECREMENT_TIME = 0.05 * PEN_START_TIME;
+
+var PRIMARY_COLOUR = BLUE;
+var DEST_COLOUR = PRIMARY_COLOUR;
 
 var time_counter = 0;
 
@@ -37,18 +36,13 @@ function Sway(cnv) {
 	this.cnv.style.left = (MARGIN).toString() + 'px';
 	
 	this.getStatus = function() {
-		/* Return status */
+		/* Return Status */
 		return this.status;
 	}
 	
 	this.setStatus = function(x) {
-		/* Set Status */
+		/* Set Status to x */
 		this.status = x;
-	}
-	
-	this.calculateSpeed = function() {
-		/* Calculate Speed based on orb_time */
-		this.speed = Math.round(this.cnv.height / (orb_time / TIME_INTERVAL));
 	}
 	
 	this.getScore = function() {
@@ -57,37 +51,44 @@ function Sway(cnv) {
 	}
 	
 	this.incrementScore = function() {
-		/* Increment Score */
+		/* Increase Score By 1 */
 		this.score += 1;
 	}
-	
+
 	this.getOldHeight = function() {
-		/* Return the old height */
+		/* Return Old Height */
 		return this.old_height;
 	};
 	
-	this.getCtx = function() {
-		/* Return the context */
-		return this.ctx;
-	}
-	
 	this.setOldHeight = function(x) {
-		/* Set the old height */
+		/* Set Old Height to x */
 		this.old_height = x;
 	}
 	
+	this.getCtx = function() {
+		/* Return Context */
+		return this.ctx;
+	}
+	
 	this.getCnv = function() {
-		/* Return the canvas */
+		/* Return Canvas */
 		return this.cnv;
 	}
 	
 	this.getPen = function() {
-		/* Return the pendulum */
+		/* Return Pendulum */
 		return this.pen;
+	}
+	
+	this.calculateSpeed = function() {
+		/* Calculate Speed of Orb based on orb_time */
+		this.speed = Math.round(this.cnv.height / (orb_time / TIME_INTERVAL));
 	}
 	
 	this.initVariable = function() {
 		/* Initialize all the main variables */
+		
+		/* Create The Pendulum */
 		var cen_height = 0.60;
 		var pen_rad = this.cnv.width * 0.1;
 		
@@ -109,15 +110,17 @@ function Sway(cnv) {
 		this.pen.setSArm(sArm);
 		this.pen.setSPen(sPen);
 		
+		/* Create Boundaries for Pendulum */
 		this.pen.setSmallLen(this.cnv);
 		this.pen.setRange(this.cnv.width / 2, PADDING); 
 		
+		/* Calculate Speed for Pendulum and Orb */
 		this.calculateSpeed();
 		this.pen.calcPenSpeed(pen_time);
 	};	 
 	
 	this.move = function() {
-		/* Move the pendulum as a whole */
+		/* Move the Pendulum as a Whole */
 		this.pen.move(this.status);
 		this.pen.draw();
 	}
@@ -204,6 +207,8 @@ function Sway(cnv) {
 }
 
 Sway.prototype.background = function() {
+	/*Configure Basics of Screen Canvas */
+	
 	this.cnv.height = (window.innerHeight - 10) * window.devicePixelRatio;
 	this.cnv.width = (window.innerWidth - 10) * window.devicePixelRatio;
 		
