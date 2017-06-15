@@ -129,7 +129,7 @@ function Sway(cnv) {
 		if (time_counter >= 1500) {
 			time_counter = 0;
 			
-			var d = new Diamond(this.cnv.width * 0.035, this.ctx, this.cnv, null);
+			var d = new Diamond(this.cnv.width * 0.035, this.ctx, this.cnv, this.score, this.speed);
 			d.place(this.pen.getArm().getOldLen(), this.pen.getPen().getR()); 
 			this.orbList.push(d);
 		}
@@ -148,7 +148,7 @@ function Sway(cnv) {
 				}
 			}
 			
-			this.orbList[i].move(this.speed);
+			this.orbList[i].move(1);
 			
 			if (this.orbList[i].getY() > (this.cnv.height + this.orbList[i].getR() * 2)) {
 				if (this.orbList[i].getType() == REGULAR) {
@@ -194,7 +194,7 @@ function Sway(cnv) {
 			if (this.hitList[i].getHitTimer() > 2000) {
 				this.hitList.splice(i, 1);
 			} else {
-				this.hitList[i].move(this.speed * -0.5);
+				this.hitList[i].move(-0.5);
 				this.hitList[i].draw();
 			}
 		}

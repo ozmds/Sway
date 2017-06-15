@@ -7,6 +7,10 @@ const SLOW_DOWN = 'slow_down';
 const POISON = 'poison';
 const SPIKE = 'spike';
 
+const x13start = 15;
+const x16start = 10;
+const x2start = 5;
+
 var arrow = new Image();
 var knife = new Image();
 var bomb = new Image();
@@ -35,12 +39,24 @@ class Circle {
 		this.oldR = r;
 	}
 	
+	setDir(x) {
+		this.dir = x;
+	}
+	
+	getDir() {
+		return this.dir;
+	}
+	
 	setCol(x) {
 		this.col = x;
 	}
 	
 	getOldR() {
 		return this.oldR;
+	}
+	
+	setX(x) {
+		this.x = x;
 	}
 	
 	setR(x) {
@@ -65,6 +81,10 @@ class Circle {
 	
 	getDeg() {
 		return this.deg;
+	}
+	
+	setDeg(x) {
+		this.deg = x;
 	}
 	
 	flip() {
@@ -219,19 +239,41 @@ class Line {
 }
 
 class Diamond {
-	constructor(r, ctx, cnv, type) {
+	constructor(r, ctx, cnv, score, speed) {
 		this.x = null;
 		this.y = -2 * r;
 		this.r = r;
 		this.col = SECONDARY_COLOUR;
 		this.ctx = ctx;
 		this.cnv = cnv;
-		this.type = type;
+		this.type = null;
 		this.hitTimer = 0;
 		this.aspectRatio = 0;
 		this.img = null;
+		this.speed = speed;
 		
 		var typeInt = Math.random() * 100;
+		var x2level = x2start;
+		var x16level = x16start;
+		var x13level = x13start;
+		
+		if (score % 20 == 0 && score >= 20) {
+			if (score <= 60) {
+				x2level = x2start + 5 * (score / 20);
+				x16level = x16start + 5 * (score / 20);
+				x13level = x13start + 5 * (score / 20);
+			}
+		}
+		
+		if (typeInt < x2level) {
+			this.speed = this.speed * 6;
+		} else if (typeInt < x2level + x16level) {
+			this.speed = this.speed * 3;
+		} else if (typeInt < x2level + x16level + x13level) {
+			this.speed = this.speed * 2;
+		}
+		
+		typeInt = Math.random() * 100;
 
 		if (typeInt < 20) {
 			this.type = REGULAR;
@@ -307,15 +349,18 @@ class Diamond {
 	}
 	
 	draw() {
-		this.hitOrb();
-		this.ctx.drawImage(this.img, this.x - this.r, this.y - this.r * this.aspectRatio, 2 * this.r, 2 * this.r * this.aspectRatio);
+		this.hitOrb();		
 		this.ctx.lineWidth = this.r * 0.30;
 		this.ctx.strokeStyle = this.col;
+		this.ctx.fillStyle = PRIMARY_COLOUR;
 		
 		this.ctx.beginPath();
 		this.ctx.arc(this.x, this.y, this.r * 2, 0.0 * Math.PI, 2.0 * Math.PI);
+		this.ctx.fill();
 		this.ctx.stroke();
 		this.ctx.closePath();
+		
+		this.ctx.drawImage(this.img, this.x - this.r, this.y - this.r * this.aspectRatio, 2 * this.r, 2 * this.r * this.aspectRatio);
 	}
 	
 	place(armLength, rad) {
@@ -330,8 +375,8 @@ class Diamond {
 		this.draw();
 	}
 	
-	move(speed) {
-		this.y += speed;
+	move(x) {
+		this.y += this.speed * x;
 	}
 }
 
@@ -457,9 +502,14 @@ class Pendulum {
 	}
 	
 	startBalloon() {
+		var dist_x = Math.pow(Math.abs(this.pen.getX() - this.sPen.getX()), 2);
+		var dist_y = Math.pow(Math.abs(this.pen.getY() - this.sPen.getY()), 2);
+		
 		if (this.timer > 15000) {
 			DEST_COLOUR = BLUE;
-			if (this.pen.getX() == this.sPen.getX()) {
+			if (dist_x + dist_y < Math.pow(this.pen.getR(), 2)) {
+				this.sPen.setDeg(this.pen.getDeg());
+				this.sPen.setDir(this.pen.getDir());
 				this.timer = 0;
 				return false;
 			}
