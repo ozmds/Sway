@@ -13,14 +13,20 @@ const TIME_INTERVAL = 15;
 const PEN_START_TIME = 1500;
 const PEN_DECREMENT_TIME = 0.05 * PEN_START_TIME;
 
-const ORB_FREQUENCY = 1500;
+const ORB_START_TIME = 6000;
+const ORB_DECREMENT_TIME = 0.025 * ORB_START_TIME;
+
+const ORB_FREQ_START_TIME = 1500;
+const ORB_FREQ_DECREMENT_TIME = 0.03 * ORB_FREQ_START_TIME;
+
+var orb_frequency = ORB_FREQ_START_TIME; /* 600 at a score of 300*/
 
 var PRIMARY_COLOUR = BLUE;
 var DEST_COLOUR = PRIMARY_COLOUR;
 
 var time_counter = 0;
 
-var orb_time = 6000;
+var orb_time = ORB_START_TIME; 
 var pen_time = PEN_START_TIME;
 
 function Sway(cnv) {
@@ -159,9 +165,24 @@ function Sway(cnv) {
 	
 	this.incrementPenSpeed = function(score) {
 		/* Increase Speed of Pendulum */
-		if ((score % 10 == 0) && (score <= 200)) {
+		if ((score % 10 == 0) && (score <= 100)) {
 			pen_time = PEN_START_TIME - (score / 10) * PEN_DECREMENT_TIME;
 			this.pen.calcPenSpeed(pen_time);
+		}
+	}
+	
+	this.incrementOrbTime = function(score) {
+		/* Increase the speed of all orbs */
+		if ((score % 10 == 0) && (score <= 200)) {
+			orb_time = ORB_START_TIME - (score / 10) * ORB_DECREMENT_TIME;
+			this.calculateSpeed();
+		}
+	}
+	
+	this.incrementOrbFrequency = function(score) {
+		/* Increase Frequency of all orbs */
+		if ((score % 15 == 0) && (score <= 300)) {
+			orb_frequency = ORB_FREQ_START_TIME - (score / 15) * ORB_FREQ_DECREMENT_TIME;
 		}
 	}
 	
@@ -184,7 +205,7 @@ function Sway(cnv) {
 		var i;
 		
 		/* Create a New Orb */
-		if (time_counter >= ORB_FREQUENCY) {
+		if (time_counter >= orb_frequency) {
 			time_counter = 0;
 			this.createOrb();
 		}
@@ -216,6 +237,8 @@ function Sway(cnv) {
 				if (this.orbList[i].getType() == REGULAR) {
 					this.incrementScore();
 					this.incrementPenSpeed(this.score);
+					this.incrementOrbTime(this.score);
+					this.incrementOrbFrequency(this.score);
 				}
 				
 				this.orbList.splice(i, 1);
@@ -246,66 +269,40 @@ Sway.prototype.background = function() {
 };
 
 function changeColours(colour1, colour2) {
+	/* Slowly return fading colours from colour1 to colour2 */
+	var i;
+	
 	var c1 = [];
 	var c2 = [];
 	
 	var newcol = []
 	
-	c1.push(parseInt(colour1.slice(1, 3), 16));
-	c1.push(parseInt(colour1.slice(3, 5), 16));
-	c1.push(parseInt(colour1.slice(5, 7), 16));
-	
-	c2.push(parseInt(colour2.slice(1, 3), 16));
-	c2.push(parseInt(colour2.slice(3, 5), 16));
-	c2.push(parseInt(colour2.slice(5, 7), 16));
-	
-	if (c1[0] > c2[0]) {
-		newcol.push(c1[0] - 1);
-	} else if (c1[0] == c2[0]) { 
-		newcol.push(c1[0]);
-	} else {
-		newcol.push(c1[0] + 1);
-	}
-	
-	if (c1[1] > c2[1]) {
-		newcol.push(c1[1] - 1);
-	} else if (c1[1] == c2[1]) { 
-		newcol.push(c1[1]);
-	} else {
-		newcol.push(c1[1] + 1);
-	}
-	
-	if (c1[2] > c2[2]) {
-		newcol.push(c1[2] - 1);
-	} else if (c1[2] == c2[2]) { 
-		newcol.push(c1[2]);
-	} else {
-		newcol.push(c1[2] + 1);
-	}
-	
-	if (newcol[0] == 0) {
-		newcol[0] = '00';
-	} else if (newcol[0] < 16) {
-		newcol[0] = '0' + newcol[0].toString(16);	
-	}
-	
-	if (newcol[1] == 0) {
-		newcol[1] = '00';
-	} else if (newcol[1] < 16) {
-		newcol[1] = '0' + newcol[1].toString(16);	
-	}
-	
-	if (newcol[2] == 0) {
-		newcol[2] = '00';
-	} else if (newcol[2] < 16) {
-		newcol[2] = '0' + newcol[2].toString(16);	
+	for (i = 0; i < 3; i++) {
+		c1.push(parseInt(colour1.slice(2 * i + 1, 2 * i + 3), 16));
+		c2.push(parseInt(colour2.slice(2 * i + 1, 2 * i + 3), 16));
+		
+		if (c1[i] > c2[i]) {
+			newcol.push(c1[i] - 1);
+		} else if (c1[i] == c2[i]) {
+			newcol.push(c1[i]);
+		} else {
+			newcol.push(c1[i] + 1);
+		}
+		
+		if (newcol[i] == 0) {
+			newcol[i] = '00';
+		} else if (newcol[i] < 16) {
+			newcol[i] = '0' + newcol[i].toString(16);
+		}
 	}
 	
 	PRIMARY_COLOUR = '#' + newcol[0].toString(16) + newcol[1].toString(16) + newcol[2].toString(16);
+	
 	return true;
 }
 
 function handleClick(event_x, event_y, sway) {
+	/* React to a click */
 	sway.getPen().getPen().flip();
 	
 	if (sway.getStatus() != BALLOON) {	
@@ -314,6 +311,7 @@ function handleClick(event_x, event_y, sway) {
 }
 
 function drawPauseButton(x, y, side_len, colour, context) {
+	/* Draw a Pause Button */
 	var bar_width = side_len / 3; 
 	context.fillStyle = colour; 
 	
@@ -322,6 +320,7 @@ function drawPauseButton(x, y, side_len, colour, context) {
 }
 
 function updateScore(c, ctx, score, highscore, colour) {
+	/* Write the score on the canvas */
 	ctx.textBaseline = 'middle'; 
 	ctx.textAlign = 'end'; 
 	ctx.fillStyle = colour; 

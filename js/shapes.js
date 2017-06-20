@@ -9,7 +9,6 @@ const SPIKE = 'spike';
 
 const x13start = 15;
 const x16start = 10;
-const x2start = 5;
 
 var arrow = new Image();
 var knife = new Image();
@@ -253,23 +252,19 @@ class Diamond {
 		this.speed = speed;
 		
 		var typeInt = Math.random() * 100;
-		var x2level = x2start;
 		var x16level = x16start;
 		var x13level = x13start;
 		
 		if (score % 20 == 0 && score >= 20) {
 			if (score <= 60) {
-				x2level = x2start + 5 * (score / 20);
 				x16level = x16start + 5 * (score / 20);
 				x13level = x13start + 5 * (score / 20);
 			}
 		}
 		
-		if (typeInt < x2level) {
-			this.speed = this.speed * 6;
-		} else if (typeInt < x2level + x16level) {
+		if (typeInt < x16level) {
 			this.speed = this.speed * 3;
-		} else if (typeInt < x2level + x16level + x13level) {
+		} else if (typeInt < x16level + x13level) {
 			this.speed = this.speed * 2;
 		}
 		
