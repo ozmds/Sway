@@ -266,7 +266,7 @@ function Sway(cnv) {
 Sway.prototype.background = function() {
 	/*Configure Basics of Screen Canvas */
 
-	this.cnv.height = (window.innerHeight - 10) * window.devicePixelRatio;
+	this.cnv.height = (window.innerHeight - 10) * window.devicePixelRatio * 2; /* DELETE THIS */
 	this.cnv.width = (window.innerWidth - 10) * window.devicePixelRatio;
 
 	this.cnv.style.width = (this.cnv.width / window.devicePixelRatio).toString() + 'px';
