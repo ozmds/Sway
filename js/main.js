@@ -35,15 +35,27 @@ function changeColours(colour1, colour2) {
 
 function handleClick(event_x, event_y, sway) {
 	/* React to a click */
-	sway.getPen().getPen().flip();
+    if (STATE == PAUSE) {
+        STATE = GAME;
+    } else if (event_x > pausex && pausex + pauseside > event_x) {
+        if (event_y > pausey && pausey + pauseside > event_y) {
+            STATE = PAUSE;
+        }
+    } else {
+        sway.getPen().getPen().flip();
 
-	if (sway.getStatus() != BALLOON) {
-		sway.getPen().getSPen().flip();
-	}
+    	if (sway.getStatus() != BALLOON) {
+    		sway.getPen().getSPen().flip();
+    	}
+    }
 }
 
 function drawPauseButton(x, y, side_len, colour, context) {
 	/* Draw a Pause Button */
+    pausex = x;
+    pausey = y;
+    pauseside = side_len;
+
 	var bar_width = side_len / 3;
 	context.fillStyle = colour;
 
@@ -86,30 +98,35 @@ function startGame() {
 			swayGame.setOldHeight(swayGame.getCnv().height);
 		}
 
-		drawPauseButton(swayGame.getCnv().width * 0.04, swayGame.getCnv().width * 0.04, swayGame.getCnv().width * 0.10,
-						SECONDARY_COLOUR, swayGame.getCtx());
+        drawPauseButton(swayGame.getCnv().width * 0.04, swayGame.getCnv().width * 0.04, swayGame.getCnv().width * 0.10,
+                        SECONDARY_COLOUR, swayGame.getCtx());
 
-		updateScore(swayGame.getCnv(), swayGame.getCtx(), swayGame.getScore(), window.localStorage.getItem('highscore'), SECONDARY_COLOUR);
+        updateScore(swayGame.getCnv(), swayGame.getCtx(), swayGame.getScore(), window.localStorage.getItem('highscore'), SECONDARY_COLOUR);
 
-		swayGame.manageOrbs();
+        if (STATE == PAUSE) {
+            /*Empty For Now*/
+        } else if (STATE == GAME) {
+    		swayGame.manageOrbs();
 
-		if (swayGame.getStatus() == SLOW_DOWN) {
-			if (!swayGame.getPen().startShrink()) {
-				swayGame.setStatus(REGULAR);
-			}
-		} else if (swayGame.getStatus() == BALLOON) {
-			if (!swayGame.getPen().startBalloon()) {
-				swayGame.setStatus(REGULAR);
-			}
-		} else if (swayGame.getStatus() == SPIKE) {
-			if (!swayGame.getPen().startSpike()) {
-				swayGame.setStatus(REGULAR);
-			}
-		} else if (swayGame.getStatus() == POISON) {
-			swayGame.setScore(0);
-			swayGame.setStatus(REGULAR);
-		}
+    		if (swayGame.getStatus() == SLOW_DOWN) {
+    			if (!swayGame.getPen().startShrink()) {
+    				swayGame.setStatus(REGULAR);
+    			}
+    		} else if (swayGame.getStatus() == BALLOON) {
+    			if (!swayGame.getPen().startBalloon()) {
+    				swayGame.setStatus(REGULAR);
+    			}
+    		} else if (swayGame.getStatus() == SPIKE) {
+    			if (!swayGame.getPen().startSpike()) {
+    				swayGame.setStatus(REGULAR);
+    			}
+    		} else if (swayGame.getStatus() == POISON) {
+    			swayGame.setScore(0);
+    			swayGame.setStatus(REGULAR);
+    		}
 
-		swayGame.move();
+    		swayGame.move();
+        }
+
 	}, TIME_INTERVAL);
 }

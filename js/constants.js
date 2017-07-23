@@ -19,6 +19,15 @@ const ORB_FREQ_DECREMENT_TIME = 0.03 * ORB_FREQ_START_TIME;
 
 var orb_frequency = ORB_FREQ_START_TIME; /* 600 at a score of 300*/
 
+const GAME = 'game';
+const PAUSE = 'pause';
+
+var STATE = GAME;
+
+var pausex;
+var pausey;
+var pauseside;
+
 var PRIMARY_COLOUR = BLUE;
 var DEST_COLOUR = PRIMARY_COLOUR;
 
