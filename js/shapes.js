@@ -1,27 +1,3 @@
-const LEFT = 'left';
-const RIGHT = 'right';
-
-const REGULAR = 'regular';
-const BALLOON = 'balloon';
-const SLOW_DOWN = 'slow_down';
-const POISON = 'poison';
-const SPIKE = 'spike';
-
-const x13start = 15;
-const x16start = 10;
-
-var arrow = new Image();
-var knife = new Image();
-var bomb = new Image();
-var crystal = new Image();
-var balloon = new Image();
-
-knife.src = 'data/knife.png';
-arrow.src = 'data/arrow.png';
-bomb.src = 'data/bomb.png';
-crystal.src = 'data/diamond.png';
-balloon.src = 'data/balloon.png';
-
 class Circle {
 	constructor(x, y, r, col, owid, ocol, ctx, cnv) {
 		this.x = x;
