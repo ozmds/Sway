@@ -4,8 +4,8 @@ const PADDING = 10;
 const PURPLE = '#9935B5';
 const GREEN = '#338A28';
 const RED = '#7F0000';
-const BLUE = '#000015';
-const SECONDARY_COLOUR = '#FFFFFF';
+const BLUE = '#6ECFF5';
+const SECONDARY_COLOUR = '#000015';
 
 const TIME_INTERVAL = 15;
 const PEN_START_TIME = 1500;
