@@ -1,0 +1,38 @@
+Sway Documentation:
+
+File: circle.js
+    Class: Circle
+        Method: constructor
+        Method: setDir
+        Method: getDir
+        Method: setCol
+        Method: getOldR
+        Method: setX
+        Method: setR
+        Method: setY
+        Method: getX
+        Method: getY
+        Method: getR
+        Method: getDeg
+        Method: setDeg
+        Method: flip
+        Method: drawInnerCircle
+        Method: spin
+        Method: drawSpikes
+        Method: draw
+        Method: hitWall
+        Method: move
+
+File: constants.js
+
+File: game.js
+
+File: line.js
+
+File: main.js
+
+File: orb.js
+
+File: orblist.js
+
+File: pendulum.js
