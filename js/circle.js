@@ -1,57 +1,50 @@
 class Circle {
-	constructor(x, y, r, col, owid, ocol, ctx, cnv) {
+	constructor(x, y, r, widthRatio, ctx, cnv) {
 		this.x = x;
 		this.y = y;
 		this.r = r;
-		this.col = col;
-		this.owid = owid;
-		this.ocol = ocol;
+		this.col = PRIMARY_COLOUR;
+		this.owid = widthRatio * this.r;
+		this.ocol = SECONDARY_COLOUR;
 		this.ctx = ctx;
 		this.cnv = cnv;
 		this.deg = 1.5 * Math.PI;
 		this.dir = LEFT;
 		this.sp = 0;
-		this.oldR = r;
-	}
-
-	setDir(x) {
-		this.dir = x;
-	}
-
-	getDir() {
-		return this.dir;
-	}
-
-	setCol(x) {
-		this.col = x;
-	}
-
-	getOldR() {
-		return this.oldR;
-	}
-
-	setX(x) {
-		this.x = x;
-	}
-
-	setR(x) {
-		this.r = x;
-	}
-
-	setY(x) {
-		this.y = x;
+		this.spikeHeight = null;
+		this.minR = r;
 	}
 
 	getX() {
 		return this.x;
 	}
 
+	setX(x) {
+		this.x = x;
+	}
+
 	getY() {
 		return this.y;
 	}
 
+	setY(x) {
+		this.y = x;
+	}
+
 	getR() {
 		return this.r;
+	}
+
+	setR(x) {
+		this.r = x;
+	}
+
+	getDir() {
+		return this.dir;
+	}
+
+	setDir(x) {
+		this.dir = x;
 	}
 
 	getDeg() {
@@ -62,12 +55,28 @@ class Circle {
 		this.deg = x;
 	}
 
+	setCol(x) {
+		this.col = x;
+	}
+
+	getMinR() {
+		return this.minR;
+	}
+
+	setSpikeHeight(x) {
+		this.spikeHeight = x;
+	}
+
 	flip() {
 		if (this.dir == LEFT) {
 			this.dir = RIGHT;
 		} else {
 			this.dir = LEFT;
 		}
+	}
+
+	spin() {
+		this.sp = this.sp + 0.008;
 	}
 
 	drawInnerCircle() {
@@ -81,16 +90,8 @@ class Circle {
 		this.ctx.closePath();
 	}
 
-	spin() {
-		this.sp = this.sp + 0.008;
-	}
-
-	drawSpikes(a) {
-		var i;
-		var j;
-
-		var x;
-		var y;
+	drawSpikes() {
+		var i, j, x, y;
 
 		this.ctx.strokeStyle = this.ocol;
 		this.ctx.lineWidth = this.owid * 0.8;
@@ -103,8 +104,8 @@ class Circle {
 				y = this.r * Math.sin((i + j / 2) * Math.PI / 3 + (this.sp * Math.PI));
 
 				if (j == 1) {
-					x = a * x;
-					y = a * y;
+					x = this.spikeHeight * x;
+					y = this.spikeHeight * y;
 				}
 
 				x = x + this.x;
@@ -135,15 +136,15 @@ class Circle {
 		this.ctx.closePath();
 	}
 
-	hitWall(pad) {
-		if (this.x < this.r + pad) {
+	hitWall() {
+		if (this.x < this.r + PADDING) {
 			return true;
-		} else if (this.x > (this.cnv.width - (this.r + pad))) {
+		} else if (this.x > (this.cnv.width - (this.r + PADDING))) {
 			return true;
 		}
 	}
 
-	move(speed, armLength, cen, pad) {
+	move(speed, armLength, cen) {
 		if (this.dir == LEFT) {
 			this.deg -= speed;
 		} else {
@@ -153,7 +154,7 @@ class Circle {
 		this.x = cen.getX() + Math.cos(this.deg) * armLength;
 		this.y = cen.getY() - Math.sin(this.deg) * armLength;
 
-		if (this.hitWall(pad)) {
+		if (this.hitWall()) {
 			this.flip();
 			if (this.dir == LEFT) {
 				this.deg -= 2 * speed;

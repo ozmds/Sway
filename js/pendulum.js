@@ -40,7 +40,7 @@ class Pendulum {
 	}
 
 	setRange(width, padding) {
-		var span = Math.asin((width - (this.pen.getR() + padding)) / this.arm.getOldLen());
+		var span = Math.asin((width - (this.pen.getR() + padding)) / this.arm.getMaxLen());
 		this.startRange = Math.PI * 1.5 - span;
 		this.endRange = Math.PI * 1.5 + span;
 	}

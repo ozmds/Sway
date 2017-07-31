@@ -1,30 +1,15 @@
 class Line {
-	constructor(stX, stY, endX, endY, wid, col, ctx, cnv) {
+	constructor(stX, stY, endX, endY, wid, ctx, cnv) {
 		this.stX = stX;
 		this.stY = stY;
 		this.endX = endX;
 		this.endY = endY;
 		this.wid = wid;
-		this.col = col;
+		this.col = SECONDARY_COLOUR;
 		this.ctx = ctx;
 		this.cnv = cnv;
 		this.len = endY - stY;
-		this.oldLen = endY - stY;
-	}
-
-	draw() {
-		this.ctx.lineWidth = this.wid;
-		this.ctx.strokeStyle = this.col;
-
-		this.ctx.beginPath();
-		this.ctx.moveTo(this.stX, this.stY);
-		this.ctx.lineTo(this.endX, this.endY);
-		this.ctx.stroke();
-		this.ctx.closePath();
-	}
-
-	getOldLen() {
-		return this.oldLen;
+		this.maxLen = endY - stY;
 	}
 
 	getLen() {
@@ -41,5 +26,20 @@ class Line {
 
 	setEndY(y) {
 		this.endY = y;
+	}
+
+	getMaxLen() {
+		return this.maxLen;
+	}
+
+	draw() {
+		this.ctx.lineWidth = this.wid;
+		this.ctx.strokeStyle = this.col;
+
+		this.ctx.beginPath();
+		this.ctx.moveTo(this.stX, this.stY);
+		this.ctx.lineTo(this.endX, this.endY);
+		this.ctx.stroke();
+		this.ctx.closePath();
 	}
 }
