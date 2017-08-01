@@ -40,13 +40,13 @@ const LEFT = 'left';
 const RIGHT = 'right';
 
 const REGULAR = 'regular';
-const BALLOON = 'balloon';
-const SLOW_DOWN = 'slow_down';
-const POISON = 'poison';
+const DOUBLE = 'double';
+const SHORT = 'short';
+const BOMB = 'bomb';
 const SPIKE = 'spike';
 
-const x13start = 15;
-const x16start = 10;
+const LEVEL_TWO_SPEED_RATIO = 15;
+const LEVEL_THREE_SPEED_RATIO = 10;
 
 var arrow = new Image();
 var knife = new Image();

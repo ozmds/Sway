@@ -22,16 +22,16 @@ class OrbList {
 		this.speed = Math.round(this.cnv.height / (orb_time / TIME_INTERVAL));
 	}
 
-    createOrb() {
+    createOrb(score, pen) {
 		/* Create a New Orb */
-		var d = new Diamond(this.cnv.width * 0.035, this.ctx, this.cnv, this.score, this.speed);
-		d.place(this.pen.getArm().getOldLen(), this.pen.getPen().getR());
+		var d = new Orb(this.cnv.width * 0.035, this.ctx, this.cnv, score, this.speed);
+		d.place(pen.getArm().getMaxLen(), pen.getPen().getR());
 		this.orbList.push(d);
 	}
 
 	checkHit(orb, pen1, pen2) {
 		/* Check if Orb has been hit by Pendulum */
-		if (orb.checkHitPen(pen1.getX(), pen1.getY(), pen1.getR() * this.pen.getSpikeHeight())) {
+		if (orb.checkHitPen(pen1.getX(), pen1.getY(), pen1.getR() * pen1.getSpikeHeight())) {
 			return true;
 		} else if (orb.checkHitPen(pen2.getX(), pen2.getY(), pen2.getR())) {
 			return true;
@@ -76,7 +76,7 @@ class OrbList {
         }
     }
 
-    manageOrbs() {
+    manageOrbs(pen) {
         /* Manage the all of the orbs currently on the screen */
         var i;
 
@@ -105,14 +105,13 @@ class OrbList {
                     this.score = 0;
                 }
             /* Check if Orb Hits Pendulum */
-            } else if (this.checkHit(this.orbList[i], this.pen.getPen(), this.pen.getSPen())) {
+            } else if (this.checkHit(this.orbList[i], pen.getPen(), pen.getSPen())) {
                 this.hitList.push(this.orbList[i]);
 
                 this.setStatusByOrb(this.orbList[i].getType());
 
                 if (this.orbList[i].getType() == REGULAR) {
                     this.incrementScore();
-                    this.incrementPenSpeed(this.score);
                     this.incrementOrbTime(this.score);
                     this.incrementOrbFrequency(this.score);
                 }

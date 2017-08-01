@@ -3,50 +3,17 @@ class Pendulum {
 		this.cen = cen;
 		this.pen = pen;
 		this.arm = arm;
-		this.smallLen = 0;
-		this.timer = 0;
+
 		this.startRange = null;
 		this.endRange = null;
+
 		this.spikeHeight = 1;
+		this.minLen = 0;
 		this.sArm = null;
 		this.sPen = null;
+		this.timer = 0;
+
 		this.speed = null;
-	}
-
-	calcPenSpeed(penTime) {
-		this.speed = (this.endRange - this.startRange) / (penTime / TIME_INTERVAL);
-	}
-
-	setCol(x) {
-		this.pen.setCol(x);
-		this.cen.setCol(x);
-		this.sPen.setCol(x);
-	}
-
-	setSArm(x) {
-		this.sArm = x;
-	}
-
-	setSPen(x) {
-		this.sPen = x;
-	}
-
-	getSPen() {
-		return this.sPen;
-	}
-
-	getSpikeHeight() {
-		return this.spikeHeight;
-	}
-
-	setRange(width, padding) {
-		var span = Math.asin((width - (this.pen.getR() + padding)) / this.arm.getMaxLen());
-		this.startRange = Math.PI * 1.5 - span;
-		this.endRange = Math.PI * 1.5 + span;
-	}
-
-	setSmallLen(cnv) {
-		this.smallLen = (cnv.width / 2) - this.pen.getR() - PADDING;
 	}
 
 	getPen() {
@@ -61,24 +28,61 @@ class Pendulum {
 		return this.arm;
 	}
 
+	getSPen() {
+		return this.sPen;
+	}
+
+	setSPen(x) {
+		this.sPen = x;
+	}
+
+	setSArm(x) {
+		this.sArm = x;
+	}
+
+	getSpikeHeight() {
+		return this.spikeHeight;
+	}
+
+	setCol(x) {
+		this.pen.setCol(x);
+		this.cen.setCol(x);
+		this.sPen.setCol(x);
+	}
+
+	setRange(width) {
+		var span = Math.asin((width - (this.pen.getR() + PADDING)) / this.arm.getMaxLen());
+		this.startRange = Math.PI * 1.5 - span;
+		this.endRange = Math.PI * 1.5 + span;
+	}
+
+	calcPenSpeed(penTime) {
+		this.speed = (this.endRange - this.startRange) / (penTime / TIME_INTERVAL);
+	}
+
+	setMinLen(cnv) {
+		this.minLen = (cnv.width / 2) - this.pen.getR() - PADDING;
+	}
+
 	draw() {
 		this.pen.spin();
 		this.arm.draw();
 		this.sArm.draw();
 		this.cen.draw();
 		this.sPen.draw();
-		this.pen.drawSpikes(this.spikeHeight);
+		this.pen.setSpikeHeight(this.spikeHeight);
+		this.pen.drawSpikes();
 		this.pen.draw();
 		this.pen.drawInnerCircle();
 	}
 
 	move(status) {
-		this.pen.move(this.speed, this.arm.getLen(), this.cen, PADDING);
+		this.pen.move(this.speed, this.arm.getLen(), this.cen);
 
-		if (status == BALLOON) {
-			this.sPen.move(-this.speed, this.sArm.getLen(), this.cen, PADDING);
+		if (status == DOUBLE) {
+			this.sPen.move(-this.speed, this.sArm.getLen(), this.cen);
 		} else {
-			this.sPen.move(this.speed, this.sArm.getLen(), this.cen, PADDING);
+			this.sPen.move(this.speed, this.sArm.getLen(), this.cen);
 		}
 
 		this.arm.setEndX(this.pen.getX());
@@ -97,25 +101,26 @@ class Pendulum {
 
 		if (this.timer < 15000) {
 			DEST_COLOUR = RED;
-			if (this.arm.getLen() > this.smallLen) {
+			if (this.arm.getLen() > this.minLen) {
 				this.arm.setLen(this.arm.getLen() * 0.99);
 				this.sArm.setLen(this.sArm.getLen() * 0.99);
 			}
 		} else {
 			DEST_COLOUR = BLUE;
-			if (this.arm.getOldLen() > this.arm.getLen()) {
+			if (this.arm.getMaxLen() > this.arm.getLen()) {
 				if ((deg > this.startRange) && (deg < this.endRange)) {
 					this.arm.setLen(this.arm.getLen() * 1.01);
 					this.sArm.setLen(this.sArm.getLen() * 1.01);
 				}
 			} else {
+				this.arm.setLen(this.arm.getMaxLen());
+				this.sArm.setLen(this.sArm.getMaxLen());
 				this.timer = 0;
 				return false;
 			}
 		}
 
 		this.timer += TIME_INTERVAL;
-
 		return true;
 	}
 
@@ -136,14 +141,13 @@ class Pendulum {
 		}
 
 		this.timer += TIME_INTERVAL;
-
 		return true;
 	}
 
 	startSpike() {
 		if (this.timer < 15000) {
 			DEST_COLOUR = PURPLE;
-			if (this.pen.getR() < 1.5 * this.pen.getOldR()) {
+			if (this.pen.getR() < 1.5 * this.pen.getMinR()) {
 				this.arm.setLen(this.arm.getLen() - (this.pen.getR() * 0.01));
 				this.sArm.setLen(this.sArm.getLen() - (this.sPen.getR() * 0.01));
 				this.pen.setR(this.pen.getR() * 1.01);
@@ -153,9 +157,10 @@ class Pendulum {
 			if (this.spikeHeight < 2) {
 				this.spikeHeight = this.spikeHeight * 1.01;
 			}
+
 		} else {
 			DEST_COLOUR = BLUE;
-			if (this.pen.getR() > this.pen.getOldR()) {
+			if (this.pen.getR() > this.pen.getMinR()) {
 				this.arm.setLen(this.arm.getLen() + (this.pen.getR() * 0.01));
 				this.sArm.setLen(this.sArm.getLen() + (this.sPen.getR() * 0.01));
 				this.pen.setR(this.pen.getR() * 0.99);
@@ -163,13 +168,16 @@ class Pendulum {
 			} else if (this.spikeHeight > 1) {
 				this.spikeHeight = this.spikeHeight * 0.99;
 			} else {
+				this.arm.setLen(this.arm.getMaxLen());
+				this.sArm.setLen(this.sArm.getMaxLen());
+				this.pen.setR(this.pen.minR());
+				this.sPen.setR(this.sPen.minR());
 				this.timer = 0;
 				return false;
 			}
 		}
 
 		this.timer += TIME_INTERVAL;
-
 		return true;
 	}
 }

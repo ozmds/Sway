@@ -1,4 +1,4 @@
-class Diamond {
+class Orb {
 	constructor(r, ctx, cnv, score, speed) {
 		this.x = null;
 		this.y = -2 * r;
@@ -13,19 +13,20 @@ class Diamond {
 		this.speed = speed;
 
 		var typeInt = Math.random() * 100;
-		var x16level = x16start;
-		var x13level = x13start;
+
+		var level_two_ratio = LEVEL_TWO_SPEED_RATIO;
+		var level_three_ratio = LEVEL_THREE_SPEED_RATIO;
 
 		if (score % 20 == 0 && score >= 20) {
 			if (score <= 60) {
-				x16level = x16start + 5 * (score / 20);
-				x13level = x13start + 5 * (score / 20);
+				level_two_ratio = LEVEL_TWO_SPEED_RATIO + 5 * (score / 20);
+				level_three_ratio = LEVEL_THREE_SPEED_RATIO + 5 * (score / 20);
 			}
 		}
 
-		if (typeInt < x16level) {
+		if (typeInt < level_three_ratio) {
 			this.speed = this.speed * 3;
-		} else if (typeInt < x16level + x13level) {
+		} else if (typeInt < level_three_ratio + level_two_ratio) {
 			this.speed = this.speed * 2;
 		}
 
@@ -34,11 +35,11 @@ class Diamond {
 		if (typeInt < 20) {
 			this.type = REGULAR;
 		} else if (typeInt < 40) {
-			this.type = BALLOON;
-		} else if (typeInt < 60){
-			this.type = SLOW_DOWN;
+			this.type = DOUBLE;
+		} else if (typeInt < 60) {
+			this.type = SHORT;
 		} else if (typeInt < 80) {
-			this.type = POISON;
+			this.type = BOMB;
 		} else {
 			this.type = SPIKE;
 		}
@@ -49,17 +50,25 @@ class Diamond {
 	setImage() {
 		if (this.type == REGULAR) {
 			this.img = crystal;
-		} else if (this.type == BALLOON) {
+		} else if (this.type == DOUBLE) {
 			this.img = balloon;
-		} else if (this.type == SLOW_DOWN) {
+		} else if (this.type == SHORT) {
 			this.img = arrow;
-		} else if (this.type == POISON) {
+		} else if (this.type == BOMB) {
 			this.img = bomb;
 		} else if (this.type == SPIKE) {
 			this.img = knife;
 		}
 
 		this.aspectRatio = this.img.height / this.img.width;
+	}
+
+	getY() {
+		return this.y;
+	}
+
+	getR() {
+		return this.r;
 	}
 
 	getType() {
@@ -78,12 +87,14 @@ class Diamond {
 		this.hitTimer = this.hitTimer + interval;
 	}
 
-	getY() {
-		return this.y;
+	move(x) {
+		this.y += this.speed * x;
 	}
 
-	getR() {
-		return this.r;
+	hitOrb() {
+		if (this.hitTimer > 0) {
+			this.r = this.r * 0.98;
+		}
 	}
 
 	checkHitPen(x, y, r) {
@@ -95,13 +106,6 @@ class Diamond {
 		}
 
 		return false;
-
-	}
-
-	hitOrb() {
-		if (this.hitTimer > 0) {
-			this.r = this.r * 0.98;
-		}
 	}
 
 	draw() {
@@ -116,7 +120,8 @@ class Diamond {
 		this.ctx.stroke();
 		this.ctx.closePath();
 
-		this.ctx.drawImage(this.img, this.x - this.r, this.y - this.r * this.aspectRatio, 2 * this.r, 2 * this.r * this.aspectRatio);
+		this.ctx.drawImage(this.img, this.x - this.r, this.y - this.r * this.aspectRatio,
+			2 * this.r, 2 * this.r * this.aspectRatio);
 	}
 
 	place(armLength, rad) {
@@ -127,11 +132,5 @@ class Diamond {
 		} else {
 			this.x = Math.round(Math.random() *	 range) + (0.5 * (this.cnv.width - range));
 		}
-
-		this.draw();
-	}
-
-	move(x) {
-		this.y += this.speed * x;
 	}
 }

@@ -6,17 +6,17 @@ function startGame() {
     swayGame.background();
     swayGame.initVariable();
 
-    swayGame.getCnv().addEventListener('click', function(event) {handleClick(
-        event.x * window.devicePixelRatio, event.y * window.devicePixelRatio, swayGame);});
+    swayGame.getCnv().addEventListener('click', function(event) {swayGame.handleClick(
+        event.x * window.devicePixelRatio, event.y * window.devicePixelRatio);});
 
     setInterval(function() {
         swayGame.background();
-        
-        drawPauseButton(swayGame.getCnv().width * 0.04, swayGame.getCnv().width * 0.04, swayGame.getCnv().width * 0.10,
-                            SECONDARY_COLOUR, swayGame.getCtx());
 
-        updateScore(swayGame.getCnv(), swayGame.getCtx(), swayGame.getScore(), window.localStorage.getItem('highscore'), SECONDARY_COLOUR);
+        swayGame.getPen().draw();
+        if (STATE == GAME) {
+            swayGame.move();
+        }
+        swayGame.draw();
 
-        swayGame.move();
     }, TIME_INTERVAL);
 }

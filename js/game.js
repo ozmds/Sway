@@ -5,7 +5,6 @@ class Game {
         this.old_height = 0;
         this.pen = null;
         this.score = 0;
-        this.speed = 0;
         this.status = REGULAR;
 
         this.cnv.style.top = (MARGIN).toString() + 'px';
@@ -100,8 +99,8 @@ class Game {
 		this.pen.setSPen(sPen);
 
 		/* Create Boundaries for Pendulum */
-		this.pen.setSmallLen(this.cnv);
-		this.pen.setRange(this.cnv.width / 2, PADDING);
+		this.pen.setMinLen(this.cnv);
+		this.pen.setRange(this.cnv.width / 2);
 
 		/* Calculate Speed for Pendulum and Orb */
 		this.pen.calcPenSpeed(pen_time);
@@ -114,8 +113,13 @@ class Game {
     move() {
 		/* Move the Pendulum as a Whole */
 		this.pen.move(this.status);
-		this.pen.draw();
+        this.pen.draw();
 	}
+
+    draw() {
+        this.drawPauseButton(this.cnv.width * 0.04, this.cnv.width * 0.04, this.cnv.width * 0.10);
+        this.updateScore();
+    }
 
 	incrementPenSpeed(score) {
 		/* Increase Speed of Pendulum */
@@ -124,82 +128,82 @@ class Game {
 			this.pen.calcPenSpeed(pen_time);
 		}
 	}
-}
 
-function changeColours(colour1, colour2) {
-	/* Slowly return fading colours from colour1 to colour2 */
-	var i;
+    changeColours(colour1, colour2) {
+        /* Slowly return fading colours from colour1 to colour2 */
+    	var i;
 
-	var c1 = [];
-	var c2 = [];
+    	var c1 = [];
+    	var c2 = [];
 
-	var newcol = []
+    	var newcol = []
 
-	for (i = 0; i < 3; i++) {
-		c1.push(parseInt(colour1.slice(2 * i + 1, 2 * i + 3), 16));
-		c2.push(parseInt(colour2.slice(2 * i + 1, 2 * i + 3), 16));
+    	for (i = 0; i < 3; i++) {
+    		c1.push(parseInt(colour1.slice(2 * i + 1, 2 * i + 3), 16));
+    		c2.push(parseInt(colour2.slice(2 * i + 1, 2 * i + 3), 16));
 
-		if (c1[i] > c2[i]) {
-			newcol.push(c1[i] - 1);
-		} else if (c1[i] == c2[i]) {
-			newcol.push(c1[i]);
-		} else {
-			newcol.push(c1[i] + 1);
-		}
+    		if (c1[i] > c2[i]) {
+    			newcol.push(c1[i] - 1);
+    		} else if (c1[i] == c2[i]) {
+    			newcol.push(c1[i]);
+    		} else {
+    			newcol.push(c1[i] + 1);
+    		}
 
-		if (newcol[i] == 0) {
-			newcol[i] = '00';
-		} else if (newcol[i] < 16) {
-			newcol[i] = '0' + newcol[i].toString(16);
-		}
-	}
-
-	PRIMARY_COLOUR = '#' + newcol[0].toString(16) + newcol[1].toString(16) + newcol[2].toString(16);
-
-	return true;
-}
-
-function handleClick(event_x, event_y, sway) {
-	/* React to a click */
-    if (STATE == PAUSE) {
-        STATE = GAME;
-    } else if (event_x > pausex && pausex + pauseside > event_x) {
-        if (event_y > pausey && pausey + pauseside > event_y) {
-            STATE = PAUSE;
-        }
-    } else {
-        sway.getPen().getPen().flip();
-
-    	if (sway.getStatus() != BALLOON) {
-    		sway.getPen().getSPen().flip();
+    		if (newcol[i] == 0) {
+    			newcol[i] = '00';
+    		} else if (newcol[i] < 16) {
+    			newcol[i] = '0' + newcol[i].toString(16);
+    		}
     	}
+
+    	PRIMARY_COLOUR = '#' + newcol[0].toString(16) + newcol[1].toString(16) + newcol[2].toString(16);
+
+    	return true;
     }
-}
 
-function drawPauseButton(x, y, side_len, colour, context) {
-	/* Draw a Pause Button */
-    pausex = x;
-    pausey = y;
-    pauseside = side_len;
+    handleClick(event_x, event_y) {
+        /* React to a click */
+        if (STATE == PAUSE) {
+            STATE = GAME;
+        } else if (event_x > pausex && pausex + pauseside > event_x) {
+            if (event_y > pausey && pausey + pauseside > event_y) {
+                STATE = PAUSE;
+            }
+        } else {
+            this.getPen().getPen().flip();
 
-	var bar_width = side_len / 3;
-	context.fillStyle = colour;
+        	if (this.getStatus() != DOUBLE) {
+        		this.getPen().getSPen().flip();
+        	}
+        }
+    }
 
-	context.fillRect(x, y, bar_width, side_len);
-	context.fillRect(x + 2 * bar_width, y, bar_width, side_len);
-}
+    drawPauseButton(x, y, side_len) {
+        /* Draw a Pause Button */
+        pausex = x;
+        pausey = y;
+        pauseside = side_len;
 
-function updateScore(c, ctx, score, highscore, colour) {
-	/* Write the score on the canvas */
-	ctx.textBaseline = 'middle';
-	ctx.textAlign = 'end';
-	ctx.fillStyle = colour;
+    	var bar_width = side_len / 3;
+    	this.ctx.fillStyle = SECONDARY_COLOUR;
 
-	var font_size = c.width * 0.13;
-	var font = font_size.toString() + "px basicWoodlands";
+    	this.ctx.fillRect(x, y, bar_width, side_len);
+    	this.ctx.fillRect(x + 2 * bar_width, y, bar_width, side_len);
+    }
 
-	ctx.font = font;
+    updateScore() {
+        /* Write the score on the canvas */
+    	this.ctx.textBaseline = 'middle';
+    	this.ctx.textAlign = 'end';
+    	this.ctx.fillStyle = SECONDARY_COLOUR;
 
-	ctx.fillText(score, c.width * 0.95, c.width * 0.05);
-	ctx.fillText(highscore, c.width * 0.95, c.width * 0.16);
+    	var font_size = this.cnv.width * 0.13;
+    	var font = font_size.toString() + "px basicWoodlands";
+
+    	this.ctx.font = font;
+
+    	this.ctx.fillText(this.score, this.cnv.width * 0.95, this.cnv.width * 0.05);
+    	this.ctx.fillText(window.localStorage.getItem('highscore'), this.cnv.width * 0.95, this.cnv.width * 0.16);
+    }
 }
