@@ -130,6 +130,12 @@ class Circle {
 		this.ctx.strokeStyle = this.ocol;
 
 		this.ctx.beginPath();
+		this.ctx.arc(this.x + this.r * 0.15, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);
+		this.ctx.fill();
+		this.ctx.stroke();
+		this.ctx.closePath();
+
+		this.ctx.beginPath();
 		this.ctx.arc(this.x, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);
 		this.ctx.fill();
 		this.ctx.stroke();

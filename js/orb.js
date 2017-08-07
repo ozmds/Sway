@@ -98,6 +98,7 @@ class Orb {
 	}
 
 	checkHitPen(x, y, r) {
+
 		var dist_x = Math.pow(this.x - x, 2);
 		var dist_y = Math.pow(this.y - y, 2);
 
@@ -110,6 +111,16 @@ class Orb {
 
 	draw() {
 		this.hitOrb();
+		this.ctx.lineWidth = this.r * 0.30;
+		this.ctx.strokeStyle = this.col;
+		this.ctx.fillStyle = this.col;
+
+		this.ctx.beginPath();
+		this.ctx.arc(this.x + this.r * 0.4, this.y, this.r * 2, 0.0 * Math.PI, 2.0 * Math.PI);
+		this.ctx.fill();
+		this.ctx.stroke();
+		this.ctx.closePath();
+
 		this.ctx.lineWidth = this.r * 0.30;
 		this.ctx.strokeStyle = this.col;
 		this.ctx.fillStyle = PRIMARY_COLOUR;

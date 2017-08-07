@@ -6,9 +6,12 @@ class Game {
         this.pen = null;
         this.score = 0;
         this.status = REGULAR;
+        this.orbList = new OrbList();
 
         this.cnv.style.top = (MARGIN).toString() + 'px';
         this.cnv.style.left = (MARGIN).toString() + 'px';
+
+        this.orbList.calculateSpeed(this.cnv);
     }
 
     getStatus() {
@@ -113,12 +116,14 @@ class Game {
     move() {
 		/* Move the Pendulum as a Whole */
 		this.pen.move(this.status);
-        this.pen.draw();
-	}
+        this.setScore(this.orbList.manageOrbs(this.score, this.pen, this.cnv) + this.score);
+    }
 
     draw() {
+        this.pen.draw();
         this.drawPauseButton(this.cnv.width * 0.04, this.cnv.width * 0.04, this.cnv.width * 0.10);
         this.updateScore();
+        this.orbList.drawOrbs();
     }
 
 	incrementPenSpeed(score) {
@@ -186,10 +191,33 @@ class Game {
         pauseside = side_len;
 
     	var bar_width = side_len / 3;
-    	this.ctx.fillStyle = SECONDARY_COLOUR;
 
-    	this.ctx.fillRect(x, y, bar_width, side_len);
-    	this.ctx.fillRect(x + 2 * bar_width, y, bar_width, side_len);
+        this.ctx.strokeStyle = SECONDARY_COLOUR;
+        this.ctx.lineWidth = this.cnv.width * 0.008;
+
+        this.ctx.beginPath();
+    	this.ctx.rect(x, y, bar_width, side_len);
+        this.ctx.stroke();
+        this.ctx.closePath();
+
+        this.ctx.beginPath();
+    	this.ctx.rect(x + 2 * bar_width, y, bar_width, side_len);
+        this.ctx.stroke();
+        this.ctx.closePath();
+
+        this.ctx.lineWidth = this.cnv.width * 0.01;
+
+        this.ctx.beginPath();
+    	this.ctx.moveTo(x + this.cnv.width * 0.005 + bar_width, y - this.cnv.width * 0.004);
+        this.ctx.lineTo(x + this.cnv.width * 0.005 + bar_width, y + side_len + this.cnv.width * 0.004);
+        this.ctx.stroke();
+        this.ctx.closePath();
+
+        this.ctx.beginPath();
+    	this.ctx.moveTo(x + 3 * bar_width + this.cnv.width * 0.005, y - this.cnv.width * 0.004);
+        this.ctx.lineTo(x + 3 * bar_width + this.cnv.width * 0.005, y + side_len + this.cnv.width * 0.004);
+        this.ctx.stroke();
+        this.ctx.closePath();
     }
 
     updateScore() {
