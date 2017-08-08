@@ -6,12 +6,10 @@ class Game {
         this.pen = null;
         this.score = 0;
         this.status = REGULAR;
-        this.orbList = new OrbList();
+        this.orbList = null;
 
         this.cnv.style.top = (MARGIN).toString() + 'px';
         this.cnv.style.left = (MARGIN).toString() + 'px';
-
-        this.orbList.calculateSpeed(this.cnv);
     }
 
     getStatus() {
@@ -108,6 +106,9 @@ class Game {
 		/* Calculate Speed for Pendulum and Orb */
 		this.pen.calcPenSpeed(pen_time);
 
+        this.orbList = new OrbList();
+        this.orbList.calculateSpeed(this.cnv);
+
 		if (window.localStorage.getItem('highscore') == null) {
 			window.localStorage.setItem('highscore', this.score);
 		}
@@ -116,7 +117,7 @@ class Game {
     move() {
 		/* Move the Pendulum as a Whole */
 		this.pen.move(this.status);
-        this.setScore(this.orbList.manageOrbs(this.score, this.pen, this.cnv) + this.score);
+        this.setScore(this.orbList.manageOrbs(this.score, this.pen, this.cnv, this.ctx) + this.score);
     }
 
     draw() {

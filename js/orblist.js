@@ -7,13 +7,11 @@ class OrbList {
     }
 
     calculateSpeed(cnv) {
-        window.alert(cnv.height);
-
         this.speed = cnv.height / (orb_time / TIME_INTERVAL);
     }
 
-    createOrb(score, pen) {
-        var d = new Orb(this.cnv.width * 0.035, this.ctx, this.cnv, score, this.speed);
+    createOrb(score, pen, cnv, ctx) {
+        var d = new Orb(cnv.width * 0.035, ctx, cnv, score, this.speed);
         d.place(pen.getArm().getMaxLen(), pen.getPen().getR());
         this.orbList.push(d);
     }
@@ -68,20 +66,20 @@ class OrbList {
         }
     }
 
-    manageOrbs(score, pen, cnv) {
+    manageOrbs(score, pen, cnv, ctx) {
         var i;
 
         this.score = 0;
 
         if (time_counter >= orb_frequency) {
             time_counter = 0;
-            this.createOrb(score, pen);
+            this.createOrb(score, pen, cnv, ctx);
         }
 
         for (i = 0; i < this.orbList.length; i++) {
             this.orbList[i].move(1);
 
-            if (this.orbList[i].getY() > (this.cnv.height + this.orbList[i].getR() * 2)) {
+            if (this.orbList[i].getY() > (cnv.height + this.orbList[i].getR() * 2)) {
                 if (this.orbList[i].getType() == REGULAR) {
                     this.orbList.splice(i, 1);
                     this.score = 0;
