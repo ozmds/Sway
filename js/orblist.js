@@ -6,6 +6,10 @@ class OrbList {
         this.score = 0;
     }
 
+    getScore() {
+        return this.score;
+    }
+
     calculateSpeed(cnv) {
         this.speed = cnv.height / (orb_time / TIME_INTERVAL);
     }
@@ -32,7 +36,7 @@ class OrbList {
     }
 
     checkHit(orb, pen1, pen2) {
-        if (orb.checkHitPen(pen1.getX(), pen1.getY(), pen1.getR())) {
+        if (orb.checkHitPen(pen1.getX(), pen1.getY(), pen1.getR() * pen1.getSpikeHeight())) {
             return true;
         } else if (orb.checkHitPen(pen2.getX(), pen2.getY(), pen2.getR())) {
             return true;
@@ -66,8 +70,9 @@ class OrbList {
         }
     }
 
-    manageOrbs(score, pen, cnv, ctx) {
+    manageOrbs(score, pen, cnv, ctx, cur_stat) {
         var i;
+        var status = null;
 
         this.score = 0;
 
@@ -77,21 +82,30 @@ class OrbList {
         }
 
         for (i = 0; i < this.orbList.length; i++) {
+            if (cur_stat != REGULAR) {
+                this.orbList[i].setType(REGULAR);
+                this.orbList[i].setImage();
+            }
+
             this.orbList[i].move(1);
 
             if (this.orbList[i].getY() > (cnv.height + this.orbList[i].getR() * 2)) {
                 if (this.orbList[i].getType() == REGULAR) {
                     this.orbList.splice(i, 1);
-                    this.score = 0;
+                    this.score = -score;
                 }
             } else if (this.checkHit(this.orbList[i], pen.getPen(), pen.getSPen())) {
                 this.hitList.push(this.orbList[i]);
 
                 if (this.orbList[i].getType() == REGULAR) {
                     this.score = this.score + 1;
-                    this.incrementOrbTime(score, cnv);
-                    this.incrementOrbFrequency(score);
+                    this.incrementOrbTime(score + 1, cnv);
+                    this.incrementOrbFrequency(score + 1);
+                } else if (this.orbList[i].getType() == BOMB) {
+                    this.score = -score;
                 }
+
+                status = this.orbList[i].getType();
 
                 this.orbList.splice(i, 1);
             }
@@ -101,6 +115,6 @@ class OrbList {
 
         time_counter = time_counter + TIME_INTERVAL;
 
-        return this.score;
+        return status;
     }
 }

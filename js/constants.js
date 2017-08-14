@@ -1,7 +1,7 @@
-const MARGIN = 5;
+const MARGIN = 0;
 const PADDING = 10;
 
-const PURPLE = '#9935B5';
+const PURPLE = '#FFCFFE';
 const GREEN = '#338A28';
 const RED = '#7F0000';
 const BLUE = '#6ECFF5';

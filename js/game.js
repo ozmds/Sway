@@ -17,11 +17,6 @@ class Game {
 		return this.status;
 	}
 
-	setStatus(x) {
-		/* Set Status to x */
-		this.status = x;
-	}
-
 	getScore() {
 		/* Return Score */
 		return this.score;
@@ -30,6 +25,10 @@ class Game {
 	setScore(x) {
 		/* Set Score to x */
 		this.score = x;
+
+        if (this.score > window.localStorage.getItem('highscore')) {
+			window.localStorage.setItem('highscore', this.score);
+		}
 	}
 
 	incrementScore() {
@@ -67,8 +66,8 @@ class Game {
 	}
 
     background() {
-        this.cnv.height = (window.innerHeight - 10) * window.devicePixelRatio;
-    	this.cnv.width = (window.innerWidth - 10) * window.devicePixelRatio;
+        this.cnv.height = (window.innerHeight - 2 * MARGIN) * window.devicePixelRatio;
+    	this.cnv.width = (window.innerWidth - 2 * MARGIN) * window.devicePixelRatio;
 
     	this.cnv.style.width = (this.cnv.width / window.devicePixelRatio).toString() + 'px';
     	this.cnv.style.height = (this.cnv.height / window.devicePixelRatio).toString() + 'px';
@@ -114,10 +113,36 @@ class Game {
 		}
     }
 
+    setStatus(x) {
+		/* Set Status to x */
+        if (x) {
+            if (this.status != x) {
+                if (x != REGULAR && x != BOMB) {
+                    this.status = x;
+                }
+            }
+        }
+	}
+
     move() {
 		/* Move the Pendulum as a Whole */
 		this.pen.move(this.status);
-        this.setScore(this.orbList.manageOrbs(this.score, this.pen, this.cnv, this.ctx) + this.score);
+        this.setStatus(this.orbList.manageOrbs(this.score, this.pen, this.cnv, this.ctx, this.status));
+        this.setScore(this.orbList.getScore() + this.score);
+
+        if (this.status == DOUBLE) {
+            if (!this.pen.startBalloon()) {
+                this.status = REGULAR;
+            }
+        } else if (this.status == SHORT) {
+            if (!this.pen.startShrink()) {
+                this.status = REGULAR;
+            }
+        } else if (this.status == SPIKE) {
+            if (!this.pen.startSpike()) {
+                this.status = REGULAR;
+            }
+        }
     }
 
     draw() {
@@ -195,14 +220,17 @@ class Game {
 
         this.ctx.strokeStyle = SECONDARY_COLOUR;
         this.ctx.lineWidth = this.cnv.width * 0.008;
+        this.ctx.fillStyle = PRIMARY_COLOUR;
 
         this.ctx.beginPath();
     	this.ctx.rect(x, y, bar_width, side_len);
+        this.ctx.fill();
         this.ctx.stroke();
         this.ctx.closePath();
 
         this.ctx.beginPath();
     	this.ctx.rect(x + 2 * bar_width, y, bar_width, side_len);
+        this.ctx.fill();
         this.ctx.stroke();
         this.ctx.closePath();
 

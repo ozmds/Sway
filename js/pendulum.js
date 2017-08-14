@@ -7,7 +7,7 @@ class Pendulum {
 		this.startRange = null;
 		this.endRange = null;
 
-		this.spikeHeight = 1;
+		this.spikeHeight = 0.8;
 		this.minLen = 0;
 		this.sArm = null;
 		this.sPen = null;
@@ -42,6 +42,10 @@ class Pendulum {
 
 	getSpikeHeight() {
 		return this.spikeHeight;
+	}
+
+	setSpikeHeight(x) {
+		this.spikeHeight = x;
 	}
 
 	setCol(x) {
@@ -165,13 +169,13 @@ class Pendulum {
 				this.sArm.setLen(this.sArm.getLen() + (this.sPen.getR() * 0.01));
 				this.pen.setR(this.pen.getR() * 0.99);
 				this.sPen.setR(this.sPen.getR() * 0.99);
-			} else if (this.spikeHeight > 1) {
+			} else if (this.spikeHeight > 0.8) {
 				this.spikeHeight = this.spikeHeight * 0.99;
 			} else {
 				this.arm.setLen(this.arm.getMaxLen());
 				this.sArm.setLen(this.sArm.getMaxLen());
-				this.pen.setR(this.pen.minR());
-				this.sPen.setR(this.sPen.minR());
+				this.pen.setR(this.pen.getMinR());
+				this.sPen.setR(this.sPen.getMinR());
 				this.timer = 0;
 				return false;
 			}

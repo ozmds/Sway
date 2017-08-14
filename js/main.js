@@ -10,8 +10,16 @@ function startGame() {
         event.x * window.devicePixelRatio, event.y * window.devicePixelRatio);});
 
     setInterval(function() {
+        swayGame.changeColours(PRIMARY_COLOUR, DEST_COLOUR);
 
         swayGame.background();
+
+        swayGame.getPen().setCol(PRIMARY_COLOUR);
+
+        if (swayGame.getOldHeight() != swayGame.getCnv().height) {
+            swayGame.initVariable();
+            swayGame.setOldHeight(swayGame.getCnv().height);
+        }
 
         if (STATE == GAME) {
             swayGame.move();
