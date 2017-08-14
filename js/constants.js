@@ -1,5 +1,5 @@
 const MARGIN = 0;
-const PADDING = 10;
+var PADDING = 0;
 
 const PURPLE = '#FFCFFE';
 const GREEN = '#338A28';

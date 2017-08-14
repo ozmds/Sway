@@ -109,8 +109,9 @@ class Orb {
 		return false;
 	}
 
-	draw() {
+	drawShadow() {
 		this.hitOrb();
+
 		this.ctx.lineWidth = this.r * 0.30;
 		this.ctx.strokeStyle = this.col;
 		this.ctx.fillStyle = this.col;
@@ -120,7 +121,9 @@ class Orb {
 		this.ctx.fill();
 		this.ctx.stroke();
 		this.ctx.closePath();
+	}
 
+	draw() {
 		this.ctx.lineWidth = this.r * 0.30;
 		this.ctx.strokeStyle = this.col;
 		this.ctx.fillStyle = PRIMARY_COLOUR;

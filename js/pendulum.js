@@ -68,8 +68,16 @@ class Pendulum {
 		this.minLen = (cnv.width / 2) - this.pen.getR() - PADDING;
 	}
 
-	draw() {
+	drawShadow() {
 		this.pen.spin();
+		this.cen.drawShadow();
+		this.sPen.drawShadow();
+		this.pen.setSpikeHeight(this.spikeHeight);
+		this.pen.drawShadowSpikes();
+		this.pen.drawShadow();
+	}
+
+	draw() {
 		this.arm.draw();
 		this.sArm.draw();
 		this.cen.draw();

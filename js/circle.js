@@ -94,7 +94,7 @@ class Circle {
 		this.ctx.closePath();
 	}
 
-	drawSpikes() {
+	drawShadowSpikes() {
 		var i, j, x, y;
 
 		this.ctx.strokeStyle = this.ocol;
@@ -126,7 +126,13 @@ class Circle {
 			this.ctx.fill();
 			this.ctx.closePath();
 		}
+	}
 
+	drawSpikes() {
+		var i, j, x, y;
+
+		this.ctx.strokeStyle = this.ocol;
+		this.ctx.lineWidth = this.owid * 1.4;
 		this.ctx.fillStyle = this.col;
 
 		for (i = 0; i < 6; i++) {
@@ -156,7 +162,7 @@ class Circle {
 		}
 	}
 
-	draw() {
+	drawShadow() {
 		this.ctx.fillStyle = this.ocol;
 		this.ctx.lineWidth = this.owid;
 		this.ctx.strokeStyle = this.ocol;
@@ -166,8 +172,12 @@ class Circle {
 		this.ctx.fill();
 		this.ctx.stroke();
 		this.ctx.closePath();
+	}
 
+	draw() {
 		this.ctx.fillStyle = this.col;
+		this.ctx.lineWidth = this.owid;
+		this.ctx.strokeStyle = this.ocol;
 
 		this.ctx.beginPath();
 		this.ctx.arc(this.x, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);

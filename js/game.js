@@ -74,6 +74,8 @@ class Game {
 
     	document.body.style.backgroundColor = PRIMARY_COLOUR;
     	this.cnv.style.backgroundColor = PRIMARY_COLOUR;
+
+        PADDING = this.cnv.width * 0.03;
     }
 
     initVariable() {
@@ -146,10 +148,15 @@ class Game {
     }
 
     draw() {
-        this.pen.draw();
         this.drawPauseButton(this.cnv.width * 0.04, this.cnv.width * 0.04, this.cnv.width * 0.10);
         this.updateScore();
+
+        this.pen.drawShadow();
+
+        this.orbList.drawShadowOrbs();
+
         this.orbList.drawOrbs();
+        this.pen.draw();
     }
 
 	incrementPenSpeed(score) {

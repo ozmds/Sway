@@ -57,6 +57,18 @@ class OrbList {
         }
     }
 
+    drawShadowOrbs() {
+        var i;
+
+        for (i = 0; i < this.orbList.length; i++) {
+            this.orbList[i].drawShadow();
+        }
+
+        for (i = 0; i < this.hitList.length; i++) {
+            this.hitList[i].drawShadow();
+        }
+    }
+
     manageHitList(i) {
         /* Move All Orbs That Have Been Hit */
         for (i = 0; i < this.hitList.length; i++) {
