@@ -5,7 +5,7 @@ class Line {
 		this.endX = endX;
 		this.endY = endY;
 		this.wid = wid;
-		this.col = SECONDARY_COLOUR;
+		this.col = '#FFFFFF';
 		this.ctx = ctx;
 		this.cnv = cnv;
 		this.len = endY - stY;
@@ -39,6 +39,17 @@ class Line {
 		this.ctx.beginPath();
 		this.ctx.moveTo(this.stX, this.stY);
 		this.ctx.lineTo(this.endX, this.endY);
+		this.ctx.stroke();
+		this.ctx.closePath();
+	}
+
+	drawShadow() {
+		this.ctx.lineWidth = this.wid;
+		this.ctx.strokeStyle = SECONDARY_COLOUR;
+
+		this.ctx.beginPath();
+		this.ctx.moveTo(this.stX + SHADOW_DIST, this.stY);
+		this.ctx.lineTo(this.endX + SHADOW_DIST, this.endY);
 		this.ctx.stroke();
 		this.ctx.closePath();
 	}

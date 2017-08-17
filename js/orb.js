@@ -32,13 +32,13 @@ class Orb {
 
 		typeInt = Math.random() * 100;
 
-		if (typeInt < 20) {
+		if (typeInt < 85) {
 			this.type = REGULAR;
-		} else if (typeInt < 40) {
+		} else if (typeInt < 86.5) {
 			this.type = DOUBLE;
-		} else if (typeInt < 60) {
+		} else if (typeInt < 89) {
 			this.type = SHORT;
-		} else if (typeInt < 80) {
+		} else if (typeInt < 99) {
 			this.type = BOMB;
 		} else {
 			this.type = SPIKE;
@@ -93,7 +93,7 @@ class Orb {
 
 	hitOrb() {
 		if (this.hitTimer > 0) {
-			this.r = this.r * 0.98;
+			this.r = this.r;
 		}
 	}
 
@@ -117,7 +117,7 @@ class Orb {
 		this.ctx.fillStyle = this.col;
 
 		this.ctx.beginPath();
-		this.ctx.arc(this.x + this.r * 0.4, this.y, this.r * 2, 0.0 * Math.PI, 2.0 * Math.PI);
+		this.ctx.arc(this.x + SHADOW_DIST, this.y, this.r * 2, 0.0 * Math.PI, 2.0 * Math.PI);
 		this.ctx.fill();
 		this.ctx.stroke();
 		this.ctx.closePath();
@@ -125,7 +125,7 @@ class Orb {
 
 	draw() {
 		this.ctx.lineWidth = this.r * 0.30;
-		this.ctx.strokeStyle = this.col;
+		this.ctx.strokeStyle = '#FFFFFF';
 		this.ctx.fillStyle = PRIMARY_COLOUR;
 
 		this.ctx.beginPath();

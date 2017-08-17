@@ -20,6 +20,11 @@ class OrbList {
         this.orbList.push(d);
     }
 
+    clearOrbs() {
+        this.orbList = [];
+        this.hitList = [];
+    }
+
     incrementOrbTime(score, cnv) {
         /* Increase the speed of all orbs */
         if ((score % 10 == 0) && (score <= 200)) {
@@ -77,7 +82,7 @@ class OrbList {
             if (this.hitList[i].getHitTimer() > 2000) {
                 this.hitList.splice(i, 1);
             } else {
-                this.hitList[i].move(-0.5);
+                this.hitList[i].move(-2);
             }
         }
     }
@@ -126,6 +131,10 @@ class OrbList {
         this.manageHitList(i);
 
         time_counter = time_counter + TIME_INTERVAL;
+
+        if (status && status != REGULAR) {
+            this.clearOrbs();
+        }
 
         return status;
     }

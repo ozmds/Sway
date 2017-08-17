@@ -85,7 +85,7 @@ class Circle {
 
 	drawInnerCircle() {
 		this.ctx.lineWidth = this.owid * 0.80;
-		this.ctx.strokeStyle = this.ocol;
+		this.ctx.strokeStyle = '#FFFFFF';
 
 		this.ctx.beginPath();
 		this.ctx.arc(this.x, this.y, this.r * 0.65, 0.0 * Math.PI + (this.sp * 2.0 * Math.PI),
@@ -112,7 +112,7 @@ class Circle {
 					y = this.spikeHeight * y;
 				}
 
-				x = x + this.x + this.r * 0.15;
+				x = x + this.x + SHADOW_DIST;
 				y = y + this.y;
 
 				if (j == 0) {
@@ -131,7 +131,7 @@ class Circle {
 	drawSpikes() {
 		var i, j, x, y;
 
-		this.ctx.strokeStyle = this.ocol;
+		this.ctx.strokeStyle = '#FFFFFF';
 		this.ctx.lineWidth = this.owid * 1.4;
 		this.ctx.fillStyle = this.col;
 
@@ -168,7 +168,7 @@ class Circle {
 		this.ctx.strokeStyle = this.ocol;
 
 		this.ctx.beginPath();
-		this.ctx.arc(this.x + this.r * 0.15, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);
+		this.ctx.arc(this.x + SHADOW_DIST, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);
 		this.ctx.fill();
 		this.ctx.stroke();
 		this.ctx.closePath();
@@ -177,7 +177,7 @@ class Circle {
 	draw() {
 		this.ctx.fillStyle = this.col;
 		this.ctx.lineWidth = this.owid;
-		this.ctx.strokeStyle = this.ocol;
+		this.ctx.strokeStyle = '#FFFFFF';
 
 		this.ctx.beginPath();
 		this.ctx.arc(this.x, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);

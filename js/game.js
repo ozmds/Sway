@@ -113,6 +113,8 @@ class Game {
 		if (window.localStorage.getItem('highscore') == null) {
 			window.localStorage.setItem('highscore', this.score);
 		}
+
+        SHADOW_DIST = this.cnv.width * 0.05;
     }
 
     setStatus(x) {

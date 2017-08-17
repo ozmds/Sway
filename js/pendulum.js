@@ -70,6 +70,8 @@ class Pendulum {
 
 	drawShadow() {
 		this.pen.spin();
+		this.arm.drawShadow();
+		this.sArm.drawShadow();
 		this.cen.drawShadow();
 		this.sPen.drawShadow();
 		this.pen.setSpikeHeight(this.spikeHeight);

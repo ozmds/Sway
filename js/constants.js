@@ -36,6 +36,8 @@ var time_counter = 0;
 var orb_time = ORB_START_TIME;
 var pen_time = PEN_START_TIME;
 
+var SHADOW_DIST = 0;
+
 const LEFT = 'left';
 const RIGHT = 'right';
 
