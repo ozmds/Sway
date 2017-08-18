@@ -72,10 +72,38 @@ class Game {
     	this.cnv.style.width = (this.cnv.width / window.devicePixelRatio).toString() + 'px';
     	this.cnv.style.height = (this.cnv.height / window.devicePixelRatio).toString() + 'px';
 
-    	document.body.style.backgroundColor = PRIMARY_COLOUR;
-    	this.cnv.style.backgroundColor = PRIMARY_COLOUR;
+    	document.body.style.backgroundColor = '#000000';
+    	this.cnv.style.backgroundColor = '#000000';
 
         PADDING = this.cnv.width * 0.03;
+
+        this.ctx.fillStyle = '#222222';
+
+        this.ctx.beginPath();
+    	this.ctx.rect(this.cnv.width * 0.1, this.cnv.width * 0.1, this.cnv.width * 0.80, this.cnv.height - (this.cnv.width * 0.2));
+        this.ctx.fill();
+        this.ctx.closePath();
+
+        this.ctx.fillStyle = '#444444';
+
+        this.ctx.beginPath();
+    	this.ctx.rect(this.cnv.width * 0.2, this.cnv.width * 0.2, this.cnv.width * 0.60, this.cnv.height - (this.cnv.width * 0.4));
+        this.ctx.fill();
+        this.ctx.closePath();
+
+        this.ctx.fillStyle = '#666666';
+
+        this.ctx.beginPath();
+    	this.ctx.rect(this.cnv.width * 0.3, this.cnv.width * 0.3, this.cnv.width * 0.40, this.cnv.height - (this.cnv.width * 0.6));
+        this.ctx.fill();
+        this.ctx.closePath();
+
+        this.ctx.fillStyle = '#888888';
+
+        this.ctx.beginPath();
+    	this.ctx.rect(this.cnv.width * 0.4, this.cnv.width * 0.4, this.cnv.width * 0.20, this.cnv.height - (this.cnv.width * 0.8));
+        this.ctx.fill();
+        this.ctx.closePath();
     }
 
     initVariable() {
@@ -229,7 +257,7 @@ class Game {
 
         this.ctx.strokeStyle = SECONDARY_COLOUR;
         this.ctx.lineWidth = this.cnv.width * 0.008;
-        this.ctx.fillStyle = PRIMARY_COLOUR;
+        this.ctx.fillStyle = '#FFFFFF';
 
         this.ctx.beginPath();
     	this.ctx.rect(x, y, bar_width, side_len);
@@ -262,7 +290,7 @@ class Game {
         /* Write the score on the canvas */
     	this.ctx.textBaseline = 'middle';
     	this.ctx.textAlign = 'end';
-    	this.ctx.fillStyle = SECONDARY_COLOUR;
+    	this.ctx.fillStyle = '#FFFFFF';
 
     	var font_size = this.cnv.width * 0.13;
     	var font = font_size.toString() + "px basicWoodlands";
