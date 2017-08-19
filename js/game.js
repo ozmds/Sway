@@ -65,6 +65,41 @@ class Game {
 		return this.pen;
 	}
 
+    backgroundDesign(prim, layer_count, col_plus) {
+        var i, j;
+        var new_col = [];
+        var newcol = prim;
+
+        document.body.style.backgroundColor = prim;
+    	this.cnv.style.backgroundColor = prim;
+
+        new_col.push(parseInt(prim.slice(1, 3), 16));
+        new_col.push(parseInt(prim.slice(3, 5), 16));
+        new_col.push(parseInt(prim.slice(5, 7), 16));
+
+        for (i = 0; i < layer_count; i++) {
+            this.ctx.fillStyle = newcol;
+
+            this.ctx.beginPath();
+        	this.ctx.rect(i * this.cnv.width / (2 * layer_count),
+                i * this.cnv.width / (2 * layer_count),
+                this.cnv.width - (i * this.cnv.width / layer_count),
+                this.cnv.height - (i * this.cnv.width / layer_count));
+            this.ctx.fill();
+            this.ctx.closePath();
+
+            newcol = '#';
+
+            for (j = 0; j < 3; j++) {
+                new_col[j] = new_col[j] + col_plus;
+                if (new_col[j] > 255) {
+                    new_col[j] = 255;
+                }
+                newcol = newcol + new_col[j].toString(16);
+            }
+        }
+    }
+
     background() {
         this.cnv.height = (window.innerHeight - 2 * MARGIN) * window.devicePixelRatio;
     	this.cnv.width = (window.innerWidth - 2 * MARGIN) * window.devicePixelRatio;
@@ -72,38 +107,9 @@ class Game {
     	this.cnv.style.width = (this.cnv.width / window.devicePixelRatio).toString() + 'px';
     	this.cnv.style.height = (this.cnv.height / window.devicePixelRatio).toString() + 'px';
 
-    	document.body.style.backgroundColor = '#000000';
-    	this.cnv.style.backgroundColor = '#000000';
+        this.backgroundDesign(PRIMARY_COLOUR, 8, 32);
 
         PADDING = this.cnv.width * 0.03;
-
-        this.ctx.fillStyle = '#222222';
-
-        this.ctx.beginPath();
-    	this.ctx.rect(this.cnv.width * 0.1, this.cnv.width * 0.1, this.cnv.width * 0.80, this.cnv.height - (this.cnv.width * 0.2));
-        this.ctx.fill();
-        this.ctx.closePath();
-
-        this.ctx.fillStyle = '#444444';
-
-        this.ctx.beginPath();
-    	this.ctx.rect(this.cnv.width * 0.2, this.cnv.width * 0.2, this.cnv.width * 0.60, this.cnv.height - (this.cnv.width * 0.4));
-        this.ctx.fill();
-        this.ctx.closePath();
-
-        this.ctx.fillStyle = '#666666';
-
-        this.ctx.beginPath();
-    	this.ctx.rect(this.cnv.width * 0.3, this.cnv.width * 0.3, this.cnv.width * 0.40, this.cnv.height - (this.cnv.width * 0.6));
-        this.ctx.fill();
-        this.ctx.closePath();
-
-        this.ctx.fillStyle = '#888888';
-
-        this.ctx.beginPath();
-    	this.ctx.rect(this.cnv.width * 0.4, this.cnv.width * 0.4, this.cnv.width * 0.20, this.cnv.height - (this.cnv.width * 0.8));
-        this.ctx.fill();
-        this.ctx.closePath();
     }
 
     initVariable() {

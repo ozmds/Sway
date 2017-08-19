@@ -21,6 +21,7 @@ var orb_frequency = ORB_FREQ_START_TIME; /* 600 at a score of 300*/
 
 const GAME = 'game';
 const PAUSE = 'pause';
+const TRANSITION = 'transition';
 
 var STATE = GAME;
 

@@ -120,6 +120,7 @@ class OrbList {
                     this.incrementOrbFrequency(score + 1);
                 } else if (this.orbList[i].getType() == BOMB) {
                     this.score = -score;
+                    STATE = PAUSE;
                 }
 
                 status = this.orbList[i].getType();
@@ -132,9 +133,11 @@ class OrbList {
 
         time_counter = time_counter + TIME_INTERVAL;
 
+        /*
         if (status && status != REGULAR) {
             this.clearOrbs();
         }
+        */
 
         return status;
     }
