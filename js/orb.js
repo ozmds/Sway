@@ -11,6 +11,7 @@ class Orb {
 		this.aspectRatio = 0;
 		this.img = null;
 		this.speed = speed;
+		this.ring = r;
 
 		var typeInt = Math.random() * 100;
 
@@ -63,12 +64,20 @@ class Orb {
 		this.aspectRatio = this.img.height / this.img.width;
 	}
 
+	getRing() {
+		return this.ring;
+	}
+
 	getY() {
 		return this.y;
 	}
 
 	getR() {
 		return this.r;
+	}
+
+	setR(x) {
+		this.r = x;
 	}
 
 	getType() {
@@ -107,6 +116,27 @@ class Orb {
 		}
 
 		return false;
+	}
+
+	furthestCorner() {
+		return Math.max(Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2)),
+			Math.sqrt(Math.pow(this.cnv.height - this.y, 2) + Math.pow(this.x, 2)),
+			Math.sqrt(Math.pow(this.cnv.height - this.y, 2) + Math.pow(this.cnv.width - this.x, 2)),
+			Math.sqrt(Math.pow(this.cnv.width - this.x, 2) + Math.pow(this.y, 2)));
+	}
+
+	drawRing() {
+		this.ring = this.ring + this.cnv.width * 0.01;
+
+		this.ctx.lineWidth = this.r * 0.30;
+		this.ctx.strokeStyle = '#FFFFFF';
+		this.ctx.fillStyle = PRIMARY_COLOUR;
+
+		this.ctx.beginPath();
+		this.ctx.arc(this.x, this.y, this.ring * 2, 0.0 * Math.PI, 2.0 * Math.PI);
+		this.ctx.fill();
+		this.ctx.stroke();
+		this.ctx.closePath();
 	}
 
 	drawShadow() {

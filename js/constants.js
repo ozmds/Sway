@@ -29,7 +29,7 @@ var pausex;
 var pausey;
 var pauseside;
 
-var PRIMARY_COLOUR = RED;
+var PRIMARY_COLOUR = BLUE;
 var DEST_COLOUR = PRIMARY_COLOUR;
 
 var time_counter = 0;

@@ -7,6 +7,7 @@ class Game {
         this.score = 0;
         this.status = REGULAR;
         this.orbList = null;
+        this.hit_orb = null;
 
         this.cnv.style.top = (MARGIN).toString() + 'px';
         this.cnv.style.left = (MARGIN).toString() + 'px';
@@ -162,10 +163,21 @@ class Game {
         }
 	}
 
+    screenWipe() {
+        if (this.hit_orb) {
+            if (this.hit_orb.getRing() > this.hit_orb.furthestCorner() * 0.55) {
+                this.orbList.clearOrbs();
+                return false;
+            }
+        }
+        return true;
+    }
+
     move() {
 		/* Move the Pendulum as a Whole */
 		this.pen.move(this.status);
-        this.setStatus(this.orbList.manageOrbs(this.score, this.pen, this.cnv, this.ctx, this.status));
+        this.hit_orb = this.orbList.manageOrbs(this.score, this.pen, this.cnv, this.ctx, this.status);
+        this.setStatus(this.orbList.getStatus());
         this.setScore(this.orbList.getScore() + this.score);
 
         if (this.status == DOUBLE) {
@@ -193,6 +205,11 @@ class Game {
 
         this.orbList.drawOrbs();
         this.pen.draw();
+
+        if (STATE == TRANSITION) {
+            this.hit_orb.drawRing();
+            this.hit_orb.draw();
+        }
     }
 
 	incrementPenSpeed(score) {

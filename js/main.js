@@ -25,6 +25,12 @@ function startGame() {
             swayGame.move();
         }
 
+        if (STATE == TRANSITION) {
+            if (!swayGame.screenWipe()) {
+                STATE = GAME;
+            }
+        }
+
         swayGame.draw();
 
     }, TIME_INTERVAL);

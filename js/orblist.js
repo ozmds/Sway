@@ -4,6 +4,11 @@ class OrbList {
         this.hitList = [];
         this.speed = 0;
         this.score = 0;
+        this.status = null;
+    }
+
+    getStatus() {
+        return this.status;
     }
 
     getScore() {
@@ -89,7 +94,7 @@ class OrbList {
 
     manageOrbs(score, pen, cnv, ctx, cur_stat) {
         var i;
-        var status = null;
+        var hit_orb = null;
 
         this.score = 0;
 
@@ -113,19 +118,25 @@ class OrbList {
                 }
             } else if (this.checkHit(this.orbList[i], pen.getPen(), pen.getSPen())) {
                 this.hitList.push(this.orbList[i]);
+                this.status = this.orbList[i].getType();
 
-                if (this.orbList[i].getType() == REGULAR) {
+                if (this.status == REGULAR) {
                     this.score = this.score + 1;
                     this.incrementOrbTime(score + 1, cnv);
                     this.incrementOrbFrequency(score + 1);
-                } else if (this.orbList[i].getType() == BOMB) {
+                    this.orbList.splice(i, 1);
+                } else if (this.status == BOMB) {
                     this.score = -score;
-                    STATE = PAUSE;
+                    hit_orb = this.orbList[i];
+                    STATE = TRANSITION;
+                } else {
+                    hit_orb = this.orbList[i];
+                    STATE = TRANSITION;
                 }
 
-                status = this.orbList[i].getType();
-
+                /*
                 this.orbList.splice(i, 1);
+                */
             }
         }
 
@@ -139,6 +150,6 @@ class OrbList {
         }
         */
 
-        return status;
+        return hit_orb;
     }
 }
