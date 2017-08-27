@@ -71,8 +71,19 @@ class Game {
         var new_col = [];
         var newcol = prim;
 
+        var gradient;
+
         document.body.style.backgroundColor = prim;
     	this.cnv.style.backgroundColor = prim;
+
+        gradient = this.ctx.createLinearGradient(0, 0, this.cnv.width, this.cnv.height);
+        gradient.addColorStop(1, '#000000');
+        gradient.addColorStop(0, PRIMARY_COLOUR);
+
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.cnv.width, this.cnv.height);
+
+        /*
 
         new_col.push(parseInt(prim.slice(1, 3), 16));
         new_col.push(parseInt(prim.slice(3, 5), 16));
@@ -99,6 +110,7 @@ class Game {
                 newcol = newcol + new_col[j].toString(16);
             }
         }
+        */
     }
 
     background() {
@@ -165,7 +177,7 @@ class Game {
 
     screenWipe() {
         if (this.hit_orb) {
-            if (this.hit_orb.getRing() > this.hit_orb.furthestCorner() * 0.55) {
+            if (this.hit_orb.getRing() > this.hit_orb.furthestCorner() * 0.5) {
                 this.orbList.clearOrbs();
                 return false;
             }
@@ -196,19 +208,24 @@ class Game {
     }
 
     draw() {
-        this.drawPauseButton(this.cnv.width * 0.04, this.cnv.width * 0.04, this.cnv.width * 0.10);
-        this.updateScore();
-
         this.pen.drawShadow();
 
         this.orbList.drawShadowOrbs();
 
         this.orbList.drawOrbs();
+
+        this.drawPauseButton(this.cnv.width * 0.04, this.cnv.width * 0.04, this.cnv.width * 0.10);
+        this.updateScore();
+
         this.pen.draw();
 
         if (STATE == TRANSITION) {
             this.hit_orb.drawRing();
+            this.pen.draw();
             this.hit_orb.draw();
+
+            this.drawPauseButton(this.cnv.width * 0.04, this.cnv.width * 0.04, this.cnv.width * 0.10);
+            this.updateScore();
         }
     }
 

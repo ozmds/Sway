@@ -126,11 +126,18 @@ class Orb {
 	}
 
 	drawRing() {
-		this.ring = this.ring + this.cnv.width * 0.01;
+		var gradient;
+
+        gradient = this.ctx.createLinearGradient(0, 0, this.cnv.width, this.cnv.height);
+        gradient.addColorStop(1, '#000000');
+        gradient.addColorStop(0, PRIMARY_COLOUR);
+
+        this.ctx.fillStyle = gradient;
+
+		this.ring = this.ring + this.cnv.width * 0.005;
 
 		this.ctx.lineWidth = this.r * 0.30;
 		this.ctx.strokeStyle = '#FFFFFF';
-		this.ctx.fillStyle = PRIMARY_COLOUR;
 
 		this.ctx.beginPath();
 		this.ctx.arc(this.x, this.y, this.ring * 2, 0.0 * Math.PI, 2.0 * Math.PI);
@@ -154,9 +161,16 @@ class Orb {
 	}
 
 	draw() {
+		var gradient;
+
+        gradient = this.ctx.createLinearGradient(0, 0, this.cnv.width, this.cnv.height);
+        gradient.addColorStop(1, '#000000');
+        gradient.addColorStop(0, PRIMARY_COLOUR);
+
+        this.ctx.fillStyle = gradient;
+
 		this.ctx.lineWidth = this.r * 0.30;
 		this.ctx.strokeStyle = '#FFFFFF';
-		this.ctx.fillStyle = PRIMARY_COLOUR;
 
 		this.ctx.beginPath();
 		this.ctx.arc(this.x, this.y, this.r * 2, 0.0 * Math.PI, 2.0 * Math.PI);

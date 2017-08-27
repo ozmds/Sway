@@ -131,9 +131,16 @@ class Circle {
 	drawSpikes() {
 		var i, j, x, y;
 
+		var gradient;
+
+		gradient = this.ctx.createLinearGradient(0, 0, this.cnv.width, this.cnv.height);
+		gradient.addColorStop(1, '#000000');
+		gradient.addColorStop(0, PRIMARY_COLOUR);
+
+		this.ctx.fillStyle = gradient;
+
 		this.ctx.strokeStyle = '#FFFFFF';
 		this.ctx.lineWidth = this.owid * 1.4;
-		this.ctx.fillStyle = this.col;
 
 		for (i = 0; i < 6; i++) {
 			this.ctx.beginPath();
@@ -175,7 +182,14 @@ class Circle {
 	}
 
 	draw() {
-		this.ctx.fillStyle = this.col;
+		var gradient;
+
+		gradient = this.ctx.createLinearGradient(0, 0, this.cnv.width, this.cnv.height);
+		gradient.addColorStop(1, '#000000');
+		gradient.addColorStop(0, PRIMARY_COLOUR);
+
+		this.ctx.fillStyle = gradient;
+
 		this.ctx.lineWidth = this.owid;
 		this.ctx.strokeStyle = '#FFFFFF';
 
