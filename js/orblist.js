@@ -55,7 +55,7 @@ class OrbList {
         return false;
     }
 
-    drawOrbs() {
+    drawOrbs(ctx) {
         var i;
 
         for (i = 0; i < this.orbList.length; i++) {
@@ -63,11 +63,13 @@ class OrbList {
         }
 
         for (i = 0; i < this.hitList.length; i++) {
+            ctx.globalAlpha = this.hitList[i].getTransparency();
             this.hitList[i].draw();
+            ctx.globalAlpha = 1;
         }
     }
 
-    drawShadowOrbs() {
+    drawShadowOrbs(ctx) {
         var i;
 
         for (i = 0; i < this.orbList.length; i++) {
@@ -75,16 +77,19 @@ class OrbList {
         }
 
         for (i = 0; i < this.hitList.length; i++) {
+            ctx.globalAlpha = this.hitList[i].getTransparency();
             this.hitList[i].drawShadow();
+            ctx.globalAlpha = 1;
         }
     }
 
-    manageHitList(i) {
+    manageHitList(i, cnv) {
         /* Move All Orbs That Have Been Hit */
         for (i = 0; i < this.hitList.length; i++) {
-            this.hitList[i].updateHitTimer(TIME_INTERVAL);
 
-            if (this.hitList[i].getHitTimer() > 2000) {
+            this.hitList[i].incrementTransparency();
+
+            if (this.hitList[i].getTransparency() <= 0) {
                 this.hitList.splice(i, 1);
             } else {
                 this.hitList[i].move(-2);
@@ -111,10 +116,11 @@ class OrbList {
 
             this.orbList[i].move(1);
 
-            if (this.orbList[i].getY() > (cnv.height + this.orbList[i].getR() * 2)) {
+            if (this.orbList[i].getY() > (cnv.height - this.orbList[i].getR() * 2)) {
                 if (this.orbList[i].getType() == REGULAR) {
-                    this.orbList.splice(i, 1);
                     this.score = -score;
+                    hit_orb = this.orbList[i];
+                    STATE = TRANSITION;
                 }
             } else if (this.checkHit(this.orbList[i], pen.getPen(), pen.getSPen())) {
                 this.hitList.push(this.orbList[i]);
@@ -140,7 +146,7 @@ class OrbList {
             }
         }
 
-        this.manageHitList(i);
+        this.manageHitList(i, cnv);
 
         time_counter = time_counter + TIME_INTERVAL;
 

@@ -33,5 +33,9 @@ function startGame() {
 
         swayGame.draw();
 
+        if (STATE == PAUSE) {
+            swayGame.drawScreen();
+        }
+
     }, TIME_INTERVAL);
 }

@@ -8,6 +8,7 @@ class Game {
         this.status = REGULAR;
         this.orbList = null;
         this.hit_orb = null;
+        this.col = null;
 
         this.cnv.style.top = (MARGIN).toString() + 'px';
         this.cnv.style.left = (MARGIN).toString() + 'px';
@@ -71,16 +72,14 @@ class Game {
         var new_col = [];
         var newcol = prim;
 
-        var gradient;
-
         document.body.style.backgroundColor = prim;
     	this.cnv.style.backgroundColor = prim;
 
-        gradient = this.ctx.createLinearGradient(0, 0, this.cnv.width, this.cnv.height);
-        gradient.addColorStop(1, '#000000');
-        gradient.addColorStop(0, PRIMARY_COLOUR);
+        this.col = this.ctx.createLinearGradient(0, 0, this.cnv.width, this.cnv.height);
+        this.col.addColorStop(1, '#000000');
+        this.col.addColorStop(0, PRIMARY_COLOUR);
 
-        this.ctx.fillStyle = gradient;
+        this.ctx.fillStyle = this.col;
         this.ctx.fillRect(0, 0, this.cnv.width, this.cnv.height);
 
         /*
@@ -177,11 +176,25 @@ class Game {
 
     screenWipe() {
         if (this.hit_orb) {
-            if (this.hit_orb.getRing() > this.hit_orb.furthestCorner() * 0.5) {
-                this.orbList.clearOrbs();
-                return false;
+            if (this.hit_orb.getType() != REGULAR) {
+                if (this.hit_orb.getY() > this.cnv.height * 0.4) {
+                    this.hit_orb.move(-4);
+                } else if (this.hit_orb.getRing() > this.hit_orb.furthestCorner() * 0.5) {
+                    this.orbList.clearOrbs();
+                    return false;
+                } else {
+                    this.hit_orb.incrementRing();
+                }
+            } else {
+                if (this.hit_orb.getRing() > this.hit_orb.furthestCorner() * 0.5) {
+                    this.orbList.clearOrbs();
+                    return false;
+                } else {
+                    this.hit_orb.incrementRing();
+                }
             }
         }
+
         return true;
     }
 
@@ -210,9 +223,9 @@ class Game {
     draw() {
         this.pen.drawShadow();
 
-        this.orbList.drawShadowOrbs();
+        this.orbList.drawShadowOrbs(this.ctx);
 
-        this.orbList.drawOrbs();
+        this.orbList.drawOrbs(this.ctx);
 
         this.drawPauseButton(this.cnv.width * 0.04, this.cnv.width * 0.04, this.cnv.width * 0.10);
         this.updateScore();
@@ -221,6 +234,7 @@ class Game {
 
         if (STATE == TRANSITION) {
             this.hit_orb.drawRing();
+            this.pen.drawShadow();
             this.pen.draw();
             this.hit_orb.draw();
 
@@ -339,5 +353,42 @@ class Game {
 
     	this.ctx.fillText(this.score, this.cnv.width * 0.95, this.cnv.width * 0.05);
     	this.ctx.fillText(window.localStorage.getItem('highscore'), this.cnv.width * 0.95, this.cnv.width * 0.16);
+    }
+
+    drawScreen() {
+        this.ctx.strokeStyle = '#FFFFFF';
+        this.ctx.fillStyle = this.col;
+        this.ctx.lineWidth = this.cnv.width * 0.02;
+
+        this.ctx.textBaseline = 'middle';
+      	this.ctx.textAlign = 'center';
+
+      	var font_size = this.cnv.width * 0.19;
+      	var font = font_size.toString() + "px Freestyle Script";
+
+      	this.ctx.font = font;
+
+        this.ctx.lineWidth = this.cnv.width * 0.015;
+
+        this.ctx.beginPath();
+        this.ctx.rect(this.cnv.width * 0.15, this.cnv.height * 0.35, this.cnv.width * 0.35, this.cnv.height * 0.30);
+        this.ctx.fill();
+        this.ctx.stroke();
+        this.ctx.closePath();
+
+        this.ctx.beginPath();
+        this.ctx.rect(this.cnv.width * 0.50, this.cnv.height * 0.35, this.cnv.width * 0.35, this.cnv.height * 0.30);
+        this.ctx.fill();
+        this.ctx.stroke();
+        this.ctx.closePath();
+
+        this.ctx.beginPath();
+        this.ctx.rect(this.cnv.width * 0.50, this.cnv.height * 0.35, this.cnv.width * 0.35, this.cnv.height * 0.15);
+        this.ctx.fill();
+        this.ctx.stroke();
+        this.ctx.closePath();
+
+        this.ctx.fillStyle = '#FFFFFF';
+        this.ctx.fillText('Game Over', this.cnv.width * 0.50, this.cnv.height * 0.30);
     }
 }

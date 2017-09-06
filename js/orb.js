@@ -7,11 +7,11 @@ class Orb {
 		this.ctx = ctx;
 		this.cnv = cnv;
 		this.type = null;
-		this.hitTimer = 0;
 		this.aspectRatio = 0;
 		this.img = null;
 		this.speed = speed;
 		this.ring = r;
+		this.transparency = 1;
 
 		var typeInt = Math.random() * 100;
 
@@ -46,6 +46,14 @@ class Orb {
 		}
 
 		this.setImage();
+	}
+
+	getTransparency() {
+		return this.transparency;
+	}
+
+	incrementTransparency() {
+		this.transparency = this.transparency - 0.05;
 	}
 
 	setImage() {
@@ -88,22 +96,8 @@ class Orb {
 		this.type = x;
 	}
 
-	getHitTimer() {
-		return this.hitTimer;
-	}
-
-	updateHitTimer(interval) {
-		this.hitTimer = this.hitTimer + interval;
-	}
-
 	move(x) {
 		this.y += this.speed * x;
-	}
-
-	hitOrb() {
-		if (this.hitTimer > 0) {
-			this.r = this.r;
-		}
 	}
 
 	checkHitPen(x, y, r) {
@@ -125,6 +119,10 @@ class Orb {
 			Math.sqrt(Math.pow(this.cnv.width - this.x, 2) + Math.pow(this.y, 2)));
 	}
 
+	incrementRing() {
+		this.ring = this.ring + this.cnv.width * 0.005;
+	}
+
 	drawRing() {
 		var gradient;
 
@@ -133,8 +131,6 @@ class Orb {
         gradient.addColorStop(0, PRIMARY_COLOUR);
 
         this.ctx.fillStyle = gradient;
-
-		this.ring = this.ring + this.cnv.width * 0.005;
 
 		this.ctx.lineWidth = this.r * 0.30;
 		this.ctx.strokeStyle = '#FFFFFF';
@@ -147,7 +143,6 @@ class Orb {
 	}
 
 	drawShadow() {
-		this.hitOrb();
 
 		this.ctx.lineWidth = this.r * 0.30;
 		this.ctx.strokeStyle = this.col;
