@@ -6,12 +6,12 @@
 
 @font-face {
 	font-family: basicWoodlands;
-	src: url(TheWoodlands-Regular.otf);
+	src: url(TheWoodlands-Regular.otf) format('opentype');
 }
 
 @font-face {
 	font-family: freestyleScript;
-	src: url(Freestyle-Script.ttf);
+	src: url(Freestyle-Script.ttf) format('truetype');
 }
 
 html, body {
