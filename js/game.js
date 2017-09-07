@@ -9,6 +9,7 @@ class Game {
         this.orbList = null;
         this.hit_orb = null;
         this.col = null;
+        this.sH = -0.70;
 
         this.cnv.style.top = (MARGIN).toString() + 'px';
         this.cnv.style.left = (MARGIN).toString() + 'px';
@@ -167,7 +168,7 @@ class Game {
 		/* Set Status to x */
         if (x) {
             if (this.status != x) {
-                if (x != REGULAR && x != BOMB) {
+                if (x != REGULAR) {
                     this.status = x;
                 }
             }
@@ -288,6 +289,10 @@ class Game {
         /* React to a click */
         if (STATE == PAUSE) {
             STATE = GAME;
+            this.sH = -0.70;
+            if (this.status == BOMB) {
+                this.status = REGULAR;
+            }
         } else if (event_x > pausex && pausex + pauseside > event_x) {
             if (event_y > pausey && pausey + pauseside > event_y) {
                 STATE = PAUSE;
@@ -355,6 +360,31 @@ class Game {
     	this.ctx.fillText(window.localStorage.getItem('highscore'), this.cnv.width * 0.95, this.cnv.width * 0.16);
     }
 
+    drawRect(x, y, lx, ly) {
+        this.ctx.beginPath();
+        this.ctx.rect(x, y, lx, ly);
+        this.ctx.fill();
+        this.ctx.stroke();
+        this.ctx.closePath();
+    }
+
+    drawCircle(x, y, r) {
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, r, 0.0 * Math.PI, 2.0 * Math.PI);
+        this.ctx.fill();
+        this.ctx.stroke();
+        this.ctx.closePath();
+    }
+
+    drawImg(x, y, r, img) {
+        var aspectRatio = img.height / img.width;
+
+        this.drawCircle(x, y, 2 * r);
+
+        this.ctx.drawImage(img, x - r, y - r * aspectRatio,
+			2 * r, 2 * r * aspectRatio);
+    }
+
     drawScreen() {
         this.ctx.strokeStyle = '#FFFFFF';
         this.ctx.fillStyle = this.col;
@@ -370,25 +400,32 @@ class Game {
 
         this.ctx.lineWidth = this.cnv.width * 0.015;
 
-        this.ctx.beginPath();
-        this.ctx.rect(this.cnv.width * 0.15, this.cnv.height * 0.35, this.cnv.width * 0.35, this.cnv.height * 0.30);
-        this.ctx.fill();
-        this.ctx.stroke();
-        this.ctx.closePath();
+        this.drawRect(this.cnv.width * 0.15, this.cnv.height * (0.35 + this.sH), this.cnv.width * 0.35, this.cnv.height * 0.30);
 
-        this.ctx.beginPath();
-        this.ctx.rect(this.cnv.width * 0.50, this.cnv.height * 0.35, this.cnv.width * 0.35, this.cnv.height * 0.30);
-        this.ctx.fill();
-        this.ctx.stroke();
-        this.ctx.closePath();
+        this.drawImg(this.cnv.width * 0.325, this.cnv.height * (0.5 + this.sH), this.cnv.width * 0.0525, restarticon);
 
-        this.ctx.beginPath();
-        this.ctx.rect(this.cnv.width * 0.50, this.cnv.height * 0.35, this.cnv.width * 0.35, this.cnv.height * 0.15);
-        this.ctx.fill();
-        this.ctx.stroke();
-        this.ctx.closePath();
+        this.drawRect(this.cnv.width * 0.50, this.cnv.height * (0.35 + this.sH), this.cnv.width * 0.35, this.cnv.height * 0.30);
+
+        if (this.status != BOMB) {
+            this.drawImg(this.cnv.width * 0.675, this.cnv.height * (0.575 + this.sH), this.cnv.height * 0.0225, homeicon);
+
+            this.drawRect(this.cnv.width * 0.50, this.cnv.height * (0.35 + this.sH), this.cnv.width * 0.35, this.cnv.height * 0.15);
+
+            this.drawImg(this.cnv.width * 0.675, this.cnv.height * (0.425 + this.sH), this.cnv.height * 0.0225, soundicon);
+        } else {
+            this.drawImg(this.cnv.width * 0.675, this.cnv.height * (0.5 + this.sH), this.cnv.width * 0.0525, homeicon);
+        }
 
         this.ctx.fillStyle = '#FFFFFF';
-        this.ctx.fillText('Game Over', this.cnv.width * 0.50, this.cnv.height * 0.30);
+
+        if (this.status == BOMB) {
+            this.ctx.fillText('Game Over', this.cnv.width * 0.50, this.cnv.height * (0.30 + this.sH));
+        } else {
+            this.ctx.fillText('Pause', this.cnv.width * 0.50, this.cnv.height * (0.30 + this.sH));
+        }
+
+        if (this.sH < 0) {
+            this.sH = this.sH + 0.05;
+        }
     }
 }

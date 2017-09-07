@@ -27,7 +27,11 @@ function startGame() {
 
         if (STATE == TRANSITION) {
             if (!swayGame.screenWipe()) {
-                STATE = GAME;
+                if (swayGame.getStatus() == BOMB) {
+                    STATE = PAUSE;
+                } else {
+                    STATE = GAME;
+                }
             }
         }
 

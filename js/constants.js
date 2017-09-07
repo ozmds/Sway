@@ -57,8 +57,18 @@ var bomb = new Image();
 var crystal = new Image();
 var balloon = new Image();
 
+var soundicon = new Image();
+var soundofficon = new Image();
+var homeicon = new Image();
+var restarticon = new Image();
+
 knife.src = 'data/knife.png';
 arrow.src = 'data/arrow.png';
 bomb.src = 'data/bomb.png';
 crystal.src = 'data/diamond.png';
 balloon.src = 'data/balloon.png';
+
+soundicon.src = 'data/sound.png';
+soundofficon.src = 'data/soundoff.png';
+homeicon.src = 'data/home.png';
+restarticon.src = 'data/restart.png';

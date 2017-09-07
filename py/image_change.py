@@ -1,6 +1,6 @@
 from PIL import Image
 
-item_list = ['bomb.png', 'arrow.png', 'balloon.png', 'diamond.png', 'knife.png']
+item_list = ['restart.png']
 
 for item in item_list:
     icon = Image.open(item)

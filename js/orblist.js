@@ -102,6 +102,7 @@ class OrbList {
         var hit_orb = null;
 
         this.score = 0;
+        this.status = null;
 
         if (time_counter >= orb_frequency) {
             time_counter = 0;
@@ -118,6 +119,7 @@ class OrbList {
 
             if (this.orbList[i].getY() > (cnv.height - this.orbList[i].getR() * 2)) {
                 if (this.orbList[i].getType() == REGULAR) {
+                    this.status = BOMB;
                     this.score = -score;
                     hit_orb = this.orbList[i];
                     STATE = TRANSITION;
@@ -139,22 +141,12 @@ class OrbList {
                     hit_orb = this.orbList[i];
                     STATE = TRANSITION;
                 }
-
-                /*
-                this.orbList.splice(i, 1);
-                */
             }
         }
 
         this.manageHitList(i, cnv);
 
         time_counter = time_counter + TIME_INTERVAL;
-
-        /*
-        if (status && status != REGULAR) {
-            this.clearOrbs();
-        }
-        */
 
         return hit_orb;
     }
