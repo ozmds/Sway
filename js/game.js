@@ -394,7 +394,7 @@ class Game {
       	this.ctx.textAlign = 'center';
 
       	var font_size = this.cnv.width * 0.19;
-      	var font = font_size.toString() + "px Freestyle Script";
+      	var font = font_size.toString() + "px freestyleScript";
 
       	this.ctx.font = font;
 

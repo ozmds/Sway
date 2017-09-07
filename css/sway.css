@@ -1,20 +1,25 @@
 * {
-	margin: 0; 
-	padding: 0px; 
-	box-sizing: border-box; 
+	margin: 0;
+	padding: 0px;
+	box-sizing: border-box;
 }
 
 @font-face {
-	font-family: basicWoodlands; 
+	font-family: basicWoodlands;
 	src: url(TheWoodlands-Regular.otf);
-}	
+}
+
+@font-face {
+	font-family: freestyleScript;
+	src: url(Freestyle-Script.ttf);
+}
 
 html, body {
-	font-family: basicWoodlands; 
+	font-family: basicWoodlands;
 }
 
 canvas {
-	display: block; 
-	position: absolute; 
+	display: block;
+	position: absolute;
 	font-family: basicWoodlands;
 }
