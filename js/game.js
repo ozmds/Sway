@@ -326,7 +326,7 @@ class Game {
                 this.sH = -0.70;
                 this.status = REGULAR;
                 this.score = 0;
-            } else {
+            } else if (this.status != BOMB) {
 		STATE = GAME;    
 	    }
         } else if (event_x > pausex && pausex + pauseside > event_x) {
