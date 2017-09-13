@@ -5,6 +5,11 @@ class OrbList {
         this.speed = 0;
         this.score = 0;
         this.status = null;
+        this.oldStatus = null;
+    }
+
+    getOldStatus() {
+        return this.oldStatus;
     }
 
     getStatus() {
@@ -103,6 +108,7 @@ class OrbList {
 
         this.score = 0;
         this.status = null;
+        this.oldStatus = null;
 
         if (time_counter >= orb_frequency) {
             time_counter = 0;
@@ -119,8 +125,11 @@ class OrbList {
 
             if (this.orbList[i].getY() > (cnv.height - this.orbList[i].getR() * 2)) {
                 if (this.orbList[i].getType() == REGULAR) {
+                    this.oldStatus = cur_stat;
                     this.status = BOMB;
+                    /*
                     this.score = -score;
+                    */
                     hit_orb = this.orbList[i];
                     STATE = TRANSITION;
                 }
@@ -134,7 +143,9 @@ class OrbList {
                     this.incrementOrbFrequency(score + 1);
                     this.orbList.splice(i, 1);
                 } else if (this.status == BOMB) {
+                    /*
                     this.score = -score;
+                    */
                     hit_orb = this.orbList[i];
                     STATE = TRANSITION;
                 } else {

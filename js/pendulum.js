@@ -105,6 +105,30 @@ class Pendulum {
 		this.sArm.setEndY(this.sPen.getY());
 	}
 
+	endShrink() {
+		var deg = null;
+		if (this.pen.getDeg() > 0) {
+			deg = this.pen.getDeg() % (2 * Math.PI);
+		} else {
+			deg = (2 * Math.PI) - Math.abs(this.pen.getDeg() % (2 * Math.PI));
+		}
+
+		DEST_COLOUR = BLUE;
+		if (this.arm.getMaxLen() > this.arm.getLen()) {
+			if ((deg > this.startRange) && (deg < this.endRange)) {
+				this.arm.setLen(this.arm.getLen() * 1.01);
+				this.sArm.setLen(this.sArm.getLen() * 1.01);
+			}
+		} else {
+			this.arm.setLen(this.arm.getMaxLen());
+			this.sArm.setLen(this.sArm.getMaxLen());
+			this.timer = 0;
+			return false;
+		}
+
+		return true;
+	}
+
 	startShrink() {
 		var deg = null;
 		if (this.pen.getDeg() > 0) {
@@ -120,21 +144,25 @@ class Pendulum {
 				this.sArm.setLen(this.sArm.getLen() * 0.99);
 			}
 		} else {
-			DEST_COLOUR = BLUE;
-			if (this.arm.getMaxLen() > this.arm.getLen()) {
-				if ((deg > this.startRange) && (deg < this.endRange)) {
-					this.arm.setLen(this.arm.getLen() * 1.01);
-					this.sArm.setLen(this.sArm.getLen() * 1.01);
-				}
-			} else {
-				this.arm.setLen(this.arm.getMaxLen());
-				this.sArm.setLen(this.sArm.getMaxLen());
-				this.timer = 0;
-				return false;
-			}
+			return this.endShrink();
 		}
 
 		this.timer += TIME_INTERVAL;
+		return true;
+	}
+
+	endBalloon() {
+		var dist_x = Math.pow(Math.abs(this.pen.getX() - this.sPen.getX()), 2);
+		var dist_y = Math.pow(Math.abs(this.pen.getY() - this.sPen.getY()), 2);
+
+		DEST_COLOUR = BLUE;
+		if (dist_x + dist_y < Math.pow(this.pen.getR(), 2)) {
+			this.sPen.setDeg(this.pen.getDeg());
+			this.sPen.setDir(this.pen.getDir());
+			this.timer = 0;
+			return false;
+		}
+
 		return true;
 	}
 
@@ -143,18 +171,33 @@ class Pendulum {
 		var dist_y = Math.pow(Math.abs(this.pen.getY() - this.sPen.getY()), 2);
 
 		if (this.timer > 15000) {
-			DEST_COLOUR = BLUE;
-			if (dist_x + dist_y < Math.pow(this.pen.getR(), 2)) {
-				this.sPen.setDeg(this.pen.getDeg());
-				this.sPen.setDir(this.pen.getDir());
-				this.timer = 0;
-				return false;
-			}
+			return this.endBalloon();
 		} else {
 			DEST_COLOUR = GREEN;
 		}
 
 		this.timer += TIME_INTERVAL;
+		return true;
+	}
+
+	endSpike() {
+		DEST_COLOUR = BLUE;
+		if (this.pen.getR() > this.pen.getMinR()) {
+			this.arm.setLen(this.arm.getLen() + (this.pen.getR() * 0.01));
+			this.sArm.setLen(this.sArm.getLen() + (this.sPen.getR() * 0.01));
+			this.pen.setR(this.pen.getR() * 0.99);
+			this.sPen.setR(this.sPen.getR() * 0.99);
+		} else if (this.spikeHeight > 0.8) {
+			this.spikeHeight = this.spikeHeight * 0.99;
+		} else {
+			this.arm.setLen(this.arm.getMaxLen());
+			this.sArm.setLen(this.sArm.getMaxLen());
+			this.pen.setR(this.pen.getMinR());
+			this.sPen.setR(this.sPen.getMinR());
+			this.timer = 0;
+			return false;
+		}
+
 		return true;
 	}
 
@@ -173,22 +216,7 @@ class Pendulum {
 			}
 
 		} else {
-			DEST_COLOUR = BLUE;
-			if (this.pen.getR() > this.pen.getMinR()) {
-				this.arm.setLen(this.arm.getLen() + (this.pen.getR() * 0.01));
-				this.sArm.setLen(this.sArm.getLen() + (this.sPen.getR() * 0.01));
-				this.pen.setR(this.pen.getR() * 0.99);
-				this.sPen.setR(this.sPen.getR() * 0.99);
-			} else if (this.spikeHeight > 0.8) {
-				this.spikeHeight = this.spikeHeight * 0.99;
-			} else {
-				this.arm.setLen(this.arm.getMaxLen());
-				this.sArm.setLen(this.sArm.getMaxLen());
-				this.pen.setR(this.pen.getMinR());
-				this.sPen.setR(this.sPen.getMinR());
-				this.timer = 0;
-				return false;
-			}
+			return this.endSpike();
 		}
 
 		this.timer += TIME_INTERVAL;

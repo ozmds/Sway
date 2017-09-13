@@ -10,9 +10,14 @@ class Game {
         this.hit_orb = null;
         this.col = null;
         this.sH = -0.70;
+        this.inTransition = false;
 
         this.cnv.style.top = (MARGIN).toString() + 'px';
         this.cnv.style.left = (MARGIN).toString() + 'px';
+    }
+
+    getInTransition() {
+      return this.inTransition;
     }
 
     getStatus() {
@@ -168,7 +173,11 @@ class Game {
 		/* Set Status to x */
         if (x) {
             if (this.status != x) {
+                if (x == BOMB && (this.orbList.getOldStatus() != REGULAR && this.orbList.getOldStatus() != null)) {
+                  this.inTransition = true;
+                }
                 if (x != REGULAR) {
+                  window.alert
                     this.status = x;
                 }
             }
@@ -222,6 +231,29 @@ class Game {
     }
 
     draw() {
+        if (this.inTransition) {
+            if (this.orbList.getOldStatus() == SPIKE) {
+                this.pen.move(this.status);
+                if (!this.pen.endSpike()) {
+                    this.inTransition = false;
+                }
+            } else if (this.orbList.getOldStatus() == DOUBLE) {
+                this.pen.move(this.status);
+                if (!this.pen.endBalloon()) {
+                    this.inTransition = false;
+                }
+            } else if (this.orbList.getOldStatus() == SHORT) {
+                this.pen.move(this.status);
+                if (!this.pen.endShrink()) {
+                    this.inTransition = false;
+                }
+            }
+        }
+
+        if (this.status == BOMB && (!this.inTransition)) {
+          this.pen.move(this.status);
+        }
+
         this.pen.drawShadow();
 
         this.orbList.drawShadowOrbs(this.ctx);
@@ -288,10 +320,12 @@ class Game {
     handleClick(event_x, event_y) {
         /* React to a click */
         if (STATE == PAUSE) {
-            STATE = GAME;
-            this.sH = -0.70;
-            if (this.status == BOMB) {
+            if (this.inSquare(event_x, event_y, this.cnv.width * 0.15, this.cnv.height * 0.35,
+                this.cnv.width * 0.35, this.cnv.height * 0.30)) {
+                STATE = GAME;
+                this.sH = -0.70;
                 this.status = REGULAR;
+                this.score = 0;
             }
         } else if (event_x > pausex && pausex + pauseside > event_x) {
             if (event_y > pausey && pausey + pauseside > event_y) {
@@ -306,6 +340,16 @@ class Game {
         }
     }
 
+    inSquare(event_x, event_y, x, y, lx, ly) {
+        if (event_x > x && x + lx > event_x) {
+            if (event_y > y && y + ly > event_y) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     drawPauseButton(x, y, side_len) {
         /* Draw a Pause Button */
         pausex = x;
@@ -314,7 +358,7 @@ class Game {
 
     	var bar_width = side_len / 3;
 
-        this.ctx.strokeStyle = SECONDARY_COLOUR;
+        this.ctx.strokeStyle = '#FFFFFF';
         this.ctx.lineWidth = this.cnv.width * 0.008;
         this.ctx.fillStyle = '#FFFFFF';
 
@@ -327,20 +371,6 @@ class Game {
         this.ctx.beginPath();
     	this.ctx.rect(x + 2 * bar_width, y, bar_width, side_len);
         this.ctx.fill();
-        this.ctx.stroke();
-        this.ctx.closePath();
-
-        this.ctx.lineWidth = this.cnv.width * 0.01;
-
-        this.ctx.beginPath();
-    	this.ctx.moveTo(x + this.cnv.width * 0.005 + bar_width, y - this.cnv.width * 0.004);
-        this.ctx.lineTo(x + this.cnv.width * 0.005 + bar_width, y + side_len + this.cnv.width * 0.004);
-        this.ctx.stroke();
-        this.ctx.closePath();
-
-        this.ctx.beginPath();
-    	this.ctx.moveTo(x + 3 * bar_width + this.cnv.width * 0.005, y - this.cnv.width * 0.004);
-        this.ctx.lineTo(x + 3 * bar_width + this.cnv.width * 0.005, y + side_len + this.cnv.width * 0.004);
         this.ctx.stroke();
         this.ctx.closePath();
     }
@@ -400,32 +430,32 @@ class Game {
 
         this.ctx.lineWidth = this.cnv.width * 0.015;
 
-        this.drawRect(this.cnv.width * 0.15, this.cnv.height * (0.35 + this.sH), this.cnv.width * 0.35, this.cnv.height * 0.30);
+          this.drawRect(this.cnv.width * 0.15, this.cnv.height * (0.35 + this.sH), this.cnv.width * 0.35, this.cnv.height * 0.30);
 
-        this.drawImg(this.cnv.width * 0.325, this.cnv.height * (0.5 + this.sH), this.cnv.width * 0.0525, restarticon);
+          this.drawImg(this.cnv.width * 0.325, this.cnv.height * (0.5 + this.sH), this.cnv.width * 0.0525, restarticon);
 
-        this.drawRect(this.cnv.width * 0.50, this.cnv.height * (0.35 + this.sH), this.cnv.width * 0.35, this.cnv.height * 0.30);
+          this.drawRect(this.cnv.width * 0.50, this.cnv.height * (0.35 + this.sH), this.cnv.width * 0.35, this.cnv.height * 0.30);
 
-        if (this.status != BOMB) {
-            this.drawImg(this.cnv.width * 0.675, this.cnv.height * (0.575 + this.sH), this.cnv.height * 0.0225, homeicon);
+          if (this.status != BOMB) {
+              this.drawImg(this.cnv.width * 0.675, this.cnv.height * (0.575 + this.sH), this.cnv.height * 0.0225, homeicon);
 
-            this.drawRect(this.cnv.width * 0.50, this.cnv.height * (0.35 + this.sH), this.cnv.width * 0.35, this.cnv.height * 0.15);
+              this.drawRect(this.cnv.width * 0.50, this.cnv.height * (0.35 + this.sH), this.cnv.width * 0.35, this.cnv.height * 0.15);
 
-            this.drawImg(this.cnv.width * 0.675, this.cnv.height * (0.425 + this.sH), this.cnv.height * 0.0225, soundicon);
-        } else {
-            this.drawImg(this.cnv.width * 0.675, this.cnv.height * (0.5 + this.sH), this.cnv.width * 0.0525, homeicon);
-        }
+              this.drawImg(this.cnv.width * 0.675, this.cnv.height * (0.425 + this.sH), this.cnv.height * 0.0225, soundicon);
+          } else {
+              this.drawImg(this.cnv.width * 0.675, this.cnv.height * (0.5 + this.sH), this.cnv.width * 0.0525, homeicon);
+          }
 
-        this.ctx.fillStyle = '#FFFFFF';
+          this.ctx.fillStyle = '#FFFFFF';
 
-        if (this.status == BOMB) {
-            this.ctx.fillText('Game Over', this.cnv.width * 0.50, this.cnv.height * (0.30 + this.sH));
-        } else {
-            this.ctx.fillText('Pause', this.cnv.width * 0.50, this.cnv.height * (0.30 + this.sH));
-        }
+          if (this.status == BOMB) {
+              this.ctx.fillText('Game Over', this.cnv.width * 0.50, this.cnv.height * (0.30 + this.sH));
+          } else {
+              this.ctx.fillText('Pause', this.cnv.width * 0.50, this.cnv.height * (0.30 + this.sH));
+          }
 
-        if (this.sH < 0) {
-            this.sH = this.sH + 0.05;
-        }
+          if (this.sH < 0) {
+              this.sH = this.sH + 0.05;
+          }
     }
 }

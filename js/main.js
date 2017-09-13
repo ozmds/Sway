@@ -21,7 +21,7 @@ function startGame() {
             swayGame.setOldHeight(swayGame.getCnv().height);
         }
 
-        if (STATE == GAME) {
+        if (STATE == GAME && (!swayGame.getInTransition())) {
             swayGame.move();
         }
 
