@@ -11,6 +11,8 @@ class Game {
         this.col = null;
         this.sH = -0.70;
         this.inTransition = false;
+        this.oldState = null;
+        this.counter = 0;
 
         this.cnv.style.top = (MARGIN).toString() + 'px';
         this.cnv.style.left = (MARGIN).toString() + 'px';
@@ -177,7 +179,6 @@ class Game {
                   this.inTransition = true;
                 }
                 if (x != REGULAR) {
-                  window.alert
                     this.status = x;
                 }
             }
@@ -231,49 +232,75 @@ class Game {
     }
 
     draw() {
+      this.ctx.shadowColor = '#FFFFFF';
+      this.ctx.shadowBlur = 10;
+
+      var trans_state;
+
+      if (this.status == BOMB) {
+        trans_state = this.orbList.getOldStatus();
+      } else {
+        trans_state = this.status;
+      }
+
         if (this.inTransition) {
-            if (this.orbList.getOldStatus() == SPIKE) {
+            if (trans_state == SPIKE) {
                 this.pen.move(this.status);
                 if (!this.pen.endSpike()) {
                     this.inTransition = false;
                 }
-            } else if (this.orbList.getOldStatus() == DOUBLE) {
+            } else if (trans_state == DOUBLE) {
                 this.pen.move(this.status);
                 if (!this.pen.endBalloon()) {
                     this.inTransition = false;
                 }
-            } else if (this.orbList.getOldStatus() == SHORT) {
+            } else if (trans_state == SHORT) {
                 this.pen.move(this.status);
                 if (!this.pen.endShrink()) {
                     this.inTransition = false;
                 }
+            }
+
+            if(!this.inTransition) {
+              this.status = REGULAR;
             }
         }
 
         if (this.status == BOMB && (!this.inTransition)) {
           this.pen.move(this.status);
         }
-
+        /*
         this.pen.drawShadow();
 
         this.orbList.drawShadowOrbs(this.ctx);
-
+        */
         this.orbList.drawOrbs(this.ctx);
 
         this.drawPauseButton(this.cnv.width * 0.04, this.cnv.width * 0.04, this.cnv.width * 0.10);
         this.updateScore();
 
         this.pen.draw();
-
+        /*
         if (STATE == TRANSITION) {
-            this.hit_orb.drawRing();
-            this.pen.drawShadow();
-            this.pen.draw();
-            this.hit_orb.draw();
+        */
 
-            this.drawPauseButton(this.cnv.width * 0.04, this.cnv.width * 0.04, this.cnv.width * 0.10);
-            this.updateScore();
+        if (this.hit_orb) {
+          this.hit_orb.drawRing();
         }
+
+        if (STATE != GAME) {
+          /*
+          this.pen.drawShadow();
+          */
+          this.pen.draw();
+        }
+        if (STATE == TRANSITION) {
+            this.hit_orb.draw();
+        }
+
+        /*
+        }
+        */
     }
 
 	incrementPenSpeed(score) {
@@ -319,18 +346,37 @@ class Game {
 
     handleClick(event_x, event_y) {
         /* React to a click */
-        if (STATE == PAUSE) {
+        if (STATE == HOME) {
+          STATE = GAME;
+        } else if (STATE == PAUSE) {
             if (this.inSquare(event_x, event_y, this.cnv.width * 0.15, this.cnv.height * 0.35,
                 this.cnv.width * 0.35, this.cnv.height * 0.30)) {
+<<<<<<< HEAD
+                  STATE = GAME;
+                  this.sH = -0.70;
+                  this.score = 0;
+                if (this.status != BOMB) {
+                  this.inTransition = true;
+                  this.orbList.clearOrbs();
+                } else {
+                    this.status = REGULAR;
+                }
+
+            } else if (this.status != BOMB) {
+		            STATE = this.oldState;
+                this.oldState = null;
+=======
                 STATE = GAME;
                 this.sH = -0.70;
                 this.status = REGULAR;
                 this.score = 0;
             } else if (this.status != BOMB) {
 		STATE = GAME;    
+>>>>>>> f9b327c239eac4587edfae8640b0e3b95fb1b509
 	    }
         } else if (event_x > pausex && pausex + pauseside > event_x) {
             if (event_y > pausey && pausey + pauseside > event_y) {
+                this.oldState = STATE;
                 STATE = PAUSE;
             }
         } else {
@@ -367,13 +413,16 @@ class Game {
         this.ctx.beginPath();
     	this.ctx.rect(x, y, bar_width, side_len);
         this.ctx.fill();
+
         this.ctx.stroke();
         this.ctx.closePath();
 
         this.ctx.beginPath();
     	this.ctx.rect(x + 2 * bar_width, y, bar_width, side_len);
         this.ctx.fill();
+
         this.ctx.stroke();
+
         this.ctx.closePath();
     }
 
@@ -390,6 +439,68 @@ class Game {
 
     	this.ctx.fillText(this.score, this.cnv.width * 0.95, this.cnv.width * 0.05);
     	this.ctx.fillText(window.localStorage.getItem('highscore'), this.cnv.width * 0.95, this.cnv.width * 0.16);
+    }
+
+    logoScreen() {
+        if (this.counter > 5000) {
+          STATE = HOME;
+        } else {
+          this.ctx.textBaseline = 'middle';
+        	this.ctx.textAlign = 'center';
+        	this.ctx.fillStyle = '#FFFFFF';
+          this.ctx.shadowColor = '#FFFFFF';
+          this.ctx.shadowBlur = 20;
+
+        	var font_size = this.cnv.width * 0.18;
+        	var font = font_size.toString() + "px basicWoodlands";
+
+        	this.ctx.font = font;
+
+        	this.ctx.fillText('Life In Computers', this.cnv.width * 0.50, this.cnv.height * 0.35);
+
+          this.counter = this.counter + TIME_INTERVAL;
+        }
+    }
+
+    homeScreen() {
+      this.ctx.textBaseline = 'middle';
+      this.ctx.textAlign = 'center';
+      this.ctx.fillStyle = '#FFFFFF';
+      this.ctx.shadowColor = '#FFFFFF';
+      this.ctx.shadowBlur = 10;
+
+      var font_size = this.cnv.width * 0.22;
+      var font = font_size.toString() + "px basicWoodlands";
+
+      this.ctx.font = font;
+
+      this.ctx.fillText('Sway', this.cnv.width * 0.50, this.cnv.height * 0.15);
+
+      this.ctx.fillStyle = PRIMARY_COLOUR;
+      this.ctx.strokeStyle = '#FFFFFF';
+      this.ctx.lineWidth = this.cnv.width * 0.01;
+
+      this.drawCircle(this.cnv.width * 0.15, this.cnv.height * 0.35, this.cnv.width * 0.1);
+      this.drawCircle(this.cnv.width * 0.15, this.cnv.height * 0.65, this.cnv.width * 0.1);
+      this.drawCircle(this.cnv.width * 0.85, this.cnv.height * 0.35, this.cnv.width * 0.1);
+      this.drawCircle(this.cnv.width * 0.85, this.cnv.height * 0.65, this.cnv.width * 0.1);
+
+      this.drawCircle(this.cnv.width * 0.50, this.cnv.height * 0.40, this.cnv.width * 0.15);
+
+      this.drawDiamond(this.cnv.width * 0.15, this.cnv.height * 0.35, this.cnv.width * 0.1);
+      this.drawDiamond(this.cnv.width * 0.15, this.cnv.height * 0.65, this.cnv.width * 0.1);
+      this.drawDiamond(this.cnv.width * 0.85, this.cnv.height * 0.35, this.cnv.width * 0.1);
+      this.drawDiamond(this.cnv.width * 0.85, this.cnv.height * 0.65, this.cnv.width * 0.1);
+
+      this.drawDiamond(this.cnv.width * 0.50, this.cnv.height * 0.40, this.cnv.width * 0.15);
+    }
+
+    drawDiamond(x, y, r) {
+      this.ctx.beginPath();
+      this.ctx.rect(x - r * 0.5, y - r * 0.5, r, r);
+      this.ctx.fill();
+      this.ctx.stroke();
+      this.ctx.closePath();
     }
 
     drawRect(x, y, lx, ly) {
@@ -418,6 +529,7 @@ class Game {
     }
 
     drawScreen() {
+
         this.ctx.strokeStyle = '#FFFFFF';
         this.ctx.fillStyle = this.col;
         this.ctx.lineWidth = this.cnv.width * 0.02;

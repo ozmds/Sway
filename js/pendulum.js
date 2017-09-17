@@ -80,6 +80,7 @@ class Pendulum {
 	}
 
 	draw() {
+		this.pen.spin();
 		this.arm.draw();
 		this.sArm.draw();
 		this.cen.draw();

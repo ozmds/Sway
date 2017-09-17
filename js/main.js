@@ -21,24 +21,34 @@ function startGame() {
             swayGame.setOldHeight(swayGame.getCnv().height);
         }
 
-        if (STATE == GAME && (!swayGame.getInTransition())) {
-            swayGame.move();
-        }
+        if (STATE == LOGO) {
+          swayGame.logoScreen();
+        } else {
+          if (STATE == HOME) {
+            swayGame.getPen().move();
+            swayGame.getPen().draw();
+            swayGame.homeScreen();
+          } else {
+            if (STATE == GAME && (!swayGame.getInTransition())) {
+                swayGame.move();
+            }
 
-        if (STATE == TRANSITION) {
-            if (!swayGame.screenWipe()) {
-                if (swayGame.getStatus() == BOMB) {
-                    STATE = PAUSE;
-                } else {
-                    STATE = GAME;
+            if (STATE == TRANSITION) {
+                if (!swayGame.screenWipe()) {
+                    if (swayGame.getStatus() == BOMB) {
+                        STATE = PAUSE;
+                    } else {
+                        STATE = GAME;
+                    }
                 }
             }
-        }
 
-        swayGame.draw();
+            swayGame.draw();
 
-        if (STATE == PAUSE) {
-            swayGame.drawScreen();
+            if (STATE == PAUSE) {
+                swayGame.drawScreen();
+            }
+          }
         }
 
     }, TIME_INTERVAL);

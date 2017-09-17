@@ -1,10 +1,10 @@
 const MARGIN = 0;
 var PADDING = 0;
 
-const PURPLE = '#FFCFFE';
-const GREEN = '#338A28';
-const RED = '#7F0000';
-const BLUE = '#6ECFF5';
+const PURPLE = '#120012';
+const GREEN = '#002500';
+const RED = '#250000';
+const BLUE = '#000025';
 const SECONDARY_COLOUR = '#000015';
 
 const TIME_INTERVAL = 15;
@@ -22,8 +22,10 @@ var orb_frequency = ORB_FREQ_START_TIME; /* 600 at a score of 300*/
 const GAME = 'game';
 const PAUSE = 'pause';
 const TRANSITION = 'transition';
+const LOGO = 'logo';
+const HOME = 'home';
 
-var STATE = GAME;
+var STATE = LOGO;
 
 var pausex;
 var pausey;
