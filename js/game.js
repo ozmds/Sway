@@ -351,7 +351,6 @@ class Game {
         } else if (STATE == PAUSE) {
             if (this.inSquare(event_x, event_y, this.cnv.width * 0.15, this.cnv.height * 0.35,
                 this.cnv.width * 0.35, this.cnv.height * 0.30)) {
-<<<<<<< HEAD
                   STATE = GAME;
                   this.sH = -0.70;
                   this.score = 0;
@@ -365,14 +364,6 @@ class Game {
             } else if (this.status != BOMB) {
 		            STATE = this.oldState;
                 this.oldState = null;
-=======
-                STATE = GAME;
-                this.sH = -0.70;
-                this.status = REGULAR;
-                this.score = 0;
-            } else if (this.status != BOMB) {
-		STATE = GAME;    
->>>>>>> f9b327c239eac4587edfae8640b0e3b95fb1b509
 	    }
         } else if (event_x > pausex && pausex + pauseside > event_x) {
             if (event_y > pausey && pausey + pauseside > event_y) {
