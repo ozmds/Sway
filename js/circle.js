@@ -1,18 +1,20 @@
+/* Cleaned up on Sept 21 */
+
 class Circle {
-	constructor(x, y, r, widthRatio, ctx, cnv) {
+	constructor(x, y, r) {
 		this.x = x;
 		this.y = y;
 		this.r = r;
-		this.col = PRIMARY_COLOUR;
-		this.owid = widthRatio * this.r;
-		this.ocol = SECONDARY_COLOUR;
-		this.ctx = ctx;
-		this.cnv = cnv;
 		this.deg = 1.5 * Math.PI;
 		this.dir = LEFT;
 		this.sp = 0;
 		this.spikeHeight = null;
 		this.minR = r;
+
+		this.tempi = null;
+		this.tempj = null;
+		this.tempx = null;
+		this.tempy = null;
 	}
 
 	getX() {
@@ -55,10 +57,6 @@ class Circle {
 		this.deg = x;
 	}
 
-	setCol(x) {
-		this.col = x;
-	}
-
 	getMinR() {
 		return this.minR;
 	}
@@ -84,126 +82,64 @@ class Circle {
 	}
 
 	drawInnerCircle() {
-		this.ctx.lineWidth = this.owid * 0.80;
-		this.ctx.strokeStyle = '#FFFFFF';
+		CONTEXT.lineWidth = LINE_WIDTH * 0.80;
+		CONTEXT.strokeStyle = SECONDARY_COLOUR;
 
-		this.ctx.beginPath();
-		this.ctx.arc(this.x, this.y, this.r * 0.65, 0.0 * Math.PI + (this.sp * 2.0 * Math.PI),
+		CONTEXT.beginPath();
+		CONTEXT.arc(this.x, this.y, this.r * 0.65, 0.0 * Math.PI + (this.sp * 2.0 * Math.PI),
 													2.0 * Math.PI * 0.85 + (this.sp * 2.0 * Math.PI));
-		this.ctx.stroke();
-		this.ctx.closePath();
-	}
-
-	drawShadowSpikes() {
-		var i, j, x, y;
-
-		this.ctx.strokeStyle = this.ocol;
-		this.ctx.lineWidth = this.owid * 1.4;
-		this.ctx.fillStyle = this.ocol;
-
-		for (i = 0; i < 6; i++) {
-			this.ctx.beginPath();
-			for (j = 0; j < 3; j++) {
-				x = this.r * Math.cos((i + j / 2) * Math.PI / 3 + (this.sp * Math.PI));
-				y = this.r * Math.sin((i + j / 2) * Math.PI / 3 + (this.sp * Math.PI));
-
-				if (j == 1) {
-					x = this.spikeHeight * x;
-					y = this.spikeHeight * y;
-				}
-
-				x = x + this.x + SHADOW_DIST;
-				y = y + this.y;
-
-				if (j == 0) {
-					this.ctx.moveTo(x, y);
-				} else {
-					this.ctx.lineTo(x, y);
-				}
-			}
-
-			this.ctx.stroke();
-			this.ctx.fill();
-			this.ctx.closePath();
-		}
+		CONTEXT.stroke();
+		CONTEXT.closePath();
 	}
 
 	drawSpikes() {
-		var i, j, x, y;
+		CONTEXT.fillStyle = PRIMARY_COLOUR;
+		CONTEXT.strokeStyle = SECONDARY_COLOUR;
+		CONTEXT.lineWidth = LINE_WIDTH * 1.4;
 
-		var gradient;
+		for (this.tempi = 0; this.tempi < 6; this.tempi++) {
+			CONTEXT.beginPath();
+			for (this.tempj = 0; this.tempj < 3; this.tempj++) {
+				this.tempx = this.r * Math.cos((this.tempi + this.tempj / 2) * Math.PI / 3 + (this.sp * Math.PI));
+				this.tempy = this.r * Math.sin((this.tempi + this.tempj / 2) * Math.PI / 3 + (this.sp * Math.PI));
 
-		gradient = this.ctx.createLinearGradient(0, 0, this.cnv.width, this.cnv.height);
-		gradient.addColorStop(1, '#000000');
-		gradient.addColorStop(0, PRIMARY_COLOUR);
-
-		this.ctx.fillStyle = gradient;
-
-		this.ctx.strokeStyle = '#FFFFFF';
-		this.ctx.lineWidth = this.owid * 1.4;
-
-		for (i = 0; i < 6; i++) {
-			this.ctx.beginPath();
-			for (j = 0; j < 3; j++) {
-				x = this.r * Math.cos((i + j / 2) * Math.PI / 3 + (this.sp * Math.PI));
-				y = this.r * Math.sin((i + j / 2) * Math.PI / 3 + (this.sp * Math.PI));
-
-				if (j == 1) {
-					x = this.spikeHeight * x;
-					y = this.spikeHeight * y;
+				if (this.tempj == 1) {
+					this.tempx = this.spikeHeight * this.tempx;
+					this.tempy = this.spikeHeight * this.tempy;
 				}
 
-				x = x + this.x;
-				y = y + this.y;
+				this.tempx = this.tempx + this.x;
+				this.tempy = this.tempy + this.y;
 
-				if (j == 0) {
-					this.ctx.moveTo(x, y);
+				if (this.tempj == 0) {
+					CONTEXT.moveTo(this.tempx, this.tempy);
 				} else {
-					this.ctx.lineTo(x, y);
+					CONTEXT.lineTo(this.tempx, this.tempy);
 				}
 			}
 
-			this.ctx.stroke();
-			this.ctx.fill();
-			this.ctx.closePath();
+			CONTEXT.stroke();
+			CONTEXT.fill();
+			CONTEXT.closePath();
 		}
 	}
 
-	drawShadow() {
-		this.ctx.fillStyle = this.ocol;
-		this.ctx.lineWidth = this.owid;
-		this.ctx.strokeStyle = this.ocol;
-
-		this.ctx.beginPath();
-		this.ctx.arc(this.x + SHADOW_DIST, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);
-		this.ctx.fill();
-		this.ctx.stroke();
-		this.ctx.closePath();
-	}
-
 	draw() {
-		var gradient;
+		CONTEXT.fillStyle = PRIMARY_COLOUR;
+		CONTEXT.lineWidth = LINE_WIDTH;
+		CONTEXT.strokeStyle = SECONDARY_COLOUR;
 
-		gradient = this.ctx.createLinearGradient(0, 0, this.cnv.width, this.cnv.height);
-		gradient.addColorStop(1, '#000000');
-		gradient.addColorStop(0, PRIMARY_COLOUR);
-
-		this.ctx.fillStyle = gradient;
-
-		this.ctx.lineWidth = this.owid;
-		this.ctx.strokeStyle = '#FFFFFF';
-
-		this.ctx.beginPath();
-		this.ctx.arc(this.x, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);
-		this.ctx.fill();
-		this.ctx.stroke();
-		this.ctx.closePath();
+		CONTEXT.beginPath();
+		CONTEXT.arc(this.x, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);
+		CONTEXT.fill();
+		CONTEXT.stroke();
+		CONTEXT.closePath();
 	}
 
 	hitWall() {
 		if (this.x < this.r + PADDING) {
 			return true;
-		} else if (this.x > (this.cnv.width - (this.r + PADDING))) {
+		} else if (this.x > (CANVAS.width - (this.r + PADDING))) {
 			return true;
 		}
 	}

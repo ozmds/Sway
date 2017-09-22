@@ -5,8 +5,13 @@
 }
 
 @font-face {
+	font-family: typeLobster;
+	src: url(Lobster.otf) format('opentype');
+}
+
+@font-face {
 	font-family: basicWoodlands;
-	src: url(TheWoodlands-Regular.otf) format('opentype');
+	src: url(Freestyle-Script.otf) format('opentype');
 }
 
 @font-face {
@@ -15,11 +20,11 @@
 }
 
 html, body {
-	font-family: basicWoodlands;
+	font-family: lobster;
 }
 
 canvas {
 	display: block;
 	position: absolute;
-	font-family: basicWoodlands;
+	font-family: lobster;
 }

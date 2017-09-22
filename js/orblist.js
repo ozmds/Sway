@@ -25,8 +25,8 @@ class OrbList {
     }
 
     createOrb(score, pen, cnv, ctx) {
-        var d = new Orb(cnv.width * 0.035, ctx, cnv, score, this.speed);
-        d.place(pen.getArm().getMaxLen(), pen.getPen().getR());
+        var d = new Orb(cnv.width * 0.07, this.speed);
+        d.place(pen.getRange());
         this.orbList.push(d);
     }
 
@@ -51,9 +51,9 @@ class OrbList {
     }
 
     checkHit(orb, pen1, pen2) {
-        if (orb.checkHitPen(pen1.getX(), pen1.getY(), pen1.getR() * pen1.getSpikeHeight())) {
+        if (orb.checkHitPen(pen1)) {
             return true;
-        } else if (orb.checkHitPen(pen2.getX(), pen2.getY(), pen2.getR())) {
+        } else if (orb.checkHitPen(pen2)) {
             return true;
         }
 
@@ -123,7 +123,7 @@ class OrbList {
 
             this.orbList[i].move(1);
 
-            if (this.orbList[i].getY() > (cnv.height - this.orbList[i].getR() * 2)) {
+            if (this.orbList[i].getY() > (cnv.height - this.orbList[i].getR())) {
                 if (this.orbList[i].getType() == REGULAR) {
                     this.oldStatus = cur_stat;
                     this.status = BOMB;

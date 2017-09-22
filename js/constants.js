@@ -1,11 +1,15 @@
 const MARGIN = 0;
 var PADDING = 0;
+var LINE_WIDTH;
+
+var CANVAS;
+var CONTEXT;
 
 const PURPLE = '#120012';
 const GREEN = '#002500';
 const RED = '#250000';
 const BLUE = '#000025';
-const SECONDARY_COLOUR = '#000015';
+const SECONDARY_COLOUR = '#FFFFFF';
 
 const TIME_INTERVAL = 15;
 const PEN_START_TIME = 1500;
@@ -25,7 +29,7 @@ const TRANSITION = 'transition';
 const LOGO = 'logo';
 const HOME = 'home';
 
-var STATE = LOGO;
+var STATE = GAME;
 
 var pausex;
 var pausey;
@@ -37,7 +41,7 @@ var DEST_COLOUR = PRIMARY_COLOUR;
 var time_counter = 0;
 
 var orb_time = ORB_START_TIME;
-var pen_time = PEN_START_TIME;
+var PEN_TIME = PEN_START_TIME;
 
 var SHADOW_DIST = 0;
 
@@ -50,8 +54,8 @@ const SHORT = 'short';
 const BOMB = 'bomb';
 const SPIKE = 'spike';
 
-const LEVEL_TWO_SPEED_RATIO = 15;
-const LEVEL_THREE_SPEED_RATIO = 10;
+const TWO_SPEED_RATIO = 15;
+const THREE_SPEED_RATIO = 10;
 
 var arrow = new Image();
 var knife = new Image();

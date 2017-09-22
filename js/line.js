@@ -1,13 +1,11 @@
+/* Cleaned up on Sept 20 */
+
 class Line {
-	constructor(stX, stY, endX, endY, wid, ctx, cnv) {
+	constructor(stX, stY, endX, endY) {
 		this.stX = stX;
 		this.stY = stY;
 		this.endX = endX;
 		this.endY = endY;
-		this.wid = wid;
-		this.col = '#FFFFFF';
-		this.ctx = ctx;
-		this.cnv = cnv;
 		this.len = endY - stY;
 		this.maxLen = endY - stY;
 	}
@@ -33,24 +31,13 @@ class Line {
 	}
 
 	draw() {
-		this.ctx.lineWidth = this.wid;
-		this.ctx.strokeStyle = this.col;
+		CONTEXT.lineWidth = LINE_WIDTH;
+		CONTEXT.strokeStyle = SECONDARY_COLOUR;
 
-		this.ctx.beginPath();
-		this.ctx.moveTo(this.stX, this.stY);
-		this.ctx.lineTo(this.endX, this.endY);
-		this.ctx.stroke();
-		this.ctx.closePath();
-	}
-
-	drawShadow() {
-		this.ctx.lineWidth = this.wid;
-		this.ctx.strokeStyle = SECONDARY_COLOUR;
-
-		this.ctx.beginPath();
-		this.ctx.moveTo(this.stX + SHADOW_DIST, this.stY);
-		this.ctx.lineTo(this.endX + SHADOW_DIST, this.endY);
-		this.ctx.stroke();
-		this.ctx.closePath();
+		CONTEXT.beginPath();
+		CONTEXT.moveTo(this.stX, this.stY);
+		CONTEXT.lineTo(this.endX, this.endY);
+		CONTEXT.stroke();
+		CONTEXT.closePath();
 	}
 }

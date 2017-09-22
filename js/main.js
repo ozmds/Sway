@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', startGame, false);
 
 function startGame() {
+    CANVAS = document.getElementById('myCanvas');
+    CONTEXT = CANVAS.getContext('2d');
+
     var swayGame = new Game('myCanvas');
 
     swayGame.background();
@@ -13,8 +16,6 @@ function startGame() {
         swayGame.changeColours(PRIMARY_COLOUR, DEST_COLOUR);
 
         swayGame.background();
-
-        swayGame.getPen().setCol(PRIMARY_COLOUR);
 
         if (swayGame.getOldHeight() != swayGame.getCnv().height) {
             swayGame.initVariable();

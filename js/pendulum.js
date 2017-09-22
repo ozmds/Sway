@@ -1,3 +1,5 @@
+/* Cleaned up on Sept 21 */
+
 class Pendulum {
 	constructor(cen, pen, arm) {
 		this.cen = cen;
@@ -14,6 +16,17 @@ class Pendulum {
 		this.timer = 0;
 
 		this.speed = null;
+
+		this.range = 2 * (this.arm.getLen() + this.pen.getR());
+		this.span = null;
+
+		this.deg = null;
+		this.distx = null;
+		this.disty = null;
+	}
+
+	getRange() {
+		return this.range;
 	}
 
 	getPen() {
@@ -48,35 +61,18 @@ class Pendulum {
 		this.spikeHeight = x;
 	}
 
-	setCol(x) {
-		this.pen.setCol(x);
-		this.cen.setCol(x);
-		this.sPen.setCol(x);
+	setRange() {
+		this.span = Math.asin((CANVAS.width * 0.5 - (this.pen.getR() + PADDING)) / this.arm.getMaxLen());
+		this.startRange = Math.PI * 1.5 - this.span;
+		this.endRange = Math.PI * 1.5 + this.span;
 	}
 
-	setRange(width) {
-		var span = Math.asin((width - (this.pen.getR() + PADDING)) / this.arm.getMaxLen());
-		this.startRange = Math.PI * 1.5 - span;
-		this.endRange = Math.PI * 1.5 + span;
+	calcPenSpeed() {
+		this.speed = (this.endRange - this.startRange) / (PEN_TIME / TIME_INTERVAL);
 	}
 
-	calcPenSpeed(penTime) {
-		this.speed = (this.endRange - this.startRange) / (penTime / TIME_INTERVAL);
-	}
-
-	setMinLen(cnv) {
-		this.minLen = (cnv.width / 2) - this.pen.getR() - PADDING;
-	}
-
-	drawShadow() {
-		this.pen.spin();
-		this.arm.drawShadow();
-		this.sArm.drawShadow();
-		this.cen.drawShadow();
-		this.sPen.drawShadow();
-		this.pen.setSpikeHeight(this.spikeHeight);
-		this.pen.drawShadowSpikes();
-		this.pen.drawShadow();
+	setMinLen() {
+		this.minLen = (CANVAS.width / 2) - this.pen.getR() - PADDING;
 	}
 
 	draw() {
@@ -107,16 +103,15 @@ class Pendulum {
 	}
 
 	endShrink() {
-		var deg = null;
 		if (this.pen.getDeg() > 0) {
-			deg = this.pen.getDeg() % (2 * Math.PI);
+			this.deg = this.pen.getDeg() % (2 * Math.PI);
 		} else {
-			deg = (2 * Math.PI) - Math.abs(this.pen.getDeg() % (2 * Math.PI));
+			this.deg = (2 * Math.PI) - Math.abs(this.pen.getDeg() % (2 * Math.PI));
 		}
 
 		DEST_COLOUR = BLUE;
 		if (this.arm.getMaxLen() > this.arm.getLen()) {
-			if ((deg > this.startRange) && (deg < this.endRange)) {
+			if ((this.deg > this.startRange) && (this.deg < this.endRange)) {
 				this.arm.setLen(this.arm.getLen() * 1.01);
 				this.sArm.setLen(this.sArm.getLen() * 1.01);
 			}
@@ -131,13 +126,6 @@ class Pendulum {
 	}
 
 	startShrink() {
-		var deg = null;
-		if (this.pen.getDeg() > 0) {
-			deg = this.pen.getDeg() % (2 * Math.PI);
-		} else {
-			deg = (2 * Math.PI) - Math.abs(this.pen.getDeg() % (2 * Math.PI));
-		}
-
 		if (this.timer < 15000) {
 			DEST_COLOUR = RED;
 			if (this.arm.getLen() > this.minLen) {
@@ -153,11 +141,11 @@ class Pendulum {
 	}
 
 	endBalloon() {
-		var dist_x = Math.pow(Math.abs(this.pen.getX() - this.sPen.getX()), 2);
-		var dist_y = Math.pow(Math.abs(this.pen.getY() - this.sPen.getY()), 2);
+		this.distx = Math.pow(Math.abs(this.pen.getX() - this.sPen.getX()), 2);
+		this.disty = Math.pow(Math.abs(this.pen.getY() - this.sPen.getY()), 2);
 
 		DEST_COLOUR = BLUE;
-		if (dist_x + dist_y < Math.pow(this.pen.getR(), 2)) {
+		if (this.distx + this.disty < Math.pow(this.pen.getR(), 2)) {
 			this.sPen.setDeg(this.pen.getDeg());
 			this.sPen.setDir(this.pen.getDir());
 			this.timer = 0;
@@ -168,9 +156,6 @@ class Pendulum {
 	}
 
 	startBalloon() {
-		var dist_x = Math.pow(Math.abs(this.pen.getX() - this.sPen.getX()), 2);
-		var dist_y = Math.pow(Math.abs(this.pen.getY() - this.sPen.getY()), 2);
-
 		if (this.timer > 15000) {
 			return this.endBalloon();
 		} else {

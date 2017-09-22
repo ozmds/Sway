@@ -130,6 +130,7 @@ class Game {
         this.backgroundDesign(PRIMARY_COLOUR, 8, 32);
 
         PADDING = this.cnv.width * 0.03;
+        LINE_WIDTH = this.cnv.width * 0.02;
     }
 
     initVariable() {
@@ -142,12 +143,12 @@ class Game {
 		var pen_x = this.cnv.width / 2;
 		var pen_y = this.cnv.height - (pen_rad + PADDING);
 
-		var arm = new Line(cen_x, cen_y, pen_x, pen_y, this.cnv.width * 0.015, this.ctx, this.cnv);
-		var cen = new Circle(cen_x, cen_y, pen_rad / 2, 0.35, this.ctx, this.cnv);
-		var pen = new Circle(pen_x, pen_y, pen_rad, 0.2, this.ctx, this.cnv);
+		var arm = new Line(cen_x, cen_y, pen_x, pen_y);
+		var cen = new Circle(cen_x, cen_y, pen_rad / 2);
+		var pen = new Circle(pen_x, pen_y, pen_rad);
 
-		var sArm = new Line(cen_x, cen_y, pen_x, pen_y, this.cnv.width * 0.015, this.ctx, this.cnv);
-		var sPen = new Circle(pen_x, pen_y, pen_rad, 0.2, this.ctx, this.cnv);
+		var sArm = new Line(cen_x, cen_y, pen_x, pen_y);
+		var sPen = new Circle(pen_x, pen_y, pen_rad);
 
 		this.pen = new Pendulum(cen, pen, arm);
 
@@ -155,11 +156,11 @@ class Game {
 		this.pen.setSPen(sPen);
 
 		/* Create Boundaries for Pendulum */
-		this.pen.setMinLen(this.cnv);
-		this.pen.setRange(this.cnv.width / 2);
+		this.pen.setMinLen();
+		this.pen.setRange();
 
 		/* Calculate Speed for Pendulum and Orb */
-		this.pen.calcPenSpeed(pen_time);
+		this.pen.calcPenSpeed(PEN_TIME);
 
         this.orbList = new OrbList();
         this.orbList.calculateSpeed(this.cnv);
@@ -189,15 +190,15 @@ class Game {
         if (this.hit_orb) {
             if (this.hit_orb.getType() != REGULAR) {
                 if (this.hit_orb.getY() > this.cnv.height * 0.4) {
-                    this.hit_orb.move(-4);
-                } else if (this.hit_orb.getRing() > this.hit_orb.furthestCorner() * 0.5) {
+                    this.hit_orb.move(-8);
+                } else if (this.hit_orb.getRing() > this.hit_orb.furthestCorner()) {
                     this.orbList.clearOrbs();
                     return false;
                 } else {
                     this.hit_orb.incrementRing();
                 }
             } else {
-                if (this.hit_orb.getRing() > this.hit_orb.furthestCorner() * 0.5) {
+                if (this.hit_orb.getRing() > this.hit_orb.furthestCorner()) {
                     this.orbList.clearOrbs();
                     return false;
                 } else {
@@ -232,8 +233,8 @@ class Game {
     }
 
     draw() {
-      this.ctx.shadowColor = '#FFFFFF';
-      this.ctx.shadowBlur = 10;
+      this.ctx.shadowColor = '#00FFFF';
+      this.ctx.shadowBlur = 40;
 
       var trans_state;
 
@@ -306,8 +307,8 @@ class Game {
 	incrementPenSpeed(score) {
 		/* Increase Speed of Pendulum */
 		if ((score % 10 == 0) && (score <= 100)) {
-			pen_time = PEN_START_TIME - (score / 10) * PEN_DECREMENT_TIME;
-			this.pen.calcPenSpeed(pen_time);
+			PEN_TIME = PEN_START_TIME - (score / 10) * PEN_DECREMENT_TIME;
+			this.pen.calcPenSpeed();
 		}
 	}
 
@@ -423,13 +424,13 @@ class Game {
     	this.ctx.textAlign = 'end';
     	this.ctx.fillStyle = '#FFFFFF';
 
-    	var font_size = this.cnv.width * 0.13;
+    	var font_size = this.cnv.width * 0.08;
     	var font = font_size.toString() + "px basicWoodlands";
 
     	this.ctx.font = font;
 
-    	this.ctx.fillText(this.score, this.cnv.width * 0.95, this.cnv.width * 0.05);
-    	this.ctx.fillText(window.localStorage.getItem('highscore'), this.cnv.width * 0.95, this.cnv.width * 0.16);
+    	this.ctx.fillText(this.score, this.cnv.width * 0.95, this.cnv.width * 0.08);
+    	this.ctx.fillText(window.localStorage.getItem('highscore'), this.cnv.width * 0.95, this.cnv.width * 0.18);
     }
 
     logoScreen() {
@@ -439,10 +440,10 @@ class Game {
           this.ctx.textBaseline = 'middle';
         	this.ctx.textAlign = 'center';
         	this.ctx.fillStyle = '#FFFFFF';
-          this.ctx.shadowColor = '#FFFFFF';
-          this.ctx.shadowBlur = 20;
+          this.ctx.shadowColor = '#FFFF76';
+          this.ctx.shadowBlur = 40;
 
-        	var font_size = this.cnv.width * 0.18;
+        	var font_size = this.cnv.width * 0.14;
         	var font = font_size.toString() + "px basicWoodlands";
 
         	this.ctx.font = font;
@@ -457,10 +458,10 @@ class Game {
       this.ctx.textBaseline = 'middle';
       this.ctx.textAlign = 'center';
       this.ctx.fillStyle = '#FFFFFF';
-      this.ctx.shadowColor = '#FFFFFF';
-      this.ctx.shadowBlur = 10;
+      this.ctx.shadowColor = '#FFFF76';
+      this.ctx.shadowBlur = 40;
 
-      var font_size = this.cnv.width * 0.22;
+      var font_size = this.cnv.width * 0.20;
       var font = font_size.toString() + "px basicWoodlands";
 
       this.ctx.font = font;
@@ -528,8 +529,8 @@ class Game {
         this.ctx.textBaseline = 'middle';
       	this.ctx.textAlign = 'center';
 
-      	var font_size = this.cnv.width * 0.19;
-      	var font = font_size.toString() + "px freestyleScript";
+      	var font_size = this.cnv.width * 0.14;
+      	var font = font_size.toString() + "px basicWoodlands";
 
       	this.ctx.font = font;
 
