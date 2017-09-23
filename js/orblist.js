@@ -1,3 +1,5 @@
+/* Cleaned up on Sept 22 */
+
 class OrbList {
     constructor() {
         this.orbList = [];
@@ -6,6 +8,9 @@ class OrbList {
         this.score = 0;
         this.status = null;
         this.oldStatus = null;
+
+        this.i = null;
+        this.hit_orb = null;
     }
 
     getOldStatus() {
@@ -20,14 +25,13 @@ class OrbList {
         return this.score;
     }
 
-    calculateSpeed(cnv) {
-        this.speed = cnv.height / (orb_time / TIME_INTERVAL);
+    calculateSpeed() {
+        this.speed = CANVAS.height / (ORB_TIME / TIME_INTERVAL);
     }
 
-    createOrb(score, pen, cnv, ctx) {
-        var d = new Orb(cnv.width * 0.07, this.speed);
-        d.place(pen.getRange());
-        this.orbList.push(d);
+    createOrb(pen) {
+        this.orbList.push(new Orb(CANVAS.width * 0.07, this.speed));
+        this.orbList[this.orbList.length - 1].place(pen.getRange());
     }
 
     clearOrbs() {
@@ -35,18 +39,23 @@ class OrbList {
         this.hitList = [];
     }
 
-    incrementOrbTime(score, cnv) {
-        /* Increase the speed of all orbs */
+    incrementOrbTime(score) {
         if ((score % 10 == 0) && (score <= 200)) {
-            orb_time = ORB_START_TIME - (score / 10) * ORB_DECREMENT_TIME;
-            this.calculateSpeed(cnv);
+            ORB_TIME = ORB_START_TIME - (score / 10) * ORB_DECREMENT_TIME;
+            this.calculateSpeed();
         }
     }
 
     incrementOrbFrequency(score) {
-        /* Increase Frequency of all orbs */
         if ((score % 15 == 0) && (score <= 300)) {
-            orb_frequency = ORB_FREQ_START_TIME - (score / 15) * ORB_FREQ_DECREMENT_TIME;
+            ORB_FREQUENCY = ORB_FREQ_START_TIME - (score / 15) * ORB_FREQ_DECREMENT_TIME;
+        }
+    }
+
+    incrementPenSpeed(score, pen) {
+        if ((score % 10 == 0) && (score <= 100)) {
+            PEN_TIME = PEN_START_TIME - (score / 10) * PEN_DECREMENT_TIME;
+            pen.calcPenSpeed();
         }
     }
 
@@ -60,105 +69,82 @@ class OrbList {
         return false;
     }
 
-    drawOrbs(ctx) {
-        var i;
-
-        for (i = 0; i < this.orbList.length; i++) {
-            this.orbList[i].draw();
+    drawOrbs() {
+        for (this.i = 0; this.i < this.orbList.length; this.i++) {
+            this.orbList[this.i].draw();
         }
 
-        for (i = 0; i < this.hitList.length; i++) {
-            ctx.globalAlpha = this.hitList[i].getTransparency();
-            this.hitList[i].draw();
-            ctx.globalAlpha = 1;
+        for (this.i = 0; this.i < this.hitList.length; this.i++) {
+            CONTEXT.globalAlpha = this.hitList[this.i].getTransparency();
+            this.hitList[this.i].draw();
         }
+
+        CONTEXT.globalAlpha = 1;
     }
 
-    drawShadowOrbs(ctx) {
-        var i;
+    manageHitList() {
+        for (this.i = 0; this.i < this.hitList.length; this.i++) {
 
-        for (i = 0; i < this.orbList.length; i++) {
-            this.orbList[i].drawShadow();
-        }
+            this.hitList[this.i].incrementTransparency();
 
-        for (i = 0; i < this.hitList.length; i++) {
-            ctx.globalAlpha = this.hitList[i].getTransparency();
-            this.hitList[i].drawShadow();
-            ctx.globalAlpha = 1;
-        }
-    }
-
-    manageHitList(i, cnv) {
-        /* Move All Orbs That Have Been Hit */
-        for (i = 0; i < this.hitList.length; i++) {
-
-            this.hitList[i].incrementTransparency();
-
-            if (this.hitList[i].getTransparency() <= 0) {
-                this.hitList.splice(i, 1);
+            if (this.hitList[this.i].getTransparency() <= 0) {
+                this.hitList.splice(this.i, 1);
             } else {
-                this.hitList[i].move(-2);
+                this.hitList[this.i].move(-2);
             }
         }
     }
 
-    manageOrbs(score, pen, cnv, ctx, cur_stat) {
-        var i;
-        var hit_orb = null;
-
+    manageOrbs(score, pen, cur_stat) {
         this.score = 0;
         this.status = null;
         this.oldStatus = null;
+        this.hit_orb = null;
 
-        if (time_counter >= orb_frequency) {
-            time_counter = 0;
-            this.createOrb(score, pen, cnv, ctx);
+        if (TIME_COUNTER >= ORB_FREQUENCY) {
+            TIME_COUNTER = 0;
+            this.createOrb(pen);
         }
 
-        for (i = 0; i < this.orbList.length; i++) {
+        for (this.i = 0; this.i < this.orbList.length; this.i++) {
             if (cur_stat != REGULAR) {
-                this.orbList[i].setType(REGULAR);
-                this.orbList[i].setImage();
+                this.orbList[this.i].setType(REGULAR);
+                this.orbList[this.i].setImage();
             }
 
-            this.orbList[i].move(1);
+            this.orbList[this.i].move(1);
 
-            if (this.orbList[i].getY() > (cnv.height - this.orbList[i].getR())) {
-                if (this.orbList[i].getType() == REGULAR) {
+            if (this.orbList[this.i].getY() > (CANVAS.height - this.orbList[this.i].getR())) {
+                if (this.orbList[this.i].getType() == REGULAR) {
                     this.oldStatus = cur_stat;
                     this.status = BOMB;
-                    /*
-                    this.score = -score;
-                    */
-                    hit_orb = this.orbList[i];
+                    this.hit_orb = this.orbList[this.i];
                     STATE = TRANSITION;
                 }
-            } else if (this.checkHit(this.orbList[i], pen.getPen(), pen.getSPen())) {
-                this.hitList.push(this.orbList[i]);
-                this.status = this.orbList[i].getType();
+            } else if (this.checkHit(this.orbList[this.i], pen.getPen(), pen.getSPen())) {
+                this.hitList.push(this.orbList[this.i]);
+                this.status = this.orbList[this.i].getType();
 
                 if (this.status == REGULAR) {
                     this.score = this.score + 1;
-                    this.incrementOrbTime(score + 1, cnv);
+                    this.incrementOrbTime(score + 1);
                     this.incrementOrbFrequency(score + 1);
-                    this.orbList.splice(i, 1);
+                    this.incrementPenSpeed(score + 1, pen);
+                    this.orbList.splice(this.i, 1);
                 } else if (this.status == BOMB) {
-                    /*
-                    this.score = -score;
-                    */
-                    hit_orb = this.orbList[i];
+                    this.hit_orb = this.orbList[this.i];
                     STATE = TRANSITION;
                 } else {
-                    hit_orb = this.orbList[i];
+                    this.hit_orb = this.orbList[this.i];
                     STATE = TRANSITION;
                 }
             }
         }
 
-        this.manageHitList(i, cnv);
+        this.manageHitList();
 
-        time_counter = time_counter + TIME_INTERVAL;
+        TIME_COUNTER = TIME_COUNTER + TIME_INTERVAL;
 
-        return hit_orb;
+        return this.hit_orb;
     }
 }

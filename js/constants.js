@@ -1,3 +1,5 @@
+/* Cleaned up on Sept 22 */
+
 const MARGIN = 0;
 var PADDING = 0;
 var LINE_WIDTH;
@@ -21,7 +23,7 @@ const ORB_DECREMENT_TIME = 0.025 * ORB_START_TIME;
 const ORB_FREQ_START_TIME = 1500;
 const ORB_FREQ_DECREMENT_TIME = 0.03 * ORB_FREQ_START_TIME;
 
-var orb_frequency = ORB_FREQ_START_TIME; /* 600 at a score of 300*/
+var ORB_FREQUENCY = ORB_FREQ_START_TIME;
 
 const GAME = 'game';
 const PAUSE = 'pause';
@@ -29,21 +31,15 @@ const TRANSITION = 'transition';
 const LOGO = 'logo';
 const HOME = 'home';
 
-var STATE = GAME;
-
-var pausex;
-var pausey;
-var pauseside;
+var STATE = LOGO;
 
 var PRIMARY_COLOUR = BLUE;
 var DEST_COLOUR = PRIMARY_COLOUR;
 
-var time_counter = 0;
+var TIME_COUNTER = 0;
 
-var orb_time = ORB_START_TIME;
+var ORB_TIME = ORB_START_TIME;
 var PEN_TIME = PEN_START_TIME;
-
-var SHADOW_DIST = 0;
 
 const LEFT = 'left';
 const RIGHT = 'right';
@@ -63,18 +59,8 @@ var bomb = new Image();
 var crystal = new Image();
 var balloon = new Image();
 
-var soundicon = new Image();
-var soundofficon = new Image();
-var homeicon = new Image();
-var restarticon = new Image();
-
 knife.src = 'data/knife.png';
 arrow.src = 'data/arrow.png';
 bomb.src = 'data/bomb.png';
 crystal.src = 'data/diamond.png';
 balloon.src = 'data/balloon.png';
-
-soundicon.src = 'data/sound.png';
-soundofficon.src = 'data/soundoff.png';
-homeicon.src = 'data/home.png';
-restarticon.src = 'data/restart.png';
