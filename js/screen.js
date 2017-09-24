@@ -4,8 +4,8 @@ class Screen {
     constructor() {
         this.pausex = CANVAS.width * 0.04 * window.devicePixelRatio;
         this.pausey = CANVAS.width * 0.04 * window.devicePixelRatio;
-        this.pauseside = CANVAS.width * 0.09 * window.devicePixelRatio;
-        this.pausebar = CANVAS.width * 0.03 * window.devicePixelRatio;
+        this.pauseside = CANVAS.width * 0.12 * window.devicePixelRatio;
+        this.pausebar = CANVAS.width * 0.04 * window.devicePixelRatio;
         this.fontsize = CANVAS.width * 0.08 * window.devicePixelRatio;
         this.font = this.fontsize.toString() + "px basicWoodlands";
 
