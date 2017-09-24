@@ -2,11 +2,11 @@
 
 class Screen {
     constructor() {
-        this.pausex = CANVAS.width * 0.04 * window.devicePixelRatio;
-        this.pausey = CANVAS.width * 0.04 * window.devicePixelRatio;
-        this.pauseside = CANVAS.width * 0.12 * window.devicePixelRatio;
-        this.pausebar = CANVAS.width * 0.04 * window.devicePixelRatio;
-        this.fontsize = CANVAS.width * 0.08 * window.devicePixelRatio;
+        this.pausex = CANVAS.width * 0.04;
+        this.pausey = CANVAS.width * 0.04;
+        this.pauseside = CANVAS.width * 0.12;
+        this.pausebar = CANVAS.width * 0.04;
+        this.fontsize = CANVAS.width * 0.08;
         this.font = this.fontsize.toString() + "px basicWoodlands";
 
         this.i = null;
@@ -28,6 +28,13 @@ class Screen {
 
         PADDING = CANVAS.width * 0.03;
         LINE_WIDTH = CANVAS.width * 0.02;
+
+        this.pausex = CANVAS.width * 0.04;
+        this.pausey = CANVAS.width * 0.04;
+        this.pauseside = CANVAS.width * 0.12;
+        this.pausebar = CANVAS.width * 0.04;
+        this.fontsize = CANVAS.width * 0.08;
+        this.font = this.fontsize.toString() + "px basicWoodlands";
     }
 
     changeColours(colour1, colour2) {
