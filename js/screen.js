@@ -4,9 +4,9 @@ class Screen {
     constructor() {
         this.pausex = CANVAS.width * 0.04;
         this.pausey = CANVAS.width * 0.04;
-        this.pauseside = CANVAS.width * 0.09;
-        this.pausebar = CANVAS.width * 0.03;
-        this.fontsize = CANVAS.width * 0.08;
+        this.pauseside = CANVAS.width * 0.15;
+        this.pausebar = CANVAS.width * 0.05;
+        this.fontsize = CANVAS.width * 0.10;
         this.font = this.fontsize.toString() + "px basicWoodlands";
 
         this.i = null;

@@ -121,6 +121,74 @@ class Orb {
 			Math.sqrt(Math.pow(CANVAS.width - this.x, 2) + Math.pow(this.y, 2)));
 	}
 
+	drawBomb() {
+		CONTEXT.fillStyle = SECONDARY_COLOUR;
+
+		CONTEXT.beginPath();
+		CONTEXT.arc(this.x, this.y, this.r * 0.5, 0.0 * Math.PI, 2.0 * Math.PI);
+		CONTEXT.fill();
+		CONTEXT.closePath();
+	}
+
+	drawSpike() {
+		CONTEXT.fillStyle = SECONDARY_COLOUR;
+
+		CONTEXT.beginPath();
+		CONTEXT.moveTo(this.x - this.r * 0.60 * Math.sin(Math.PI / 3), this.y + this.r * 0.30);
+		CONTEXT.lineTo(this.x + this.r * 0.60 * Math.sin(Math.PI / 3), this.y + this.r * 0.30);
+		CONTEXT.lineTo(this.x, this.y - this.r * 0.60);
+		CONTEXT.lineTo(this.x - this.r * 0.60 * Math.sin(Math.PI / 3), this.y + this.r * 0.30);
+		CONTEXT.fill();
+		CONTEXT.closePath();
+	}
+
+	drawDouble() {
+		CONTEXT.strokeStyle = SECONDARY_COLOUR;
+		CONTEXT.lineWidth = LINE_WIDTH * 0.40;
+
+		CONTEXT.beginPath();
+		CONTEXT.arc(this.x - this.r * 0.20, this.y - this.r * 0.20, this.r * 0.40, 0.0 * Math.PI, 2.0 * Math.PI);
+		CONTEXT.stroke();
+		CONTEXT.closePath();
+
+		CONTEXT.beginPath();
+		CONTEXT.arc(this.x + this.r * 0.20, this.y + this.r * 0.20, this.r * 0.40, 0.0 * Math.PI, 2.0 * Math.PI);
+		CONTEXT.stroke();
+		CONTEXT.closePath();
+	}
+
+	drawShort() {
+		CONTEXT.fillStyle = SECONDARY_COLOUR;
+
+		CONTEXT.beginPath();
+		CONTEXT.rect(this.x - this.r * 0.25, this.y - this.r * 0.45, this.r * 0.50, this.r * 0.60);
+		CONTEXT.fill();
+		CONTEXT.closePath();
+
+		CONTEXT.beginPath();
+		CONTEXT.moveTo(this.x - this.r * 0.60 * Math.sin(Math.PI / 3), this.y - this.r * 0.05);
+		CONTEXT.lineTo(this.x + this.r * 0.60 * Math.sin(Math.PI / 3), this.y - this.r * 0.05);
+		CONTEXT.lineTo(this.x, this.y + this.r * 0.55);
+		CONTEXT.lineTo(this.x - this.r * 0.60 * Math.sin(Math.PI / 3), this.y - this.r * 0.05);
+		CONTEXT.fill();
+		CONTEXT.closePath();
+	}
+
+	drawDiamond() {
+		CONTEXT.strokeStyle = SECONDARY_COLOUR;
+		CONTEXT.lineWidth = LINE_WIDTH * 0.40;
+
+		CONTEXT.beginPath();
+		CONTEXT.moveTo(this.x - this.r * 0.5, this.y - this.r * 0.2);
+		CONTEXT.lineTo(this.x, this.y + this.r * 0.4);
+		CONTEXT.lineTo(this.x + this.r * 0.5, this.y - this.r * 0.2);
+		CONTEXT.lineTo(this.x + this.r * 0.35, this.y - this.r * 0.4);
+		CONTEXT.lineTo(this.x - this.r * 0.35, this.y - this.r * 0.4);
+		CONTEXT.lineTo(this.x - this.r * 0.5, this.y - this.r * 0.2);
+		CONTEXT.stroke();
+		CONTEXT.closePath();
+	}
+
 	drawRing() {
 		CONTEXT.fillStyle = PRIMARY_COLOUR;
 		CONTEXT.lineWidth = LINE_WIDTH * 0.60;
@@ -144,8 +212,17 @@ class Orb {
 		CONTEXT.stroke();
 		CONTEXT.closePath();
 
-		CONTEXT.drawImage(this.img, this.x - this.r * 0.5, this.y - this.r * this.aspectRatio * 0.5,
-			this.r, this.r * this.aspectRatio);
+		if (this.type == BOMB) {
+			this.drawBomb();
+		} else if (this.type == SPIKE) {
+			this.drawSpike();
+		} else if (this.type == DOUBLE) {
+			this.drawDouble();
+		} else if (this.type == SHORT) {
+			this.drawShort();
+		} else if (this.type == REGULAR) {
+			this.drawDiamond();
+		}
 	}
 
 	place(range) {
