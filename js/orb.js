@@ -179,12 +179,13 @@ class Orb {
 		CONTEXT.lineWidth = LINE_WIDTH * 0.40;
 
 		CONTEXT.beginPath();
-		CONTEXT.moveTo(this.x - this.r * 0.5, this.y - this.r * 0.2);
+		CONTEXT.moveTo(this.x, this.y - this.r * 0.4);
+		CONTEXT.lineTo(this.x - this.r * 0.35, this.y - this.r * 0.4);
+		CONTEXT.lineTo(this.x - this.r * 0.5, this.y - this.r * 0.2);
 		CONTEXT.lineTo(this.x, this.y + this.r * 0.4);
 		CONTEXT.lineTo(this.x + this.r * 0.5, this.y - this.r * 0.2);
 		CONTEXT.lineTo(this.x + this.r * 0.35, this.y - this.r * 0.4);
-		CONTEXT.lineTo(this.x - this.r * 0.35, this.y - this.r * 0.4);
-		CONTEXT.lineTo(this.x - this.r * 0.5, this.y - this.r * 0.2);
+		CONTEXT.lineTo(this.x, this.y - this.r * 0.4);
 		CONTEXT.stroke();
 		CONTEXT.closePath();
 	}
