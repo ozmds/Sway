@@ -31,13 +31,6 @@ class Line {
 	}
 
 	draw() {
-		CONTEXT.lineWidth = LINE_WIDTH;
-		CONTEXT.strokeStyle = SECONDARY_COLOUR;
-
-		CONTEXT.beginPath();
-		CONTEXT.moveTo(this.stX, this.stY);
-		CONTEXT.lineTo(this.endX, this.endY);
-		CONTEXT.stroke();
-		CONTEXT.closePath();
+		IMAGESET.drawLine(this.stX, this.stY, this.endX, this.endY);
 	}
 }

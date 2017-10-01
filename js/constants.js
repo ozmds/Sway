@@ -6,6 +6,7 @@ var LINE_WIDTH;
 
 var CANVAS;
 var CONTEXT;
+var IMAGESET; 
 
 const PURPLE = '#120012';
 const GREEN = '#002500';
@@ -49,6 +50,9 @@ const DOUBLE = 'double';
 const SHORT = 'short';
 const BOMB = 'bomb';
 const SPIKE = 'spike';
+
+const ZEROPI = 0.0 * Math.PI;
+const TWOPI = 2.0 * Math.PI;
 
 const TWO_SPEED_RATIO = 15;
 const THREE_SPEED_RATIO = 10;

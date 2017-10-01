@@ -2,10 +2,6 @@
 
 class Screen {
     constructor() {
-        this.pausex = CANVAS.width * 0.04;
-        this.pausey = CANVAS.width * 0.04;
-        this.pauseside = CANVAS.width * 0.12;
-        this.pausebar = CANVAS.width * 0.04;
         this.fontsize = CANVAS.width * 0.08;
         this.font = this.fontsize.toString() + "px basicWoodlands";
 
@@ -29,10 +25,6 @@ class Screen {
         PADDING = CANVAS.width * 0.03;
         LINE_WIDTH = CANVAS.width * 0.02;
 
-        this.pausex = CANVAS.width * 0.04;
-        this.pausey = CANVAS.width * 0.04;
-        this.pauseside = CANVAS.width * 0.12;
-        this.pausebar = CANVAS.width * 0.04;
         this.fontsize = CANVAS.width * 0.08;
         this.font = this.fontsize.toString() + "px basicWoodlands";
     }
@@ -63,17 +55,7 @@ class Screen {
     }
 
     drawPause() {
-        CONTEXT.fillStyle = SECONDARY_COLOUR;
-
-        CONTEXT.beginPath();
-    	CONTEXT.rect(this.pausex, this.pausey, this.pausebar, this.pauseside);
-        CONTEXT.fill();
-        CONTEXT.closePath();
-
-        CONTEXT.beginPath();
-    	CONTEXT.rect(this.pausex + 2 * this.pausebar, this.pausey, this.pausebar, this.pauseside);
-        CONTEXT.fill();
-        CONTEXT.closePath();
+        IMAGESET.drawPause(CANVAS.width * 0.1, CANVAS.width * 0.1);
     }
 
     updateScore(score) {
@@ -95,6 +77,6 @@ class Screen {
     }
 
     pauseClicked(ex, ey) {
-        return this.isClicked(ex, ey, this.pausex, this.pausex, this.pauseside, this.pauseside);
+        return this.isClicked(ex, ey, CANVAS.width * 0.04, CANVAS.width * 0.04, CANVAS.width * 0.12, CANVAS.width * 0.12);
     }
 }

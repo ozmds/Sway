@@ -82,58 +82,15 @@ class Circle {
 	}
 
 	drawInnerCircle() {
-		CONTEXT.lineWidth = LINE_WIDTH * 0.80;
-		CONTEXT.strokeStyle = SECONDARY_COLOUR;
-
-		CONTEXT.beginPath();
-		CONTEXT.arc(this.x, this.y, this.r * 0.65, 0.0 * Math.PI + (this.sp * 2.0 * Math.PI),
-													2.0 * Math.PI * 0.85 + (this.sp * 2.0 * Math.PI));
-		CONTEXT.stroke();
-		CONTEXT.closePath();
+		IMAGESET.drawInnerCircle(this.x, this.y, this.r, this.sp);
 	}
 
 	drawSpikes() {
-		CONTEXT.fillStyle = PRIMARY_COLOUR;
-		CONTEXT.strokeStyle = SECONDARY_COLOUR;
-		CONTEXT.lineWidth = LINE_WIDTH * 1.4;
-
-		for (this.tempi = 0; this.tempi < 6; this.tempi++) {
-			CONTEXT.beginPath();
-			for (this.tempj = 0; this.tempj < 3; this.tempj++) {
-				this.tempx = this.r * Math.cos((this.tempi + this.tempj / 2) * Math.PI / 3 + (this.sp * Math.PI));
-				this.tempy = this.r * Math.sin((this.tempi + this.tempj / 2) * Math.PI / 3 + (this.sp * Math.PI));
-
-				if (this.tempj == 1) {
-					this.tempx = this.spikeHeight * this.tempx;
-					this.tempy = this.spikeHeight * this.tempy;
-				}
-
-				this.tempx = this.tempx + this.x;
-				this.tempy = this.tempy + this.y;
-
-				if (this.tempj == 0) {
-					CONTEXT.moveTo(this.tempx, this.tempy);
-				} else {
-					CONTEXT.lineTo(this.tempx, this.tempy);
-				}
-			}
-
-			CONTEXT.stroke();
-			CONTEXT.fill();
-			CONTEXT.closePath();
-		}
+		IMAGESET.drawSpikes(this.x, this.y, this.r, this.sp, this.spikeHeight);
 	}
 
 	draw() {
-		CONTEXT.fillStyle = PRIMARY_COLOUR;
-		CONTEXT.lineWidth = LINE_WIDTH;
-		CONTEXT.strokeStyle = SECONDARY_COLOUR;
-
-		CONTEXT.beginPath();
-		CONTEXT.arc(this.x, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);
-		CONTEXT.fill();
-		CONTEXT.stroke();
-		CONTEXT.closePath();
+		IMAGESET.drawCircle(this.x, this.y, this.r);
 	}
 
 	hitWall() {

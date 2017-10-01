@@ -1,13 +1,11 @@
 /* Cleaned up on Sept 21 */
 
 class Orb {
-	constructor(r, speed) {
+	constructor(r, speed, status) {
 		this.x = null;
 		this.y = -2 * r;
 		this.r = r;
 		this.type = null;
-		this.aspectRatio = 0;
-		this.img = null;
 		this.speed = speed;
 		this.ring = r;
 		this.transparency = 1;
@@ -16,9 +14,8 @@ class Orb {
 		this.distx = null;
 		this.disty = null;
 
-		this.initType();
+		this.initType(status);
 		this.initSpeed();
-		this.setImage();
 	}
 
 	getType() {
@@ -71,36 +68,24 @@ class Orb {
 		}
 	}
 
-	initType() {
-		this.randInt = Math.random() * 100;
-
-		if (this.randInt < 20) {
+	initType(status) {
+		if (status != REGULAR) {
 			this.type = REGULAR;
-		} else if (this.randInt < 40) {
-			this.type = BOMB;
-		} else if (this.randInt < 60) {
-			this.type = SHORT;
-		} else if (this.randInt < 80) {
-			this.type = DOUBLE;
 		} else {
-			this.type = SPIKE
-		}
-	}
+			this.randInt = Math.random() * 100;
 
-	setImage() {
-		if (this.type == REGULAR) {
-			this.img = crystal;
-		} else if (this.type == DOUBLE) {
-			this.img = balloon;
-		} else if (this.type == SHORT) {
-			this.img = arrow;
-		} else if (this.type == BOMB) {
-			this.img = bomb;
-		} else if (this.type == SPIKE) {
-			this.img = knife;
+			if (this.randInt < 20) {
+				this.type = REGULAR;
+			} else if (this.randInt < 40) {
+				this.type = BOMB;
+			} else if (this.randInt < 60) {
+				this.type = SHORT;
+			} else if (this.randInt < 80) {
+				this.type = DOUBLE;
+			} else {
+				this.type = SPIKE
+			}
 		}
-
-		this.aspectRatio = this.img.height / this.img.width;
 	}
 
 	checkHitPen(pen) {
@@ -121,108 +106,21 @@ class Orb {
 			Math.sqrt(Math.pow(CANVAS.width - this.x, 2) + Math.pow(this.y, 2)));
 	}
 
-	drawBomb() {
-		CONTEXT.fillStyle = SECONDARY_COLOUR;
-
-		CONTEXT.beginPath();
-		CONTEXT.arc(this.x, this.y, this.r * 0.5, 0.0 * Math.PI, 2.0 * Math.PI);
-		CONTEXT.fill();
-		CONTEXT.closePath();
-	}
-
-	drawSpike() {
-		CONTEXT.fillStyle = SECONDARY_COLOUR;
-
-		CONTEXT.beginPath();
-		CONTEXT.moveTo(this.x - this.r * 0.60 * Math.sin(Math.PI / 3), this.y + this.r * 0.30);
-		CONTEXT.lineTo(this.x + this.r * 0.60 * Math.sin(Math.PI / 3), this.y + this.r * 0.30);
-		CONTEXT.lineTo(this.x, this.y - this.r * 0.60);
-		CONTEXT.lineTo(this.x - this.r * 0.60 * Math.sin(Math.PI / 3), this.y + this.r * 0.30);
-		CONTEXT.fill();
-		CONTEXT.closePath();
-	}
-
-	drawDouble() {
-		CONTEXT.strokeStyle = SECONDARY_COLOUR;
-		CONTEXT.lineWidth = LINE_WIDTH * 0.40;
-
-		CONTEXT.beginPath();
-		CONTEXT.arc(this.x - this.r * 0.20, this.y - this.r * 0.20, this.r * 0.40, 0.0 * Math.PI, 2.0 * Math.PI);
-		CONTEXT.stroke();
-		CONTEXT.closePath();
-
-		CONTEXT.beginPath();
-		CONTEXT.arc(this.x + this.r * 0.20, this.y + this.r * 0.20, this.r * 0.40, 0.0 * Math.PI, 2.0 * Math.PI);
-		CONTEXT.stroke();
-		CONTEXT.closePath();
-	}
-
-	drawShort() {
-		CONTEXT.fillStyle = SECONDARY_COLOUR;
-
-		CONTEXT.beginPath();
-		CONTEXT.rect(this.x - this.r * 0.25, this.y - this.r * 0.45, this.r * 0.50, this.r * 0.60);
-		CONTEXT.fill();
-		CONTEXT.closePath();
-
-		CONTEXT.beginPath();
-		CONTEXT.moveTo(this.x - this.r * 0.60 * Math.sin(Math.PI / 3), this.y - this.r * 0.05);
-		CONTEXT.lineTo(this.x + this.r * 0.60 * Math.sin(Math.PI / 3), this.y - this.r * 0.05);
-		CONTEXT.lineTo(this.x, this.y + this.r * 0.55);
-		CONTEXT.lineTo(this.x - this.r * 0.60 * Math.sin(Math.PI / 3), this.y - this.r * 0.05);
-		CONTEXT.fill();
-		CONTEXT.closePath();
-	}
-
-	drawDiamond() {
-		CONTEXT.strokeStyle = SECONDARY_COLOUR;
-		CONTEXT.lineWidth = LINE_WIDTH * 0.40;
-
-		CONTEXT.beginPath();
-		CONTEXT.moveTo(this.x, this.y - this.r * 0.4);
-		CONTEXT.lineTo(this.x - this.r * 0.35, this.y - this.r * 0.4);
-		CONTEXT.lineTo(this.x - this.r * 0.5, this.y - this.r * 0.2);
-		CONTEXT.lineTo(this.x, this.y + this.r * 0.4);
-		CONTEXT.lineTo(this.x + this.r * 0.5, this.y - this.r * 0.2);
-		CONTEXT.lineTo(this.x + this.r * 0.35, this.y - this.r * 0.4);
-		CONTEXT.lineTo(this.x, this.y - this.r * 0.4);
-		CONTEXT.stroke();
-		CONTEXT.closePath();
-	}
-
 	drawRing() {
-		CONTEXT.fillStyle = PRIMARY_COLOUR;
-		CONTEXT.lineWidth = LINE_WIDTH * 0.60;
-		CONTEXT.strokeStyle = SECONDARY_COLOUR;
-
-		CONTEXT.beginPath();
-		CONTEXT.arc(this.x, this.y, this.ring, 0.0 * Math.PI, 2.0 * Math.PI);
-		CONTEXT.fill();
-		CONTEXT.stroke();
-		CONTEXT.closePath();
+		IMAGESET.drawRing(this.x, this.y, this.ring);
 	}
 
 	draw() {
-	    CONTEXT.fillStyle = PRIMARY_COLOUR;
-		CONTEXT.lineWidth = LINE_WIDTH * 0.60;
-		CONTEXT.strokeStyle = SECONDARY_COLOUR;
-
-		CONTEXT.beginPath();
-		CONTEXT.arc(this.x, this.y, this.r, 0.0 * Math.PI, 2.0 * Math.PI);
-		CONTEXT.fill();
-		CONTEXT.stroke();
-		CONTEXT.closePath();
-
 		if (this.type == BOMB) {
-			this.drawBomb();
+			IMAGESET.drawBomb(this.x, this.y);
 		} else if (this.type == SPIKE) {
-			this.drawSpike();
+			IMAGESET.drawSpike(this.x, this.y);
 		} else if (this.type == DOUBLE) {
-			this.drawDouble();
+			IMAGESET.drawDouble(this.x, this.y);
 		} else if (this.type == SHORT) {
-			this.drawShort();
+			IMAGESET.drawShort(this.x, this.y);
 		} else if (this.type == REGULAR) {
-			this.drawDiamond();
+			IMAGESET.drawDiamond(this.x, this.y);
 		}
 	}
 

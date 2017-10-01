@@ -29,8 +29,8 @@ class OrbList {
         this.speed = CANVAS.height / (ORB_TIME / TIME_INTERVAL);
     }
 
-    createOrb(pen) {
-        this.orbList.push(new Orb(CANVAS.width * 0.07, this.speed));
+    createOrb(pen, cur_stat) {
+        this.orbList.push(new Orb(CANVAS.width * 0.07, this.speed, cur_stat));
         this.orbList[this.orbList.length - 1].place(pen.getRange());
     }
 
@@ -103,15 +103,10 @@ class OrbList {
 
         if (TIME_COUNTER >= ORB_FREQUENCY) {
             TIME_COUNTER = 0;
-            this.createOrb(pen);
+            this.createOrb(pen, cur_stat);
         }
 
         for (this.i = 0; this.i < this.orbList.length; this.i++) {
-            if (cur_stat != REGULAR) {
-                this.orbList[this.i].setType(REGULAR);
-                this.orbList[this.i].setImage();
-            }
-
             this.orbList[this.i].move(1);
 
             if (this.orbList[this.i].getY() > (CANVAS.height - this.orbList[this.i].getR())) {
