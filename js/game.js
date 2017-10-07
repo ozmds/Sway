@@ -178,7 +178,7 @@ class Game {
             CONTEXT.textBaseline = 'middle';
         	CONTEXT.textAlign = 'center';
         	CONTEXT.fillStyle = '#FFFFFF';
-            CONTEXT.shadowColor = '#FFFF76';
+            CONTEXT.shadowColor = '#FFFFFF';
             CONTEXT.shadowBlur = 40;
 
         	var font_size = CANVAS.width * 0.14;
@@ -186,7 +186,40 @@ class Game {
 
         	CONTEXT.font = font;
 
-        	CONTEXT.fillText('Life In Computers', CANVAS.width * 0.50, CANVAS.height * 0.35);
+        	CONTEXT.fillText('Melancholy Dream', CANVAS.width * 0.50, CANVAS.height * 0.30);
+
+            CONTEXT.strokeStyle = SECONDARY_COLOUR;
+            CONTEXT.fillStyle = SECONDARY_COLOUR;
+    		CONTEXT.lineWidth = LINE_WIDTH;
+            CONTEXT.shadowBlur = 150;
+
+            CONTEXT.beginPath();
+    		CONTEXT.arc(CANVAS.width * 0.5, CANVAS.height * 0.55, CANVAS.height * 0.1, TWOPI * 0.25, TWOPI * 0.75);
+            CONTEXT.fill();
+
+            CONTEXT.moveTo(CANVAS.width * 0.5, CANVAS.height * 0.45);
+            CONTEXT.arc(CANVAS.width * 0.5 - CANVAS.height * 0.025 * Math.sqrt(3), CANVAS.height * 0.475, CANVAS.height * 0.05, 11 * TWOPI / 12, TWOPI / 12);
+
+            CONTEXT.moveTo(CANVAS.width * 0.5, CANVAS.height * 0.55);
+            CONTEXT.fillStyle = PRIMARY_COLOUR;
+            CONTEXT.arc(CANVAS.width * 0.5 + CANVAS.height * 0.025 * Math.sqrt(3), CANVAS.height * 0.525, CANVAS.height * 0.05, 5 * TWOPI / 12, 7 * TWOPI / 12);
+            CONTEXT.fill();
+
+            CONTEXT.moveTo(CANVAS.width * 0.5, CANVAS.height * 0.55);
+            CONTEXT.fillStyle = SECONDARY_COLOUR;
+            CONTEXT.arc(CANVAS.width * 0.5 - CANVAS.height * 0.025 * Math.sqrt(3), CANVAS.height * 0.575, CANVAS.height * 0.05, 11 * TWOPI / 12, TWOPI / 12);
+
+            CONTEXT.moveTo(CANVAS.width * 0.5, CANVAS.height * 0.65);
+            CONTEXT.fillStyle = PRIMARY_COLOUR;
+            CONTEXT.arc(CANVAS.width * 0.5 + CANVAS.height * 0.025 * Math.sqrt(3), CANVAS.height * 0.625, CANVAS.height * 0.05, 5 * TWOPI / 12, 7 * TWOPI / 12);
+
+            CONTEXT.moveTo(CANVAS.width * 0.5 + CANVAS.height * 0.1, CANVAS.height * 0.55);
+            CONTEXT.fillStyle = SECONDARY_COLOUR;
+
+            CONTEXT.arc(CANVAS.width * 0.5, CANVAS.height * 0.55, CANVAS.height * 0.1, ZEROPI, TWOPI);
+
+            CONTEXT.stroke();
+    		CONTEXT.closePath();
 
             this.counter = this.counter + TIME_INTERVAL;
         }
@@ -215,7 +248,7 @@ class Game {
 
     draw() {
         CONTEXT.shadowColor = '#00FFFF';
-        CONTEXT.shadowBlur = 40;
+        CONTEXT.shadowBlur = 120;
 
         this.resetPen();
 
@@ -223,9 +256,9 @@ class Game {
         this.screen.drawPause();
         this.screen.updateScore(this.score);
 
-        if (this.hit_orb) {
-          this.hit_orb.drawRing();
-          this.hit_orb.draw();
+        if (this.hit_orb && STATE == TRANSITION) {
+            this.hit_orb.drawRing();
+            this.hit_orb.draw();
         }
 
         this.pen.draw();

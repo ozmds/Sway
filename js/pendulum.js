@@ -11,6 +11,8 @@ class Pendulum {
 
 		this.spikeHeight = 0.8;
 		this.minLen = 0;
+		this.maxLen = this.arm.getLen();
+		this.minR = this.pen.getR();
 		this.sArm = null;
 		this.sPen = null;
 		this.timer = 0;
@@ -62,7 +64,7 @@ class Pendulum {
 	}
 
 	setRange() {
-		this.span = Math.asin((CANVAS.width * 0.5 - (this.pen.getR() + PADDING)) / this.arm.getMaxLen());
+		this.span = Math.asin((CANVAS.width * 0.5 - (this.pen.getR() + PADDING)) / this.maxLen);
 		this.startRange = Math.PI * 1.5 - this.span;
 		this.endRange = Math.PI * 1.5 + this.span;
 	}
@@ -110,14 +112,14 @@ class Pendulum {
 		}
 
 		DEST_COLOUR = BLUE;
-		if (this.arm.getMaxLen() > this.arm.getLen()) {
+		if (this.maxLen > this.arm.getLen()) {
 			if ((this.deg > this.startRange) && (this.deg < this.endRange)) {
 				this.arm.setLen(this.arm.getLen() * 1.01);
 				this.sArm.setLen(this.sArm.getLen() * 1.01);
 			}
 		} else {
-			this.arm.setLen(this.arm.getMaxLen());
-			this.sArm.setLen(this.sArm.getMaxLen());
+			this.arm.setLen(this.maxLen);
+			this.sArm.setLen(this.maxLen);
 			this.timer = 0;
 			return false;
 		}
@@ -168,7 +170,7 @@ class Pendulum {
 
 	endSpike() {
 		DEST_COLOUR = BLUE;
-		if (this.pen.getR() > this.pen.getMinR()) {
+		if (this.pen.getR() > this.minR) {
 			this.arm.setLen(this.arm.getLen() + (this.pen.getR() * 0.01));
 			this.sArm.setLen(this.sArm.getLen() + (this.sPen.getR() * 0.01));
 			this.pen.setR(this.pen.getR() * 0.99);
@@ -176,10 +178,10 @@ class Pendulum {
 		} else if (this.spikeHeight > 0.8) {
 			this.spikeHeight = this.spikeHeight * 0.99;
 		} else {
-			this.arm.setLen(this.arm.getMaxLen());
-			this.sArm.setLen(this.sArm.getMaxLen());
-			this.pen.setR(this.pen.getMinR());
-			this.sPen.setR(this.sPen.getMinR());
+			this.arm.setLen(this.maxLen);
+			this.sArm.setLen(this.maxLen);
+			this.pen.setR(this.minR);
+			this.sPen.setR(this.minR);
 			this.timer = 0;
 			return false;
 		}
@@ -190,7 +192,7 @@ class Pendulum {
 	startSpike() {
 		if (this.timer < 15000) {
 			DEST_COLOUR = PURPLE;
-			if (this.pen.getR() < 1.5 * this.pen.getMinR()) {
+			if (this.pen.getR() < 1.5 * this.minR) {
 				this.arm.setLen(this.arm.getLen() - (this.pen.getR() * 0.01));
 				this.sArm.setLen(this.sArm.getLen() - (this.sPen.getR() * 0.01));
 				this.pen.setR(this.pen.getR() * 1.01);

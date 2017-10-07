@@ -44,6 +44,10 @@ function startGame() {
             }
 
             swayGame.draw();
+
+            if (STATE == PAUSE) {
+                IMAGESET.drawPauseScreen(CANVAS.width * 0.50, CANVAS.height * 0.35);
+            }
         }
     }, TIME_INTERVAL);
 }

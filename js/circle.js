@@ -9,7 +9,6 @@ class Circle {
 		this.dir = LEFT;
 		this.sp = 0;
 		this.spikeHeight = null;
-		this.minR = r;
 
 		this.tempi = null;
 		this.tempj = null;
@@ -55,10 +54,6 @@ class Circle {
 
 	setDeg(x) {
 		this.deg = x;
-	}
-
-	getMinR() {
-		return this.minR;
 	}
 
 	setSpikeHeight(x) {

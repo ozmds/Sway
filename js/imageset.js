@@ -14,6 +14,7 @@ class ImageSet {
         this.short = new Image();
         this.diamond = new Image();
         this.pause = new Image();
+        this.pauseScreen = new Image();
 
         this.tempCanvas.width = CANVAS.width * 0.28;
         this.tempCanvas.height = CANVAS.width * 0.28;
@@ -24,6 +25,11 @@ class ImageSet {
         this.initShort(CANVAS.width * 0.07);
         this.initDiamond(CANVAS.width * 0.07);
         this.initPause(CANVAS.width * 0.12);
+
+        this.tempCanvas.width = CANVAS.width * 0.80;
+        this.tempCanvas.height = CANVAS.width * 0.60;
+
+        this.initPauseScreen();
     }
 
     convertToImage(dest) {
@@ -55,6 +61,33 @@ class ImageSet {
 
     drawPause(x, y) {
         CONTEXT.drawImage(this.pause, x - CANVAS.width * 0.14, y - CANVAS.width * 0.14);
+    }
+
+    drawPauseScreen(x, y) {
+        CONTEXT.drawImage(this.pauseScreen, x - CANVAS.width * 0.40, y - CANVAS.width * 0.30);
+    }
+
+    initPauseScreen() {
+        this.tempContext.strokeStyle = SECONDARY_COLOUR;
+        this.tempContext.fillStyle = PRIMARY_COLOUR;
+		this.tempContext.lineWidth = LINE_WIDTH;
+
+        this.tempContext.beginPath();
+    	this.tempContext.rect(CANVAS.width * 0.05, CANVAS.width * 0.05, CANVAS.width * 0.70, CANVAS.width * 0.50);
+        this.tempContext.stroke();
+        this.tempContext.closePath();
+
+        this.tempContext.beginPath();
+    	this.tempContext.rect(CANVAS.width * 0.40, CANVAS.width * 0.05, CANVAS.width * 0.35, CANVAS.width * 0.50);
+        this.tempContext.stroke();
+        this.tempContext.closePath();
+
+        this.tempContext.beginPath();
+    	this.tempContext.rect(CANVAS.width * 0.40, CANVAS.width * 0.30, CANVAS.width * 0.35, CANVAS.width * 0.25);
+        this.tempContext.stroke();
+        this.tempContext.closePath();
+
+        this.pauseScreen = this.convertToImage(this.pauseScreen);
     }
 
     initPause(d) {

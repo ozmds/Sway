@@ -7,7 +7,6 @@ class Line {
 		this.endX = endX;
 		this.endY = endY;
 		this.len = endY - stY;
-		this.maxLen = endY - stY;
 	}
 
 	getLen() {
@@ -24,10 +23,6 @@ class Line {
 
 	setEndY(y) {
 		this.endY = y;
-	}
-
-	getMaxLen() {
-		return this.maxLen;
 	}
 
 	draw() {
