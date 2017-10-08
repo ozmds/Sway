@@ -193,31 +193,13 @@ class Game {
     		CONTEXT.lineWidth = LINE_WIDTH;
             CONTEXT.shadowBlur = 150;
 
+            CONTEXT.arc(CANVAS.width * 0.5, CANVAS.height * 0.5, CANVAS.width * 0.20, ZEROPI, TWOPI);
+            CONTEXT.stroke();
+            CONTEXT.closePath();
+
             CONTEXT.beginPath();
-    		CONTEXT.arc(CANVAS.width * 0.5, CANVAS.height * 0.55, CANVAS.height * 0.1, TWOPI * 0.25, TWOPI * 0.75);
+            CONTEXT.arc(CANVAS.width * 0.55, CANVAS.height * 0.5, CANVAS.width * 0.14, ZEROPI, TWOPI);
             CONTEXT.fill();
-
-            CONTEXT.moveTo(CANVAS.width * 0.5, CANVAS.height * 0.45);
-            CONTEXT.arc(CANVAS.width * 0.5 - CANVAS.height * 0.025 * Math.sqrt(3), CANVAS.height * 0.475, CANVAS.height * 0.05, 11 * TWOPI / 12, TWOPI / 12);
-
-            CONTEXT.moveTo(CANVAS.width * 0.5, CANVAS.height * 0.55);
-            CONTEXT.fillStyle = PRIMARY_COLOUR;
-            CONTEXT.arc(CANVAS.width * 0.5 + CANVAS.height * 0.025 * Math.sqrt(3), CANVAS.height * 0.525, CANVAS.height * 0.05, 5 * TWOPI / 12, 7 * TWOPI / 12);
-            CONTEXT.fill();
-
-            CONTEXT.moveTo(CANVAS.width * 0.5, CANVAS.height * 0.55);
-            CONTEXT.fillStyle = SECONDARY_COLOUR;
-            CONTEXT.arc(CANVAS.width * 0.5 - CANVAS.height * 0.025 * Math.sqrt(3), CANVAS.height * 0.575, CANVAS.height * 0.05, 11 * TWOPI / 12, TWOPI / 12);
-
-            CONTEXT.moveTo(CANVAS.width * 0.5, CANVAS.height * 0.65);
-            CONTEXT.fillStyle = PRIMARY_COLOUR;
-            CONTEXT.arc(CANVAS.width * 0.5 + CANVAS.height * 0.025 * Math.sqrt(3), CANVAS.height * 0.625, CANVAS.height * 0.05, 5 * TWOPI / 12, 7 * TWOPI / 12);
-
-            CONTEXT.moveTo(CANVAS.width * 0.5 + CANVAS.height * 0.1, CANVAS.height * 0.55);
-            CONTEXT.fillStyle = SECONDARY_COLOUR;
-
-            CONTEXT.arc(CANVAS.width * 0.5, CANVAS.height * 0.55, CANVAS.height * 0.1, ZEROPI, TWOPI);
-
             CONTEXT.stroke();
     		CONTEXT.closePath();
 
