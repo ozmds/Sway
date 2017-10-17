@@ -8,8 +8,8 @@ class Game {
         this.status = REGULAR;
         this.orbList = null;
         this.hit_orb = null;
-        this.inTransition = false;
         this.oldState = null;
+        this.oldStatus = null;
         this.counter = 0;
         this.screen = new Screen();
 
@@ -36,10 +36,6 @@ class Game {
         if (window.localStorage.getItem('highscore') == null) {
             window.localStorage.setItem('highscore', this.score);
         }
-    }
-
-    getInTransition() {
-        return this.inTransition;
     }
 
     getStatus() {
@@ -115,9 +111,6 @@ class Game {
     setStatus(x) {
         if (x) {
             if (this.status != x) {
-                if (x == BOMB && (this.orbList.getOldStatus() != REGULAR && this.orbList.getOldStatus() != null)) {
-                  this.inTransition = true;
-                }
                 if (x != REGULAR) {
                     this.status = x;
                 }
@@ -150,18 +143,43 @@ class Game {
     }
 
     handleClick(event_x, event_y) {
-        if (STATE == PAUSE) {
-            if (this.status == BOMB && !this.inTransition) {
-                  STATE = GAME;
-                  this.score = 0;
-                  this.status = REGULAR;
-            } else {
+        if (STATE == HOME) {
+            if (!this.pen.getStatus()) {
+                STATE = GAME;
+                this.status = REGULAR;
+                this.oldStatus = null;
+            }
+        } else if (STATE == PAUSE) {
+            if (event_x > CANVAS.width * 0.50 && event_x < CANVAS.width * 0.85) {
+                if (event_y > (CANVAS.height * 0.35 - CANVAS.width * 0.25)) {
+                    if (event_y < (CANVAS.height * 0.35 + CANVAS.width * 0.25)) {
+                        STATE = HOME;
+                        this.oldStatus = this.status;
+                        this.status = BOMB;
+                        this.hit_orb = null;
+                        this.score = 0;
+                        this.orbList.clearOrbs();
+                    }
+                }
+            }
+             else {
                 STATE = this.oldState;
                 this.oldState = null;
             }
+        } else if (STATE == GAME_OVER) {
+            STATE = HOME;
+            this.score = 0;
+            this.hit_orb = null;
+            this.orbList.clearOrbs();
+        } else if (STATE == TRANSITION) {
+            /* DO NOTHING */
         } else if (this.screen.pauseClicked(event_x, event_y)) {
-            this.oldState = STATE;
-            STATE = PAUSE;
+            if (this.status == BOMB) {
+                STATE = GAME_OVER;
+            } else {
+                this.oldState = STATE;
+                STATE = PAUSE;
+            }
         } else {
             this.getPen().getPen().flip();
 
@@ -171,9 +189,46 @@ class Game {
         }
     }
 
+    homeScreen() {
+        this.resetPen();
+        this.pen.move();
+        this.pen.draw();
+
+        CONTEXT.textBaseline = 'middle';
+        CONTEXT.textAlign = 'center';
+        CONTEXT.fillStyle = '#FFFFFF';
+        CONTEXT.shadowColor = '#FFFFFF';
+        CONTEXT.shadowBlur = 40;
+
+        var font_size = CANVAS.width * 0.14;
+        var font = font_size.toString() + "px basicWoodlands";
+
+        CONTEXT.font = font;
+
+        CONTEXT.fillText('Sway', CANVAS.width * 0.50, CANVAS.height * 0.15);
+
+        CONTEXT.strokeStyle = SECONDARY_COLOUR;
+        CONTEXT.fillStyle = SECONDARY_COLOUR;
+        CONTEXT.lineWidth = LINE_WIDTH;
+        CONTEXT.shadowBlur = 40;
+
+        CONTEXT.beginPath();
+        CONTEXT.arc(CANVAS.width * 0.5, CANVAS.height * 0.36, CANVAS.width * 0.2, ZEROPI, TWOPI);
+        CONTEXT.stroke();
+        CONTEXT.closePath();
+
+        CONTEXT.beginPath();
+		CONTEXT.moveTo(CANVAS.width * 0.62, CANVAS.height * 0.36);
+		CONTEXT.lineTo(CANVAS.width * 0.44, CANVAS.height * 0.36 - (CANVAS.width * 0.12 * Math.sqrt(3) * 0.5));
+		CONTEXT.lineTo(CANVAS.width * 0.44, CANVAS.height * 0.36 + (CANVAS.width * 0.12 * Math.sqrt(3) * 0.5));
+		CONTEXT.lineTo(CANVAS.width * 0.62, CANVAS.height * 0.36);
+		CONTEXT.fill();
+		CONTEXT.closePath();
+    }
+
     logoScreen() {
         if (this.counter > 5000) {
-            STATE = GAME;
+            STATE = HOME;
         } else {
             CONTEXT.textBaseline = 'middle';
         	CONTEXT.textAlign = 'center';
@@ -193,6 +248,7 @@ class Game {
     		CONTEXT.lineWidth = LINE_WIDTH;
             CONTEXT.shadowBlur = 150;
 
+            CONTEXT.beginPath();
             CONTEXT.arc(CANVAS.width * 0.5, CANVAS.height * 0.5, CANVAS.width * 0.20, ZEROPI, TWOPI);
             CONTEXT.stroke();
             CONTEXT.closePath();
@@ -209,19 +265,25 @@ class Game {
 
     resetPen() {
         if (this.status == BOMB) {
+            if (this.oldStatus == null) {
+                this.oldStatus = this.orbList.getOldStatus();
+            }
             this.pen.move(this.status);
-            if (this.orbList.getOldStatus() != REGULAR) {
-                if (this.orbList.getOldStatus() == SPIKE) {
+            if (this.oldStatus != REGULAR) {
+                if (this.oldStatus == SPIKE) {
                     if (!this.pen.endSpike()) {
-                        this.inTransition = false;
+                        this.status = REGULAR;
+                        this.oldStatus = null;
                     }
-                } else if (this.orbList.getOldStatus() == DOUBLE) {
+                } else if (this.oldStatus == DOUBLE) {
                     if (!this.pen.endBalloon()) {
-                        this.inTransition = false;
+                        this.status = REGULAR;
+                        this.oldStatus = null;
                     }
-                } else if (this.orbList.getOldStatus() == SHORT) {
+                } else if (this.oldStatus == SHORT) {
                     if (!this.pen.endShrink()) {
-                        this.inTransition = false;
+                        this.status = REGULAR;
+                        this.oldStatus = null;
                     }
                 }
             }
@@ -232,13 +294,15 @@ class Game {
         CONTEXT.shadowColor = '#00FFFF';
         CONTEXT.shadowBlur = 120;
 
-        this.resetPen();
+        if (STATE != TRANSITION) {
+            this.resetPen();
+        }
 
         this.orbList.drawOrbs();
         this.screen.drawPause();
         this.screen.updateScore(this.score);
 
-        if (this.hit_orb && STATE == TRANSITION) {
+        if (this.hit_orb && (STATE == TRANSITION || this.oldState == TRANSITION)) {
             this.hit_orb.drawRing();
             this.hit_orb.draw();
         }

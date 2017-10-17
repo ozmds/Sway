@@ -15,6 +15,7 @@ class ImageSet {
         this.diamond = new Image();
         this.pause = new Image();
         this.pauseScreen = new Image();
+        this.gameOverScreen = new Image();
 
         this.tempCanvas.width = CANVAS.width * 0.28;
         this.tempCanvas.height = CANVAS.width * 0.28;
@@ -30,6 +31,7 @@ class ImageSet {
         this.tempCanvas.height = CANVAS.width * 0.60;
 
         this.initPauseScreen();
+        this.initGameOverScreen();
     }
 
     convertToImage(dest) {
@@ -67,10 +69,17 @@ class ImageSet {
         CONTEXT.drawImage(this.pauseScreen, x - CANVAS.width * 0.40, y - CANVAS.width * 0.30);
     }
 
-    initPauseScreen() {
+    drawGameOverScreen(x, y) {
+        CONTEXT.drawImage(this.gameOverScreen, x - CANVAS.width * 0.40, y - CANVAS.width * 0.30);
+    }
+
+    initGameOverScreen() {
         this.tempContext.strokeStyle = SECONDARY_COLOUR;
-        this.tempContext.fillStyle = PRIMARY_COLOUR;
+        this.tempContext.fillStyle = SECONDARY_COLOUR;
 		this.tempContext.lineWidth = LINE_WIDTH;
+
+        this.tempContext.shadowColor = '#00FFFF';
+        this.tempContext.shadowBlur = 40;
 
         this.tempContext.beginPath();
     	this.tempContext.rect(CANVAS.width * 0.05, CANVAS.width * 0.05, CANVAS.width * 0.70, CANVAS.width * 0.50);
@@ -78,14 +87,78 @@ class ImageSet {
         this.tempContext.closePath();
 
         this.tempContext.beginPath();
-    	this.tempContext.rect(CANVAS.width * 0.40, CANVAS.width * 0.05, CANVAS.width * 0.35, CANVAS.width * 0.50);
+        this.tempContext.arc(CANVAS.width * 0.40, CANVAS.width * 0.30, CANVAS.width * 0.13, ZEROPI, TWOPI);
         this.tempContext.stroke();
         this.tempContext.closePath();
 
         this.tempContext.beginPath();
-    	this.tempContext.rect(CANVAS.width * 0.40, CANVAS.width * 0.30, CANVAS.width * 0.35, CANVAS.width * 0.25);
+        this.tempContext.arc(CANVAS.width * 0.40, CANVAS.width * 0.305, CANVAS.width * 0.07, TWOPI * 0.95, TWOPI * 0.75);
         this.tempContext.stroke();
         this.tempContext.closePath();
+
+        this.tempContext.beginPath();
+		this.tempContext.moveTo(CANVAS.width * 0.445, CANVAS.width * 0.235);
+		this.tempContext.lineTo(CANVAS.width * 0.4, CANVAS.width * 0.265);
+		this.tempContext.lineTo(CANVAS.width * 0.4, CANVAS.width * 0.205);
+		this.tempContext.lineTo(CANVAS.width * 0.445, CANVAS.width * 0.235);
+		this.tempContext.fill();
+		this.tempContext.closePath();
+
+        this.gameOverScreen = this.convertToImage(this.gameOverScreen);
+    }
+
+    initPauseScreen() {
+        this.tempContext.strokeStyle = SECONDARY_COLOUR;
+        this.tempContext.fillStyle = PRIMARY_COLOUR;
+		this.tempContext.lineWidth = LINE_WIDTH;
+
+        this.tempContext.shadowColor = '#00FFFF';
+        this.tempContext.shadowBlur = 40;
+
+        this.tempContext.beginPath();
+    	this.tempContext.rect(CANVAS.width * 0.05, CANVAS.width * 0.05, CANVAS.width * 0.35, CANVAS.width * 0.50);
+        this.tempContext.fill();
+        this.tempContext.stroke();
+        this.tempContext.closePath();
+
+        this.tempContext.beginPath();
+    	this.tempContext.rect(CANVAS.width * 0.40, CANVAS.width * 0.05, CANVAS.width * 0.35, CANVAS.width * 0.50);
+        this.tempContext.fill();
+        this.tempContext.stroke();
+        this.tempContext.closePath();
+
+        this.tempContext.beginPath();
+        this.tempContext.arc(CANVAS.width * 0.225, CANVAS.width * 0.30, CANVAS.width * 0.13, ZEROPI, TWOPI);
+        this.tempContext.stroke();
+        this.tempContext.closePath();
+
+        this.tempContext.beginPath();
+        this.tempContext.arc(CANVAS.width * 0.575, CANVAS.width * 0.30, CANVAS.width * 0.13, ZEROPI, TWOPI);
+        this.tempContext.stroke();
+        this.tempContext.closePath();
+
+        this.tempContext.beginPath();
+        this.tempContext.arc(CANVAS.width * 0.575, CANVAS.width * 0.305, CANVAS.width * 0.07, TWOPI * 0.95, TWOPI * 0.75);
+        this.tempContext.stroke();
+        this.tempContext.closePath();
+
+        this.tempContext.fillStyle = SECONDARY_COLOUR;
+
+        this.tempContext.beginPath();
+		this.tempContext.moveTo(CANVAS.width * 0.305, CANVAS.width * 0.30);
+		this.tempContext.lineTo(CANVAS.width * 0.185, CANVAS.width * 0.30 - (CANVAS.width * 0.08 * Math.sqrt(3) * 0.5));
+		this.tempContext.lineTo(CANVAS.width * 0.185, CANVAS.width * 0.30 + (CANVAS.width * 0.08 * Math.sqrt(3) * 0.5));
+		this.tempContext.lineTo(CANVAS.width * 0.305, CANVAS.width * 0.30);
+		this.tempContext.fill();
+		this.tempContext.closePath();
+
+        this.tempContext.beginPath();
+		this.tempContext.moveTo(CANVAS.width * 0.62, CANVAS.width * 0.235);
+		this.tempContext.lineTo(CANVAS.width * 0.575, CANVAS.width * 0.265);
+		this.tempContext.lineTo(CANVAS.width * 0.575, CANVAS.width * 0.205);
+		this.tempContext.lineTo(CANVAS.width * 0.62, CANVAS.width * 0.235);
+		this.tempContext.fill();
+		this.tempContext.closePath();
 
         this.pauseScreen = this.convertToImage(this.pauseScreen);
     }
@@ -218,6 +291,8 @@ class ImageSet {
     }
 
     drawCircle(x, y, r) {
+        CONTEXT.shadowColor = '#00FFFF';
+        CONTEXT.shadowBlur = 40;
 		CONTEXT.fillStyle = PRIMARY_COLOUR;
 		CONTEXT.lineWidth = LINE_WIDTH;
 		CONTEXT.strokeStyle = SECONDARY_COLOUR;
@@ -232,6 +307,8 @@ class ImageSet {
     drawInnerCircle(x, y, r, sp) {
 		CONTEXT.lineWidth = LINE_WIDTH * 0.80;
 		CONTEXT.strokeStyle = SECONDARY_COLOUR;
+        CONTEXT.shadowColor = '#00FFFF';
+        CONTEXT.shadowBlur = 40;
 
 		CONTEXT.beginPath();
 		CONTEXT.arc(x, y, r * 0.65, ZEROPI + (sp * TWOPI), TWOPI * 0.85 + (sp * TWOPI));
@@ -242,7 +319,9 @@ class ImageSet {
     drawSpikes(x, y, r, sp, sheight) {
 		CONTEXT.fillStyle = PRIMARY_COLOUR;
 		CONTEXT.strokeStyle = SECONDARY_COLOUR;
-		CONTEXT.lineWidth = LINE_WIDTH * 1.4;
+		CONTEXT.lineWidth = LINE_WIDTH;
+        CONTEXT.shadowColor = '#00FFFF';
+        CONTEXT.shadowBlur = 40;
 
 		for (this.tempi = 0; this.tempi < 6; this.tempi++) {
 			CONTEXT.beginPath();
@@ -274,6 +353,8 @@ class ImageSet {
     drawLine(sx, sy, ex, ey) {
 		CONTEXT.lineWidth = LINE_WIDTH;
 		CONTEXT.strokeStyle = SECONDARY_COLOUR;
+        CONTEXT.shadowColor = '#00FFFF';
+        CONTEXT.shadowBlur = 40;
 
 		CONTEXT.beginPath();
 		CONTEXT.moveTo(sx, sy);

@@ -6,7 +6,7 @@ var LINE_WIDTH;
 
 var CANVAS;
 var CONTEXT;
-var IMAGESET; 
+var IMAGESET;
 
 const PURPLE = '#120012';
 const GREEN = '#002500';
@@ -31,6 +31,7 @@ const PAUSE = 'pause';
 const TRANSITION = 'transition';
 const LOGO = 'logo';
 const HOME = 'home';
+const GAME_OVER = 'game over';
 
 var STATE = LOGO;
 

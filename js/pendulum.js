@@ -17,6 +17,8 @@ class Pendulum {
 		this.sPen = null;
 		this.timer = 0;
 
+		this.status = false;
+
 		this.speed = null;
 
 		this.range = 2 * (this.arm.getLen() + this.pen.getR());
@@ -29,6 +31,10 @@ class Pendulum {
 
 	getRange() {
 		return this.range;
+	}
+
+	getStatus() {
+		return this.status;
 	}
 
 	getPen() {
@@ -121,6 +127,7 @@ class Pendulum {
 			this.arm.setLen(this.maxLen);
 			this.sArm.setLen(this.maxLen);
 			this.timer = 0;
+			this.status = false;
 			return false;
 		}
 
@@ -129,6 +136,7 @@ class Pendulum {
 
 	startShrink() {
 		if (this.timer < 15000) {
+			this.status = true;
 			DEST_COLOUR = RED;
 			if (this.arm.getLen() > this.minLen) {
 				this.arm.setLen(this.arm.getLen() * 0.99);
@@ -151,6 +159,7 @@ class Pendulum {
 			this.sPen.setDeg(this.pen.getDeg());
 			this.sPen.setDir(this.pen.getDir());
 			this.timer = 0;
+			this.status = false;
 			return false;
 		}
 
@@ -161,6 +170,7 @@ class Pendulum {
 		if (this.timer > 15000) {
 			return this.endBalloon();
 		} else {
+			this.status = true;
 			DEST_COLOUR = GREEN;
 		}
 
@@ -183,6 +193,7 @@ class Pendulum {
 			this.pen.setR(this.minR);
 			this.sPen.setR(this.minR);
 			this.timer = 0;
+			this.status = false;
 			return false;
 		}
 
@@ -191,6 +202,7 @@ class Pendulum {
 
 	startSpike() {
 		if (this.timer < 15000) {
+			this.status = true;
 			DEST_COLOUR = PURPLE;
 			if (this.pen.getR() < 1.5 * this.minR) {
 				this.arm.setLen(this.arm.getLen() - (this.pen.getR() * 0.01));

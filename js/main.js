@@ -28,15 +28,17 @@ function startGame() {
 
         if (STATE == LOGO) {
             swayGame.logoScreen();
+        } else if (STATE == HOME) {
+            swayGame.homeScreen();
         } else {
-            if (STATE == GAME && (!swayGame.getInTransition())) {
+            if (STATE == GAME && (swayGame.getStatus() != BOMB)) {
                 swayGame.move();
             }
 
             if (STATE == TRANSITION) {
                 if (!swayGame.screenWipe()) {
                     if (swayGame.getStatus() == BOMB) {
-                        STATE = PAUSE;
+                        STATE = GAME_OVER;
                     } else {
                         STATE = GAME;
                     }
@@ -47,6 +49,8 @@ function startGame() {
 
             if (STATE == PAUSE) {
                 IMAGESET.drawPauseScreen(CANVAS.width * 0.50, CANVAS.height * 0.35);
+            } else if (STATE == GAME_OVER) {
+                IMAGESET.drawGameOverScreen(CANVAS.width * 0.50, CANVAS.height * 0.35);
             }
         }
     }, TIME_INTERVAL);

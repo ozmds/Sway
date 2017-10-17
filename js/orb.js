@@ -74,13 +74,13 @@ class Orb {
 		} else {
 			this.randInt = Math.random() * 100;
 
-			if (this.randInt < 20) {
+			if (this.randInt < 80) {
 				this.type = REGULAR;
-			} else if (this.randInt < 40) {
+			} else if (this.randInt < 94) {
 				this.type = BOMB;
-			} else if (this.randInt < 60) {
+			} else if (this.randInt < 97) {
 				this.type = SHORT;
-			} else if (this.randInt < 80) {
+			} else if (this.randInt < 99) {
 				this.type = DOUBLE;
 			} else {
 				this.type = SPIKE
