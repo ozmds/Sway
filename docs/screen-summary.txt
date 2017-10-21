@@ -1,0 +1,27 @@
+----------------------------------------------------------------------
+Name of File: screen.js
+----------------------------------------------------------------------
+Number of Lines: 82
+Number of Classes: 1
+Number of Methods: 7
+----------------------------------------------------------------------
+          Method Name          |             Description              
+----------------------------------------------------------------------
+          constructor          |            DOES NOT EXIST            
+          background           |            DOES NOT EXIST            
+         changeColours         |            DOES NOT EXIST            
+           drawPause           |            DOES NOT EXIST            
+          updateScore          |            DOES NOT EXIST            
+           isClicked           |            DOES NOT EXIST            
+         pauseClicked          |            DOES NOT EXIST            
+----------------------------------------------------------------------
+          Method Name          | Number of Lines | Longest Line Width 
+----------------------------------------------------------------------
+          constructor          |       10        |         67         
+          background           |       16        |         90         
+         changeColours         |       24        |        119         
+           drawPause           |        3        |         67         
+          updateScore          |        9        |        109         
+           isClicked           |        7        |         40         
+         pauseClicked          |        3        |        122         
+   Lines Outside of Class:     |        2        |         27         

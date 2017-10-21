@@ -1,0 +1,49 @@
+----------------------------------------------------------------------
+Name of File: orb.js
+----------------------------------------------------------------------
+Number of Lines: 134
+Number of Classes: 1
+Number of Methods: 18
+----------------------------------------------------------------------
+          Method Name          |             Description              
+----------------------------------------------------------------------
+          constructor          |            DOES NOT EXIST            
+            getType            |            DOES NOT EXIST            
+            setType            |            DOES NOT EXIST            
+             getR              |            DOES NOT EXIST            
+             setR              |            DOES NOT EXIST            
+             getY              |            DOES NOT EXIST            
+            getRing            |            DOES NOT EXIST            
+        getTransparency        |            DOES NOT EXIST            
+     incrementTransparency     |            DOES NOT EXIST            
+             move              |            DOES NOT EXIST            
+         incrementRing         |            DOES NOT EXIST            
+           initSpeed           |            DOES NOT EXIST            
+           initType            |            DOES NOT EXIST            
+          checkHitPen          |            DOES NOT EXIST            
+        furthestCorner         |            DOES NOT EXIST            
+           drawRing            |            DOES NOT EXIST            
+             draw              |            DOES NOT EXIST            
+             place             |            DOES NOT EXIST            
+----------------------------------------------------------------------
+          Method Name          | Number of Lines | Longest Line Width 
+----------------------------------------------------------------------
+          constructor          |       16        |         35         
+            getType            |        3        |         25         
+            setType            |        3        |         22         
+             getR              |        3        |         22         
+             setR              |        3        |         19         
+             getY              |        3        |         22         
+            getRing            |        3        |         25         
+        getTransparency        |        3        |         33         
+     incrementTransparency     |        3        |         53         
+             move              |        3        |         33         
+         incrementRing         |        3        |         52         
+           initSpeed           |        9        |         72         
+           initType            |       19        |         47         
+          checkHitPen          |       10        |        120         
+        furthestCorner         |        6        |         96         
+           drawRing            |        3        |         53         
+             draw              |       13        |         49         
+             place             |        7        |         92         
+   Lines Outside of Class:     |        2        |         27         

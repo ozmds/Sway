@@ -18,9 +18,7 @@ class Game {
     }
 
     initVariable() {
-        this.pen = new Pendulum(new Circle(CANVAS.width * 0.5, CANVAS.height * 0.60, CANVAS.width * 0.05),
-                                new Circle(CANVAS.width * 0.5, CANVAS.height - (CANVAS.width * 0.1 + PADDING), CANVAS.width * 0.1),
-                                new Line(CANVAS.width * 0.5, CANVAS.height * 0.60, CANVAS.width * 0.5, CANVAS.height - (CANVAS.width * 0.1 + PADDING)));
+        this.pen = new Pendulum(new Circle(CANVAS.width * 0.5, CANVAS.height * 0.60, CANVAS.width * 0.05), new Circle(CANVAS.width * 0.5, CANVAS.height - (CANVAS.width * 0.1 + PADDING), CANVAS.width * 0.1), new Line(CANVAS.width * 0.5, CANVAS.height * 0.60, CANVAS.width * 0.5, CANVAS.height - (CANVAS.width * 0.1 + PADDING)));
 
         this.pen.setSArm(new Line(CANVAS.width * 0.5, CANVAS.height * 0.60, CANVAS.width * 0.5, CANVAS.height - (CANVAS.width * 0.1 + PADDING)));
         this.pen.setSPen(new Circle(CANVAS.width * 0.5, CANVAS.height - (CANVAS.width * 0.1 + PADDING), CANVAS.width * 0.1));

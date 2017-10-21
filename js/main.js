@@ -13,8 +13,7 @@ function startGame() {
 
     IMAGESET = new ImageSet();
 
-    CANVAS.addEventListener('click', function(event) {swayGame.handleClick(
-        event.x * window.devicePixelRatio, event.y * window.devicePixelRatio);});
+    CANVAS.addEventListener('click', function(event) {swayGame.handleClick(event.x * window.devicePixelRatio, event.y * window.devicePixelRatio);});
 
     setInterval(function() {
         swayGame.changeColours(PRIMARY_COLOUR, DEST_COLOUR);

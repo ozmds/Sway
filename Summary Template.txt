@@ -1,0 +1,57 @@
+--------------------------------------------------------------------
+Name of File:
+--------------------------------------------------------------------
+
+Number of Lines:
+Number of Classes:
+Number of Methods:
+Number of Functions:
+
+         Method Name          |            Description
+------------------------------|-------------------------------------
+30 characters                 | Retrieve Function Description as
+If longer than 30 characters  | First Comment after Definition.
+wrap around                   | DOES NOT EXIST, if it does not
+                              | exist.
+
+         Method Name           | Number of Lines | Longest Line Width
+-------------------------------|-----------------|--------------------
+31 characters                 | 17 characters   | 20 characters
+If longer than 30 characters  | 25 Lines Max    | 80 characters max
+wrap around                   |                 |
+                              |                 |
+                              |                 |
+                              |                 |
+                              |                 |
+                              |                 |
+                              |                 |
+                              |                 |
+                              |                 |
+                              |                 |
+Total                         | Total Lines     | Max Line Width
+
+
+
+<-------------------------- 68 ------------------------------------>
+Red Flag File
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+Name of File:
+--------------------------------------------------------------------
+
+         Method Name          | Line Count | Max Width | Description
+------------------------------|------------|-----------|-------------
+31 characters                 | 12 chars   | 11 chars  | 13 chars
+If longer than 30 characters  | 25 Lines Max    | 80 characters max
+wrap around                   |                 |
+                              |                 |
+                              |                 |
+                              |                 |
+                              |                 |
+                              |                 |
+                              |                 |
+                              |                 |
+                              |                 |
+                              |                 |
+Total                         | Total Lines     | Max Line Width

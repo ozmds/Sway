@@ -1,0 +1,53 @@
+----------------------------------------------------------------------
+Name of File: circle.js
+----------------------------------------------------------------------
+Number of Lines: 121
+Number of Classes: 1
+Number of Methods: 20
+----------------------------------------------------------------------
+          Method Name          |             Description
+----------------------------------------------------------------------
+          constructor          |            DOES NOT EXIST
+             getX              |            DOES NOT EXIST
+             setX              |            DOES NOT EXIST
+             getY              |            DOES NOT EXIST
+             setY              |            DOES NOT EXIST
+             getR              |            DOES NOT EXIST
+             setR              |            DOES NOT EXIST
+            getDir             |            DOES NOT EXIST
+            setDir             |            DOES NOT EXIST
+            getDeg             |            DOES NOT EXIST
+            setDeg             |            DOES NOT EXIST
+        setSpikeHeight         |            DOES NOT EXIST
+        getSpikeHeight         |            DOES NOT EXIST
+             flip              |            DOES NOT EXIST
+             spin              |            DOES NOT EXIST
+        drawInnerCircle        |            DOES NOT EXIST
+          drawSpikes           |            DOES NOT EXIST
+             draw              |            DOES NOT EXIST
+            hitWall            |            DOES NOT EXIST
+             move              |            DOES NOT EXIST
+----------------------------------------------------------------------
+          Method Name          | Number of Lines | Longest Line Width
+----------------------------------------------------------------------
+          constructor          |       14        |         33
+             getX              |        3        |         22
+             setX              |        3        |         19
+             getY              |        3        |         22
+             setY              |        3        |         19
+             getR              |        3        |         22
+             setR              |        3        |         19
+            getDir             |        3        |         24
+            setDir             |        3        |         21
+            getDeg             |        3        |         24
+            setDeg             |        3        |         21
+        setSpikeHeight         |        3        |         29
+        getSpikeHeight         |        3        |         32
+             flip              |        7        |         31
+             spin              |        3        |         34
+        drawInnerCircle        |        3        |         66
+          drawSpikes           |        3        |         79
+             draw              |        3        |         52
+            hitWall            |        7        |         66
+             move              |       22        |         65
+   Lines Outside of Class:     |        2        |         27

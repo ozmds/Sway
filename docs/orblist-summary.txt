@@ -1,0 +1,41 @@
+----------------------------------------------------------------------
+Name of File: orblist.js
+----------------------------------------------------------------------
+Number of Lines: 145
+Number of Classes: 1
+Number of Methods: 14
+----------------------------------------------------------------------
+          Method Name          |             Description              
+----------------------------------------------------------------------
+          constructor          |            DOES NOT EXIST            
+         getOldStatus          |            DOES NOT EXIST            
+           getStatus           |            DOES NOT EXIST            
+           getScore            |            DOES NOT EXIST            
+        calculateSpeed         |            DOES NOT EXIST            
+           createOrb           |            DOES NOT EXIST            
+           clearOrbs           |            DOES NOT EXIST            
+       incrementOrbTime        |            DOES NOT EXIST            
+     incrementOrbFrequency     |            DOES NOT EXIST            
+       incrementPenSpeed       |            DOES NOT EXIST            
+           checkHit            |            DOES NOT EXIST            
+           drawOrbs            |            DOES NOT EXIST            
+         manageHitList         |            DOES NOT EXIST            
+          manageOrbs           |            DOES NOT EXIST            
+----------------------------------------------------------------------
+          Method Name          | Number of Lines | Longest Line Width 
+----------------------------------------------------------------------
+          constructor          |       11        |         30         
+         getOldStatus          |        3        |         30         
+           getStatus           |        3        |         27         
+           getScore            |        3        |         26         
+        calculateSpeed         |        3        |         64         
+           createOrb           |        4        |         78         
+           clearOrbs           |        4        |         26         
+       incrementOrbTime        |        6        |         74         
+     incrementOrbFrequency     |        5        |         89         
+       incrementPenSpeed       |        6        |         74         
+           checkHit            |        9        |         43         
+           drawOrbs            |       12        |         73         
+         manageHitList         |       12        |         66         
+          manageOrbs           |       47        |         94         
+   Lines Outside of Class:     |        2        |         27         
