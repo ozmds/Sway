@@ -73,6 +73,37 @@ def writeMethodList(fp, mlist):
         
         fp.write('\n')
 
+def writeRedFlagReport(fp, mlist):
+    for m in mlist:
+        m[0] = m[0][:findOpenPar(m[0])]
+        m[0] = m[0].strip()
+        if (len(m[0]) > 30 or
+            (m[2] - m[1] + 1) > 25 or
+            m[3] > 80 or
+            m[4][0] == 'DOES NOT EXIST'):
+
+            if len(m[0]) > 30:
+                fp.write(m[0][:20] + ': TOO LONG')
+            else:
+                fp.write(centerString(m[0], 31))
+
+            fp.write('|')
+
+            fp.write(centerString(str(m[2] - m[1] + 1), 12))
+
+            fp.write('|')
+
+            fp.write(centerString(str(m[3]), 11))
+
+            fp.write('|')
+                
+            if m[4][0] == 'DOES NOT EXIST':
+                fp.write(centerString('NONE', 13))
+            else:
+                fp.write(centerString('PRESENT', 13))
+
+            fp.write('\n')
+                
 def createLineList(file_path):
     fr = open(file_path, 'r')
     line_list = fr.readlines()
@@ -162,6 +193,15 @@ def calcStringLength(s):
 
     return total
 
+fe = open(FILE_DEST_PATH + 'redflagreport.txt', 'w')
+
+fe.write(70 * '-' + '\n')
+fe.write(centerString('Red Flag Report', 70) + '\n')
+fe.write(70 * '-' + '\n')
+
+createFileHeader
+createTableHeader
+
 for file in file_list:
     curl_count = 0
     method_list = []
@@ -172,6 +212,13 @@ for file in file_list:
     fw = open(FILE_DEST_PATH + file[:-3] + '-summary.txt', 'w')
 
     createFileHeader(fw, file)
+
+    createFileHeader(fe, file)
+
+    createTableHeader(fe, [('Method Name', 31),
+                           ('Line Count', 12),
+                           ('Max Width', 11),
+                           ('Description', 13)])
 
     max_length = 0
     max_out_length = 0
@@ -247,4 +294,16 @@ for file in file_list:
     fw.write(centerString(str(len(line_list) - class_total), 17) + '|')
     fw.write(centerString(str(max_out_length), 20) + '\n')
 
-    fw.close()    
+    writeRedFlagReport(fe, method_list)
+
+    if (max_out_length > 80 or
+        len(line_list) - class_total > 2):
+
+            fe.write(centerString('Lines Outside of Class: ', 31) + '|')
+            fe.write(centerString(str(len(line_list) - class_total), 12) + '|')
+            fe.write(centerString(str(max_out_length), 11) + '|')
+            fe.write(centerString('N/A', 13) + '\n')        
+
+    fw.close()
+
+fe.close()
