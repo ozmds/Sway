@@ -15,6 +15,9 @@ function startGame() {
             game.setOldHeight(CANVAS.height);
         }
 
+        game.getOrbList().move();
+        game.getOrbList().draw();
+
         game.getPen().drawBack();
         game.getPen().draw();
 

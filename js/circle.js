@@ -15,6 +15,7 @@ class Circle {
 
         this.x = null;
         this.y = null;
+        this.r = null;
     }
 
     getHeight() {
@@ -39,18 +40,6 @@ class Circle {
 
     setY(x) {
         this.y = x;
-    }
-
-    setSize() {
-        if (this.type == 'pendulum') {
-            this.height = CANVAS.width * 0.20;
-        } else if (this.type == 'center') {
-            this.height = CANVAS.width * 0.10;
-        } else if (this.type == 'link') {
-            this.height = CANVAS.width * 0.08;
-        }
-
-        this.width = this.height * this.aspectratio;
     }
 
     draw() {

@@ -15,5 +15,6 @@ class PenPart extends Circle {
         }
 
         this.width = this.height * this.aspectratio;
+        this.r = this.height / 2;
     }
 }

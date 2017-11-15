@@ -145,6 +145,7 @@ if __name__ == "__main__":
             IMAGE_SIZE = (1100, 800)
         else:
             IMAGE_SIZE = (950, 800)
+            LINE_WIDTH = 60
 
         if IMAGE_SIZE[0] > 1000:
             WIDTH = 300

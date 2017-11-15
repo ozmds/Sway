@@ -8,6 +8,11 @@ class Game {
         CANVAS.style.left = (MARGIN).toString() + 'px';
 
         this.pen = null;
+        this.orblist = new OrbList();
+    }
+
+    getOrbList() {
+        return this.orblist;
     }
 
     getPen() {
