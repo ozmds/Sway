@@ -9,7 +9,7 @@ class PenPart extends Circle {
         if (this.type == 'pendulum') {
             this.height = CANVAS.width * 0.20;
         } else if (this.type == 'center') {
-            this.height = CANVAS.width * 0.10;
+            this.height = CANVAS.width * 0.12;
         } else if (this.type == 'link') {
             this.height = CANVAS.width * 0.08;
         }
