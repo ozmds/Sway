@@ -15,7 +15,7 @@ class Orb extends Circle {
     }
 
     setSize() {
-        this.height = CANVAS.width * 0.10;
+        this.height = CANVAS.width * 0.14;
         this.width = this.height * this.aspectratio;
         this.r = this.height / 2;
     }
