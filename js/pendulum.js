@@ -1,225 +1,54 @@
-/* Cleaned up on Sept 21 */
-
 class Pendulum {
-	constructor(cen, pen, arm) {
-		this.cen = cen;
-		this.pen = pen;
-		this.arm = arm;
+    constructor() {
+        this.cen = new PenPart('center');
+        this.pen = new PenPart('pendulum');
+        this.linklist = [];
 
-		this.startRange = null;
-		this.endRange = null;
+        this.cen.setY(CANVAS.height * 0.6);
+        this.pen.setY(CANVAS.height - (this.pen.getHeight() * 0.5 + PADDING));
 
-		this.spikeHeight = 0.8;
-		this.minLen = 0;
-		this.maxLen = this.arm.getLen();
-		this.minR = this.pen.getR();
-		this.sArm = null;
-		this.sPen = null;
-		this.timer = 0;
+        this.calcLinks();
+    }
 
-		this.status = false;
+    calcLinks() {
+        var armdist = (this.pen.getY() - this.pen.getHeight() * 0.5) -
+                        (this.cen.getY() + this.cen.getHeight() * 0.5);
 
-		this.speed = null;
+        var link = new PenPart('link');
 
-		this.range = 2 * (this.arm.getLen() + this.pen.getR());
-		this.span = null;
+        var numlinks = 0;
 
-		this.deg = null;
-		this.distx = null;
-		this.disty = null;
-	}
+        if (armdist > 0) {
+            numlinks = Math.floor(armdist / link.getHeight());
+        }
 
-	getRange() {
-		return this.range;
-	}
+        var linkspace = (armdist - numlinks * link.getHeight()) / (numlinks + 1);
 
-	getStatus() {
-		return this.status;
-	}
+        var startpoint = this.cen.getY() + this.cen.getHeight() * 0.5;
 
-	getPen() {
-		return this.pen;
-	}
+        for (var i = 0; i < numlinks; i++) {
+            var newlink = new PenPart('link');
+            newlink.setY(startpoint + linkspace + newlink.getHeight() * 0.5);
+            this.linklist.push(newlink);
+            startpoint = startpoint + linkspace + newlink.getHeight();
+        }
+    }
 
-	getCen() {
-		return this.cen;
-	}
+    draw() {
+        this.cen.draw();
+        this.pen.draw();
 
-	getArm() {
-		return this.arm;
-	}
+        for (var i = 0; i < this.linklist.length; i++) {
+            this.linklist[i].draw();
+        }
+    }
 
-	getSPen() {
-		return this.sPen;
-	}
+    drawBack() {
+        this.cen.drawBack();
+        this.pen.drawBack();
 
-	setSPen(x) {
-		this.sPen = x;
-	}
-
-	setSArm(x) {
-		this.sArm = x;
-	}
-
-	getSpikeHeight() {
-		return this.spikeHeight;
-	}
-
-	setSpikeHeight(x) {
-		this.spikeHeight = x;
-	}
-
-	setRange() {
-		this.span = Math.asin((CANVAS.width * 0.5 - (this.pen.getR() + PADDING)) / this.maxLen);
-		this.startRange = Math.PI * 1.5 - this.span;
-		this.endRange = Math.PI * 1.5 + this.span;
-	}
-
-	calcPenSpeed() {
-		this.speed = (this.endRange - this.startRange) / (PEN_TIME / TIME_INTERVAL);
-	}
-
-	setMinLen() {
-		this.minLen = (CANVAS.width / 2) - this.pen.getR() - PADDING;
-	}
-
-	draw() {
-		this.pen.spin();
-		this.arm.draw();
-		this.sArm.draw();
-		this.cen.draw();
-		this.sPen.draw();
-		this.pen.setSpikeHeight(this.spikeHeight);
-		this.pen.drawSpikes();
-		this.pen.draw();
-		this.pen.drawInnerCircle();
-	}
-
-	move(status) {
-		this.pen.move(this.speed, this.arm.getLen(), this.cen);
-
-		if (status == DOUBLE) {
-			this.sPen.move(-this.speed, this.sArm.getLen(), this.cen);
-		} else {
-			this.sPen.move(this.speed, this.sArm.getLen(), this.cen);
-		}
-
-		this.arm.setEndX(this.pen.getX());
-		this.arm.setEndY(this.pen.getY());
-		this.sArm.setEndX(this.sPen.getX());
-		this.sArm.setEndY(this.sPen.getY());
-	}
-
-	endShrink() {
-		if (this.pen.getDeg() > 0) {
-			this.deg = this.pen.getDeg() % (2 * Math.PI);
-		} else {
-			this.deg = (2 * Math.PI) - Math.abs(this.pen.getDeg() % (2 * Math.PI));
-		}
-
-		DEST_COLOUR = BLUE;
-		if (this.maxLen > this.arm.getLen()) {
-			if ((this.deg > this.startRange) && (this.deg < this.endRange)) {
-				this.arm.setLen(this.arm.getLen() * 1.01);
-				this.sArm.setLen(this.sArm.getLen() * 1.01);
-			}
-		} else {
-			this.arm.setLen(this.maxLen);
-			this.sArm.setLen(this.maxLen);
-			this.timer = 0;
-			this.status = false;
-			return false;
-		}
-
-		return true;
-	}
-
-	startShrink() {
-		if (this.timer < 15000) {
-			this.status = true;
-			DEST_COLOUR = RED;
-			if (this.arm.getLen() > this.minLen) {
-				this.arm.setLen(this.arm.getLen() * 0.99);
-				this.sArm.setLen(this.sArm.getLen() * 0.99);
-			}
-		} else {
-			return this.endShrink();
-		}
-
-		this.timer += TIME_INTERVAL;
-		return true;
-	}
-
-	endBalloon() {
-		this.distx = Math.pow(Math.abs(this.pen.getX() - this.sPen.getX()), 2);
-		this.disty = Math.pow(Math.abs(this.pen.getY() - this.sPen.getY()), 2);
-
-		DEST_COLOUR = BLUE;
-		if (this.distx + this.disty < Math.pow(this.pen.getR(), 2)) {
-			this.sPen.setDeg(this.pen.getDeg());
-			this.sPen.setDir(this.pen.getDir());
-			this.timer = 0;
-			this.status = false;
-			return false;
-		}
-
-		return true;
-	}
-
-	startBalloon() {
-		if (this.timer > 15000) {
-			return this.endBalloon();
-		} else {
-			this.status = true;
-			DEST_COLOUR = GREEN;
-		}
-
-		this.timer += TIME_INTERVAL;
-		return true;
-	}
-
-	endSpike() {
-		DEST_COLOUR = BLUE;
-		if (this.pen.getR() > this.minR) {
-			this.arm.setLen(this.arm.getLen() + (this.pen.getR() * 0.01));
-			this.sArm.setLen(this.sArm.getLen() + (this.sPen.getR() * 0.01));
-			this.pen.setR(this.pen.getR() * 0.99);
-			this.sPen.setR(this.sPen.getR() * 0.99);
-		} else if (this.spikeHeight > 0.8) {
-			this.spikeHeight = this.spikeHeight * 0.99;
-		} else {
-			this.arm.setLen(this.maxLen);
-			this.sArm.setLen(this.maxLen);
-			this.pen.setR(this.minR);
-			this.sPen.setR(this.minR);
-			this.timer = 0;
-			this.status = false;
-			return false;
-		}
-
-		return true;
-	}
-
-	startSpike() {
-		if (this.timer < 15000) {
-			this.status = true;
-			DEST_COLOUR = PURPLE;
-			if (this.pen.getR() < 1.5 * this.minR) {
-				this.arm.setLen(this.arm.getLen() - (this.pen.getR() * 0.01));
-				this.sArm.setLen(this.sArm.getLen() - (this.sPen.getR() * 0.01));
-				this.pen.setR(this.pen.getR() * 1.01);
-				this.sPen.setR(this.sPen.getR() * 1.01);
-			}
-
-			if (this.spikeHeight < 2) {
-				this.spikeHeight = this.spikeHeight * 1.01;
-			}
-
-		} else {
-			return this.endSpike();
-		}
-
-		this.timer += TIME_INTERVAL;
-		return true;
-	}
+        for (var i = 0; i < this.linklist.length; i++) {
+            this.linklist[i].drawBack();
+        }
+    }
 }

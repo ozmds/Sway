@@ -1,121 +1,67 @@
-/* Cleaned up on Sept 21 */
-
 class Circle {
-	constructor(x, y, r) {
-		this.x = x;
-		this.y = y;
-		this.r = r;
-		this.deg = 1.5 * Math.PI;
-		this.dir = LEFT;
-		this.sp = 0;
-		this.spikeHeight = null;
+    constructor(type) {
+        this.type = type;
 
-		this.tempi = null;
-		this.tempj = null;
-		this.tempx = null;
-		this.tempy = null;
-	}
+        this.img = new Image();
+        this.backimg = new Image();
 
-	getX() {
-		return this.x;
-	}
+        this.img.src = 'data/images/' + type + '.png';
+        this.backimg.src = 'data/images/' + type + '-background.png';
 
-	setX(x) {
-		this.x = x;
-	}
+        this.aspectratio = this.img.width / this.img.height;
 
-	getY() {
-		return this.y;
-	}
+        this.width = 0;
+        this.height = 0;
 
-	setY(x) {
-		this.y = x;
-	}
+        this.x = null;
+        this.y = null;
+    }
 
-	getR() {
-		return this.r;
-	}
+    getHeight() {
+        return this.height;
+    }
 
-	setR(x) {
-		this.r = x;
-	}
+    getWidth() {
+        return this.width;
+    }
 
-	getDir() {
-		return this.dir;
-	}
+    getX() {
+        return this.x;
+    }
 
-	setDir(x) {
-		this.dir = x;
-	}
+    getY() {
+        return this.y;
+    }
 
-	getDeg() {
-		return this.deg;
-	}
+    setX(x) {
+        this.x = x;
+    }
 
-	setDeg(x) {
-		this.deg = x;
-	}
+    setY(x) {
+        this.y = x;
+    }
 
-	setSpikeHeight(x) {
-		this.spikeHeight = x;
-	}
+    setSize() {
+        if (this.type == 'pendulum') {
+            this.height = CANVAS.width * 0.20;
+        } else if (this.type == 'center') {
+            this.height = CANVAS.width * 0.10;
+        } else if (this.type == 'link') {
+            this.height = CANVAS.width * 0.08;
+        }
 
-	getSpikeHeight() {
-		return this.spikeHeight;
-	}
+        this.width = this.height * this.aspectratio;
+    }
 
-	flip() {
-		if (this.dir == LEFT) {
-			this.dir = RIGHT;
-		} else {
-			this.dir = LEFT;
-		}
-	}
+    draw() {
+        CONTEXT.drawImage(this.img, this.x - this.height * 0.5,
+            this.y - this.height * 0.5, this.aspectratio * this.height,
+            this.height);
+    }
 
-	spin() {
-		this.sp = this.sp + 0.008;
-	}
-
-	drawInnerCircle() {
-		IMAGESET.drawInnerCircle(this.x, this.y, this.r, this.sp);
-	}
-
-	drawSpikes() {
-		IMAGESET.drawSpikes(this.x, this.y, this.r, this.sp, this.spikeHeight);
-	}
-
-	draw() {
-		IMAGESET.drawCircle(this.x, this.y, this.r);
-	}
-
-	hitWall() {
-		if (this.x < this.r + PADDING) {
-			return true;
-		} else if (this.x > (CANVAS.width - (this.r + PADDING))) {
-			return true;
-		}
-	}
-
-	move(speed, armLength, cen) {
-		if (this.dir == LEFT) {
-			this.deg -= speed;
-		} else {
-			this.deg += speed;
-		}
-
-		this.x = cen.getX() + Math.cos(this.deg) * armLength;
-		this.y = cen.getY() - Math.sin(this.deg) * armLength;
-
-		if (this.hitWall()) {
-			this.flip();
-			if (this.dir == LEFT) {
-				this.deg -= 2 * speed;
-			} else {
-				this.deg += 2 * speed;
-			}
-
-			this.x = cen.getX() + Math.cos(this.deg) * armLength;
-			this.y = cen.getY() - Math.sin(this.deg) * armLength;
-		}
-	}
+    drawBack() {
+        CONTEXT.drawImage(this.backimg, this.x - this.height * 0.5,
+            this.y - this.height * 0.5, this.aspectratio * this.height,
+            this.height);
+    }
 }
